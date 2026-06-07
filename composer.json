@@ -1,0 +1,94 @@
+{
+    "name": "crypto-chiefs/cryptochief-crypto-processing-php",
+    "description": "Official PHP SDK for the Crypto Chief crypto processing API. Accept crypto payments, send payouts and mass payouts, sign and broadcast EVM/TRON/Solana/TON/XRP transactions, encode contract calls, and verify webhooks.",
+    "type": "library",
+    "license": "MIT",
+    "homepage": "https://crypto-chief.com/processing/",
+    "keywords": [
+        "cryptochief",
+        "crypto-chief",
+        "crypto",
+        "cryptocurrency",
+        "crypto-processing",
+        "payment-processing",
+        "payment-gateway",
+        "crypto-payments",
+        "accept-crypto-payments",
+        "payout",
+        "mass-payout",
+        "stablecoin",
+        "usdt",
+        "usdc",
+        "webhook",
+        "ethereum",
+        "evm",
+        "erc20",
+        "trc20",
+        "bep20",
+        "polygon",
+        "arbitrum",
+        "optimism",
+        "avalanche",
+        "bitcoin",
+        "tron",
+        "solana",
+        "anchor",
+        "ton",
+        "jetton",
+        "xrp",
+        "litecoin",
+        "dogecoin",
+        "bitcoin-cash",
+        "sdk",
+        "rest-api"
+    ],
+    "authors": [
+        {
+            "name": "Crypto Chief",
+            "homepage": "https://crypto-chief.com"
+        }
+    ],
+    "support": {
+        "issues": "https://github.com/crypto-chiefs/cryptochief-crypto-processing-php/issues",
+        "source": "https://github.com/crypto-chiefs/cryptochief-crypto-processing-php",
+        "docs": "https://docs-sdk.crypto-chief.com/processing/php"
+    },
+    "require": {
+        "php": "^8.1",
+        "ext-bcmath": "*",
+        "ext-json": "*",
+        "ext-mbstring": "*",
+        "ext-openssl": "*",
+        "guzzlehttp/guzzle": "^7.5",
+        "kornrunner/keccak": "^1.1",
+        "olifanton/interop": "^1.4",
+        "phpseclib/phpseclib": "^3.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^10.0",
+        "phpstan/phpstan": "^1.10",
+        "friendsofphp/php-cs-fixer": "^3.40"
+    },
+    "autoload": {
+        "psr-4": {
+            "CryptoChief\\Processing\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "CryptoChief\\Processing\\Tests\\": "tests/"
+        }
+    },
+    "scripts": {
+        "test": "phpunit",
+        "analyse": "phpstan analyse",
+        "cs-check": "php-cs-fixer fix --dry-run --diff",
+        "cs-fix": "php-cs-fixer fix"
+    },
+    "config": {
+        "sort-packages": true,
+        "allow-plugins": {}
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true
+}
