@@ -347,6 +347,38 @@ try {
 
 Only 5xx and network failures retry; 4xx is the caller's fault and surfaces immediately.
 
+## Credits balance & top-up
+
+API usage is billed in credits (10 000 000 credits = 1 USD). The balance check itself is
+free of charge and answers even at zero or negative balance, so it is safe to poll before
+gas-paying operations (rate-limited to 60 req/min per project):
+
+```php
+$credits = $client->credits()->balance();
+
+echo "USD balance: {$credits->usdBalance}\n";   // pre-formatted, e.g. "-1.52" in postpaid debt
+
+if (!$credits->canExecuteGasOperations) {
+    // top up before /v1/transaction/execute, sweeps, service-fee payouts, ...
+}
+```
+
+Top up in USDT or USDC (USD-pegged, max 100 000 per invoice) via a hosted payment page —
+QR code, network selection, live status. `topup()` is free of charge too:
+
+```php
+use CryptoChief\Processing\Dto\CreditsTopupRequest;
+
+$invoice = $client->credits()->topup(new CreditsTopupRequest(
+    amount:     '250.00',
+    currency:   'USDT',
+    urlSuccess: 'https://example.com/billing/ok',    // optional browser redirects
+    urlError:   'https://example.com/billing/fail',
+));
+
+echo "Pay at: {$invoice->paymentLink}\n";           // status starts as "pending"
+```
+
 ## Amount precision
 
 Crypto amounts are decimal strings end-to-end. `float` loses precision past 2^53 and
@@ -404,6 +436,12 @@ GitHub organization.
   RPC proxy, and picks the gas budget.
 - **How do I verify Crypto Chief webhooks in PHP?** `Webhook::parseEvent($apiKey, $rawBody,
   $signature)` — re-canonicalizes the body, MD5-verifies, and returns a typed event.
+- **How do I check my API credits balance in PHP?** `$client->credits()->balance()` — free
+  of charge, and `canExecuteGasOperations` tells you up front whether gas-paying operations
+  would pass the billing gate.
+- **How do I top up my API credits from PHP?** `$client->credits()->topup(new
+  CreditsTopupRequest(amount: '250.00', currency: 'USDT'))` — returns a hosted
+  `paymentLink` (QR code, network selection, live status). Also free of charge.
 - **Does it work with Laravel / Symfony?** Yes — the HTTP client is PSR-18 compatible and
   the webhook verifier takes raw bytes, so it slots into any framework's request body.
 

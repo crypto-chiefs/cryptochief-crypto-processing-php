@@ -7,6 +7,7 @@ namespace CryptoChief\Processing;
 use CryptoChief\Processing\Exception\CryptoChiefException;
 use CryptoChief\Processing\Exception\RsaKeyNotConfiguredException;
 use CryptoChief\Processing\Service\BlockchainService;
+use CryptoChief\Processing\Service\CreditsService;
 use CryptoChief\Processing\Service\CurrenciesService;
 use CryptoChief\Processing\Service\PayInsService;
 use CryptoChief\Processing\Service\PayoutsService;
@@ -56,6 +57,7 @@ final class Client
     private readonly StaticDepositsService $staticDeposits;
     private readonly BlockchainService $blockchain;
     private readonly CurrenciesService $currencies;
+    private readonly CreditsService $credits;
 
     public function __construct(
         public readonly string $merchantId,
@@ -104,6 +106,7 @@ final class Client
         $this->staticDeposits = new StaticDepositsService($this);
         $this->blockchain     = new BlockchainService($this);
         $this->currencies     = new CurrenciesService($this);
+        $this->credits        = new CreditsService($this);
     }
 
     public function payouts(): PayoutsService               { return $this->payouts; }
@@ -115,6 +118,7 @@ final class Client
     public function staticDeposits(): StaticDepositsService { return $this->staticDeposits; }
     public function blockchain(): BlockchainService         { return $this->blockchain; }
     public function currencies(): CurrenciesService         { return $this->currencies; }
+    public function credits(): CreditsService               { return $this->credits; }
 
     /**
      * Low-level signed POST against an API path (e.g. `/v1/payout/estimate`).
