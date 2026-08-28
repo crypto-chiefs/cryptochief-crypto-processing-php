@@ -5,6 +5,9 @@ declare(strict_types=1);
 /**
  * Uniswap V2 swapExactTokensForTokens via the contract-call helper. The SDK ABI-encodes
  * `data` from the signature + args so you never touch the wire format.
+ *
+ * Two transactions: the router pulls the input token with TransferHelper.safeTransferFrom,
+ * so the wallet has to approve the router first and let that land before swapping.
  */
 
 require __DIR__ . '/../vendor/autoload.php';
@@ -27,7 +30,27 @@ $dai     = '0x6B175474E89094C44Da98b954EedeAC495271d0F';
 
 $amountIn  = Amount::humanToBase('1', 18);       // 1 DAI
 $amountMin = Amount::humanToBase('0.0001', 18);  // worst-case ETH out
-$deadline  = time() + 600;
+
+// 1. Allow the router to move exactly `amountIn` DAI out of the wallet.
+$approval = $client->transactions()->signEvmCall(new EvmCallRequest(
+    network:     Chain::EthMainnet->value,
+    fromAddress: $from,
+    contract:    $dai,
+    method:      'approve(address,uint256)',
+    args:        [$router, $amountIn],
+));
+$client->transactions()->execute(new ExecuteTransactionRequest(uuid: $approval->uuid));
+
+// 2. The allowance has to be on chain before the swap is signed, or the router reverts.
+$approved = $client->transactions()->waitFor($approval->uuid);
+printf("Approve: status=%s\n", $approved->status);
+if ($approved->status !== 'confirmed') {
+    fwrite(STDERR, "approve did not confirm, nothing swapped\n");
+    exit(1);
+}
+
+// 3. Swap. The deadline starts here, so waiting on the approve does not eat the window.
+$deadline = time() + 600;
 
 $signed = $client->transactions()->signEvmCall(new EvmCallRequest(
     network:     Chain::EthMainnet->value,

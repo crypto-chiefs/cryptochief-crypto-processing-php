@@ -199,6 +199,14 @@ $signed = $client->transactions()->erc20Transfer(new Erc20TransferRequest(
 Arbitrary Solidity calls — the SDK reads the signature, computes the Keccak-256 selector,
 encodes head + tail, and hands you the bytes:
 
+> **This snippet shows the encoder, not a complete swap.** Uniswap's router
+> moves your input token with `transferFrom`, so it needs an ERC-20
+> `approve(address,uint256)` on that token first, confirmed before the swap is
+> signed — without it the swap reverts and burns the gas. And an `amountOutMin`
+> of `0` accepts whatever the pool returns, which on a public mempool hands the
+> trade to the first sandwich bot that sees it. The runnable version, with both,
+> is in `examples/`.
+
 ```php
 use CryptoChief\Processing\Dto\EvmCallRequest;
 
