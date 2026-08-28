@@ -442,6 +442,36 @@ GitHub organization.
 - **How do I top up my API credits from PHP?** `$client->credits()->topup(new
   CreditsTopupRequest(amount: '250.00', currency: 'USDT'))` — returns a hosted
   `paymentLink` (QR code, network selection, live status). Also free of charge.
+- **How do I control when a deposit wallet is swept?** `$client->sweeps()->settings($address)`
+  reads the policy in force and `updateSettings()` changes it — sweep on arrival
+  (`SweepPolicyMode::Momentum`), sweep once the balance reaches an amount
+  (`SweepPolicyMode::Threshold` plus `thresholdAmountUsd`), or never on its own
+  (`SweepPolicyMode::Off`; a force sweep still works). The read comes back in three
+  layers — what will happen, what this wallet overrides, and what it inherits from the
+  project — so a value of your own is distinguishable from an inherited one:
+
+  ```php
+  $s = $client->sweeps()->updateSettings(
+      address: $depositAddress,
+      typeWork: SweepPolicyMode::Threshold,
+      thresholdAmountUsd: '250',
+  );
+  // $s->effective is the resolved policy; $s->effective->source names the layer it came from.
+  ```
+
+  Inheritance is per field: overriding the mode leaves the fee mode inherited. To stop
+  overriding a field, pass `Clear::value()` — `null` already means "leave this field
+  alone", so it cannot also mean "reset it".
+- **How do I know a sweep actually settled?** Check `status`.
+  `SweepStatus::Broadcasted` means the transaction is out and not yet confirmed;
+  `SweepStatus::Completed` means confirmed, with `sweepConfirmations` and `completedAt`
+  filled in. Earlier platform versions reported `completed` at broadcast, so a sweep could
+  read as settled while its transaction was still unconfirmed.
+- **How do I keep test payments off real chains?** Set `environment` on
+  `CreatePayInRequest` to `Environment::Testnet->value` or `Environment::Mainnet->value`.
+  It constrains the asset the platform picks when you have not named a concrete network —
+  fiat mode and `ANY` — so an unconstrained pick cannot put a real payment on a test chain.
+  Omit it to use the project's default.
 - **Does it work with Laravel / Symfony?** Yes — the HTTP client is PSR-18 compatible and
   the webhook verifier takes raw bytes, so it slots into any framework's request body.
 
