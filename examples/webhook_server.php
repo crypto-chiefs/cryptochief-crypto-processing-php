@@ -22,6 +22,7 @@ use CryptoChief\Processing\Webhook;
 use CryptoChief\Processing\Webhook\PayInEvent;
 use CryptoChief\Processing\Webhook\PayoutEvent;
 use CryptoChief\Processing\Webhook\StaticDepositEvent;
+use CryptoChief\Processing\Webhook\SweepEvent;
 use CryptoChief\Processing\Webhook\TransactionEvent;
 
 $apiKey = getenv('API_KEY') ?: '';
@@ -55,6 +56,28 @@ if ($event instanceof PayoutEvent) {
     error_log("invoice {$event->uuid} -> {$event->status}");
 } elseif ($event instanceof StaticDepositEvent) {
     error_log("static_deposit {$event->uuid} -> {$event->status}");
+} elseif ($event instanceof SweepEvent) {
+    // Your money finishing its move into your own custody. A
+    // static_deposit.paid told you a customer paid; THIS says the funds have
+    // been swept off the deposit address and the sweep is confirmed on chain.
+    // Until it fires the balance still sits on the deposit wallet, so treasury
+    // reporting and "available to pay out" should key off this, not the deposit.
+    error_log(
+        "sweep {$event->taskId}: {$event->amountHuman} {$event->assetSymbol} "
+        . "{$event->walletAddress} -> {$event->toAddress} "
+        . "tx={$event->sweepTxHash} confirmations={$event->sweepConfirmations} "
+        . "trigger={$event->typeWork} fee_usd={$event->totalFeeUsd}"
+    );
+
+    // taskId is the idempotency key: one sweep settles once. Seeing it twice
+    // means a redelivery - acknowledge and stop.
+    // if ($treasury->alreadyRecorded($event->taskId)) { http_response_code(200); echo 'ok'; return; }
+
+    // The event only ever arrives confirmed, but apply your own finality policy
+    // here if you have one - "confirmed" is not the same number on every chain.
+    // $treasury->recordSettled($event->taskId, $event->assetSymbol, $event->amountHuman, $event->sweepTxHash);
+    // $ledger->moveToAvailable($customerFor($event->walletAddress), $event->assetSymbol, $event->amountHuman);
+    // $costs->record($event->taskId, $event->totalFeeUsd);  // sweeps are not free
 } else {
     error_log('unknown event: ' . json_encode($event));
 }

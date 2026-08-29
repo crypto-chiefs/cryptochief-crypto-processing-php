@@ -9,6 +9,7 @@ use CryptoChief\Processing\Exception\WebhookSignatureException;
 use CryptoChief\Processing\Webhook\PayInEvent;
 use CryptoChief\Processing\Webhook\PayoutEvent;
 use CryptoChief\Processing\Webhook\StaticDepositEvent;
+use CryptoChief\Processing\Webhook\SweepEvent;
 use CryptoChief\Processing\Webhook\TransactionEvent;
 
 /**
@@ -82,6 +83,7 @@ final class Webhook
             'transaction'    => TransactionEvent::fromWire($data),
             'invoice'        => PayInEvent::fromWire($data),
             'static_deposit' => StaticDepositEvent::fromWire($data),
+            'sweep' => SweepEvent::fromWire($data),
             default          => $data,
         };
     }
