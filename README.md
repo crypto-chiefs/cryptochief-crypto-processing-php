@@ -301,6 +301,7 @@ $client = new Client(
 $wallet = $client->wallets()->generate(new GenerateWalletRequest(
     walletType:  'transit',
     chainFamily: ChainFamily::Evm->value,
+    label:       'hot wallet EU',   // optional, any wallet type, max 255 chars
 ));
 
 if ($wallet->privateKeyEncrypted !== null) {
@@ -308,6 +309,22 @@ if ($wallet->privateKeyEncrypted !== null) {
     $key = $client->wallets()->decryptPrivateKey($wallet->privateKeyEncrypted);
 }
 ```
+
+Neither the deposit webhook nor the master a wallet settles to is fixed at creation:
+
+```php
+// Move the next sweep to a different master. No money moves: sweeps already queued
+// land on the new master, anything already swept stays on the old one.
+$w = $client->wallets()->rebindMaster($depositAddress, $newMasterAddress);
+// $w->masterWalletAddress is the master the next sweep will settle to.
+
+// Point a static wallet's deposit webhook somewhere else, or drop it.
+$client->wallets()->setCallbackUrl($depositAddress, 'https://example.com/hook');
+$client->wallets()->clearCallbackUrl($depositAddress);   // same as passing ''
+```
+
+`masterWalletAddress` and `callbackUrl` come back as `null` when the wallet has no such
+value — a master has no master of its own, a transit wallet never has a callback.
 
 ## Webhooks
 
@@ -470,6 +487,22 @@ GitHub organization.
   Inheritance is per field: overriding the mode leaves the fee mode inherited. To stop
   overriding a field, pass `Clear::value()` — `null` already means "leave this field
   alone", so it cannot also mean "reset it".
+- **How do I name a wallet in PHP?** Pass `label` to `GenerateWalletRequest` — it works
+  for master, transit and static wallets alike, holds up to 255 characters, and is for
+  your own bookkeeping: the platform stores and echoes it, it routes nothing. Leave it
+  unset and it stays off the wire.
+- **How do I move a deposit wallet to another master wallet?**
+  `$client->wallets()->rebindMaster($address, $newMasterAddress)`. It moves no money —
+  it changes where the *next* sweep settles, including sweeps already queued but not yet
+  sent. Anything already swept stays on the previous master; move that with a payout.
+  The call is idempotent, master wallets cannot be re-pointed, and the new master has to
+  be on the same project and chain family and not frozen.
+- **How do I change a static wallet's deposit webhook after creating it?**
+  `$client->wallets()->setCallbackUrl($address, $url)` — static wallets only (master and
+  transit answer 400). An empty string is a value, not an omission: it clears the webhook
+  and the SDK sends it as `""` rather than dropping the field, which
+  `clearCallbackUrl($address)` spells out. The new URL applies to deposits announced from
+  here on; one already announced is not re-announced to it.
 - **How do I know a sweep actually settled?** Check `status`.
   `SweepStatus::Broadcasted` means the transaction is out and not yet confirmed;
   `SweepStatus::Completed` means confirmed, with `sweepConfirmations` and `completedAt`
