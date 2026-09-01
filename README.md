@@ -310,9 +310,15 @@ if ($wallet->privateKeyEncrypted !== null) {
 }
 ```
 
-Neither the deposit webhook nor the master a wallet settles to is fixed at creation:
+Nothing named at creation is fixed there — the name, the deposit webhook and the master a
+wallet settles to can all be changed afterwards:
 
 ```php
+// Rename a wallet, or take its name off. Any wallet type, max 255 chars.
+$w = $client->wallets()->setLabel($address, 'customer 4242');
+// $w->label is the name now stored - null once cleared, never ''.
+$client->wallets()->clearLabel($address);                // same as passing ''
+
 // Move the next sweep to a different master. No money moves: sweeps already queued
 // land on the new master, anything already swept stays on the old one.
 $w = $client->wallets()->rebindMaster($depositAddress, $newMasterAddress);
@@ -323,8 +329,10 @@ $client->wallets()->setCallbackUrl($depositAddress, 'https://example.com/hook');
 $client->wallets()->clearCallbackUrl($depositAddress);   // same as passing ''
 ```
 
-`masterWalletAddress` and `callbackUrl` come back as `null` when the wallet has no such
-value — a master has no master of its own, a transit wallet never has a callback.
+Every response that describes a wallet — generate, info, the list, and the three calls
+above — carries `label`. `label`, `masterWalletAddress` and `callbackUrl` come back as
+`null` when the wallet has no such value: an unnamed wallet reads as `null` and never as
+an empty string, a master has no master of its own, a transit wallet never has a callback.
 
 ## Webhooks
 
@@ -491,6 +499,14 @@ GitHub organization.
   for master, transit and static wallets alike, holds up to 255 characters, and is for
   your own bookkeeping: the platform stores and echoes it, it routes nothing. Leave it
   unset and it stays off the wire.
+- **How do I rename a wallet after creating it?**
+  `$client->wallets()->setLabel($address, 'customer 4242')` — every wallet type, not just
+  static ones. An empty string is a value, not an omission: it clears the name and the SDK
+  sends it as `""` rather than dropping the field, which `clearLabel($address)` spells
+  out. Over 255 characters the call fails with `LABEL_TOO_LONG`
+  (`ErrorCode::LabelTooLong`). Read the name back from `label` on any wallet response —
+  it is `null` when the wallet has no name, never `''`, so `label === null` is the one
+  test for "unnamed".
 - **How do I move a deposit wallet to another master wallet?**
   `$client->wallets()->rebindMaster($address, $newMasterAddress)`. It moves no money —
   it changes where the *next* sweep settles, including sweeps already queued but not yet

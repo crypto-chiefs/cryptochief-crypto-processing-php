@@ -23,7 +23,7 @@ final class GenerateWalletRequest extends BaseDto
          * to every wallet type, not only static ones, and is yours for bookkeeping: the
          * platform stores and echoes it, it carries no routing meaning. At most 255
          * characters. Left null it stays off the wire entirely rather than being sent as
-         * an empty string.
+         * an empty string. Changeable later - {@see \CryptoChief\Processing\Service\WalletsService::setLabel()}.
          */
         public readonly ?string $label = null,
     ) {}

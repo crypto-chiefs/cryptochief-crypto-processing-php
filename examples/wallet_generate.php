@@ -6,8 +6,8 @@ declare(strict_types=1);
  * Generate a transit wallet, then decrypt its private key locally using the project's
  * RSA private key. The key never leaves the SDK process.
  *
- * Also shows the two things that are not fixed at creation time: the master a wallet
- * settles to, and a static wallet's deposit webhook.
+ * Also shows the three things that are not fixed at creation time: the wallet's name, the
+ * master it settles to, and a static wallet's deposit webhook.
  */
 
 require __DIR__ . '/../vendor/autoload.php';
@@ -28,7 +28,7 @@ $wallet = $client->wallets()->generate(new GenerateWalletRequest(
     // Optional, and not only for static wallets: a name for your own bookkeeping.
     label:       'hot wallet EU',
 ));
-printf("Generated wallet: %s\n", $wallet->address);
+printf("Generated wallet: %s (%s)\n", $wallet->address, $wallet->label ?? '(unnamed)');
 
 if ($wallet->privateKeyEncrypted !== null) {
     $privateKey = $client->wallets()->decryptPrivateKey($wallet->privateKeyEncrypted);
@@ -46,7 +46,19 @@ $deposit = $client->wallets()->generate(new GenerateWalletRequest(
     callbackUrl:         'https://example.com/hooks/deposits',
     label:               'customer 4242',
 ));
-printf("Deposit address: %s\n", $deposit->address);
+printf("Deposit address: %s (%s)\n", $deposit->address, $deposit->label ?? '(unnamed)');
+
+// Rename it later - or take the name off. An empty label is a value, not an omission,
+// and a wallet with no name reads back as null rather than as "".
+$deposit = $client->wallets()->setLabel($deposit->address, 'customer 4242 (EU)');
+printf("Name now: %s\n", $deposit->label ?? '(unnamed)');
+
+$deposit = $client->wallets()->clearLabel($deposit->address);
+printf("Name now: %s\n", $deposit->label ?? '(unnamed)');
+
+// The same call renames a master wallet - naming is not static-only the way the deposit
+// webhook below is.
+$client->wallets()->setLabel($wallet->address, 'hot wallet EU (rotated)');
 
 // Repoint the webhook later - or clear it. An empty URL is a value, not an omission.
 $deposit = $client->wallets()->setCallbackUrl($deposit->address, 'https://example.com/hooks/v2');

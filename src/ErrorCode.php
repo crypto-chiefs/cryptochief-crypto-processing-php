@@ -22,6 +22,7 @@ enum ErrorCode: string
     case ServiceError                     = 'SERVICE_ERROR';
     case Unauthorized                     = 'UNAUTHORIZED';
     case UrlCallbackRequired              = 'URL_CALLBACK_REQUIRED';
+    case LabelTooLong                     = 'LABEL_TOO_LONG';
     case BatchEmpty                       = 'BATCH_EMPTY';
     case BatchTooLarge                    = 'BATCH_TOO_LARGE';
     case BatchDuplicateOrderId            = 'BATCH_DUPLICATE_ORDER_ID';

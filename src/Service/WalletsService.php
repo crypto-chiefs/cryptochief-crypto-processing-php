@@ -18,9 +18,9 @@ final class WalletsService extends BaseService
      * root of trust; transit and static wallets attach to one.
      *
      * Nothing optional here is frozen at creation: `label` names the wallet for your own
-     * bookkeeping on any wallet type, and both the deposit webhook and the master a
-     * wallet settles to can be changed afterwards - {@see self::setCallbackUrl()} and
-     * {@see self::rebindMaster()}.
+     * bookkeeping on any wallet type, and the name, the deposit webhook and the master a
+     * wallet settles to can all be changed afterwards - {@see self::setLabel()},
+     * {@see self::setCallbackUrl()} and {@see self::rebindMaster()}.
      */
     public function generate(GenerateWalletRequest $req): Wallet
     {
@@ -95,6 +95,36 @@ final class WalletsService extends BaseService
     public function clearCallbackUrl(string $address): Wallet
     {
         return $this->setCallbackUrl($address, '');
+    }
+
+    /**
+     * Set or clear a wallet's human-readable name after it has been created. Returns the
+     * wallet as it stands afterwards, so `label` on the result is the name now stored.
+     *
+     * Every wallet type, unlike the deposit webhook: masters, transit and static wallets
+     * are all nameable. The name is yours for bookkeeping - the platform stores and echoes
+     * it and routes nothing by it - and is capped at 255 characters, past which the call
+     * fails with `LABEL_TOO_LONG`.
+     *
+     * An empty `$label` is a value, not an omission: it clears the name, and the SDK puts
+     * it on the wire as `""` rather than dropping the field the way an unset optional
+     * would be dropped. {@see self::clearLabel()} says the same thing more plainly. A
+     * wallet with no name reads back as `label === null`, never as `''`.
+     */
+    public function setLabel(string $address, string $label): Wallet
+    {
+        // A literal array, not a DTO: `''` has to reach the platform as an empty string,
+        // and `BaseDto::toWire()` would be free to treat an unset optional the same way.
+        return self::fromWire(Wallet::class, $this->post('/v1/wallets/label', [
+            'address' => $address,
+            'label' => $label,
+        ]));
+    }
+
+    /** Take the name off a wallet - {@see self::setLabel()} with an empty label, spelled out. */
+    public function clearLabel(string $address): Wallet
+    {
+        return $this->setLabel($address, '');
     }
 
     /**

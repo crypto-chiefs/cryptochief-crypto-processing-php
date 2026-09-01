@@ -58,11 +58,12 @@ final class WalletsServiceTest extends TestCase
     }
 
     /**
-     * The wallet-info shape both new endpoints answer with.
+     * The wallet-info shape every one of these endpoints answers with. `label` rides on
+     * it like the rest: always present, null when the wallet has no name.
      *
      * @return array<string, mixed>
      */
-    private function walletInfoPayload(?string $master, ?string $callback): array
+    private function walletInfoPayload(?string $master, ?string $callback, ?string $label = null): array
     {
         return [
             'type' => 'static',
@@ -71,6 +72,7 @@ final class WalletsServiceTest extends TestCase
             'frozen' => false,
             'master_wallet_address' => $master,
             'callback_url' => $callback,
+            'label' => $label,
         ];
     }
 
@@ -193,11 +195,64 @@ final class WalletsServiceTest extends TestCase
         self::assertSame('{"address":"0xstatic","callback_url":""}', (string) $req->getBody());
     }
 
-    public function testNullMasterAndCallbackDecodeToNull(): void
+    public function testSetLabelSendsTheName(): void
     {
         $captured = [];
-        // A master wallet: no master of its own, and no deposit webhook. The platform
-        // spells both as JSON null rather than leaving the keys out.
+        $client = $this->client(
+            $this->walletInfoPayload('0xmaster', null, 'customer 4242'),
+            $captured
+        );
+
+        $wallet = $client->wallets()->setLabel('0xstatic', 'customer 4242');
+
+        $req = $this->sentRequest($captured);
+        self::assertSame('POST', $req->getMethod());
+        self::assertSame('/v1/wallets/label', $req->getUri()->getPath());
+
+        // Exactly two fields: an extra one here would be a field the platform ignores.
+        $body = (string) $req->getBody();
+        self::assertSame('{"address":"0xstatic","label":"customer 4242"}', $body);
+        self::assertSame(['address', 'label'], array_keys($this->sentBody($captured)));
+        self::assertSame(Sign::sign($body, 'K'), $req->getHeaderLine('Signature'));
+
+        self::assertSame('customer 4242', $wallet->label);
+    }
+
+    public function testEmptyLabelIsSentRatherThanOmitted(): void
+    {
+        $captured = [];
+        $client = $this->client($this->walletInfoPayload('0xmaster', null, null), $captured);
+
+        $wallet = $client->wallets()->setLabel('0xstatic', '');
+
+        // "" is the value that clears the name. Dropping the field the way an unset
+        // optional is dropped would leave the old name in place - the opposite request.
+        $body = (string) $this->sentRequest($captured)->getBody();
+        self::assertSame('{"address":"0xstatic","label":""}', $body);
+        self::assertArrayHasKey('label', $this->sentBody($captured));
+        self::assertSame(Sign::sign($body, 'K'), $this->sentRequest($captured)->getHeaderLine('Signature'));
+
+        // And a cleared name reads back as null, never as the empty string that cleared it.
+        self::assertNull($wallet->label);
+    }
+
+    public function testClearLabelIsTheEmptyStringSpelledOut(): void
+    {
+        $captured = [];
+        $client = $this->client($this->walletInfoPayload('0xmaster', null, null), $captured);
+
+        $client->wallets()->clearLabel('0xstatic');
+
+        $req = $this->sentRequest($captured);
+        self::assertSame('/v1/wallets/label', $req->getUri()->getPath());
+        self::assertSame('{"address":"0xstatic","label":""}', (string) $req->getBody());
+    }
+
+    public function testSetLabelIsNotStaticOnly(): void
+    {
+        $captured = [];
+        // Unlike the deposit webhook, naming applies to masters and transit wallets too:
+        // the SDK sends the same body whatever the wallet turns out to be.
         $client = $this->client([
             'type' => 'master',
             'address' => '0xmaster',
@@ -205,6 +260,32 @@ final class WalletsServiceTest extends TestCase
             'frozen' => false,
             'master_wallet_address' => null,
             'callback_url' => null,
+            'label' => 'treasury EU',
+        ], $captured);
+
+        $wallet = $client->wallets()->setLabel('0xmaster', 'treasury EU');
+
+        self::assertSame(
+            '{"address":"0xmaster","label":"treasury EU"}',
+            (string) $this->sentRequest($captured)->getBody()
+        );
+        self::assertSame('master', $wallet->type);
+        self::assertSame('treasury EU', $wallet->label);
+    }
+
+    public function testNullMasterCallbackAndLabelDecodeToNull(): void
+    {
+        $captured = [];
+        // A master wallet: no master of its own, no deposit webhook, and never named. The
+        // platform spells all three as JSON null rather than leaving the keys out.
+        $client = $this->client([
+            'type' => 'master',
+            'address' => '0xmaster',
+            'chain_family' => 'EVM',
+            'frozen' => false,
+            'master_wallet_address' => null,
+            'callback_url' => null,
+            'label' => null,
         ], $captured);
 
         $wallet = $client->wallets()->rebindMaster('0xmaster', '0xother');
@@ -213,6 +294,41 @@ final class WalletsServiceTest extends TestCase
         self::assertSame('master', $wallet->type);
         self::assertNull($wallet->masterWalletAddress);
         self::assertNull($wallet->callbackUrl);
+        self::assertNull($wallet->label);
+    }
+
+    public function testLabelComesBackFromGenerateAndFromTheList(): void
+    {
+        $captured = [];
+        $client = $this->client([
+            'address' => '0xnew',
+            'chain_family' => 'EVM',
+            'type' => 'static',
+            'label' => 'customer 4242',
+        ], $captured);
+
+        $wallet = $client->wallets()->generate(new GenerateWalletRequest(
+            walletType: 'static',
+            chainFamily: ChainFamily::Evm->value,
+            label: 'customer 4242',
+        ));
+
+        // The name the wallet was created with comes straight back on the generate call,
+        // so a bulk run does not have to look each address up afterwards.
+        self::assertSame('customer 4242', $wallet->label);
+
+        $captured = [];
+        $client = $this->client(['items' => [
+            $this->walletInfoPayload('0xmaster', null, 'customer 4242'),
+            $this->walletInfoPayload('0xmaster', null, null),
+        ]], $captured);
+
+        $list = $client->wallets()->list();
+
+        self::assertNotNull($list->items);
+        self::assertCount(2, $list->items);
+        self::assertSame('customer 4242', $list->items[0]->label);
+        self::assertNull($list->items[1]->label);
     }
 
     public function testWalletInfoShapeSurvivesAnUnknownServerField(): void
