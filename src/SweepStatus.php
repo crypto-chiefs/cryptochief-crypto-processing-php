@@ -24,7 +24,13 @@ enum SweepStatus: string
     case Failed      = 'failed';
     case Skipped     = 'skipped';
 
-    /** Whether the chain has confirmed this sweep. */
+    /**
+     * Whether the chain has confirmed this sweep.
+     *
+     * Pair it with `Sweep::$sweepConfirmations` being above zero on rows written by an
+     * older platform version. Never read `Sweep::$completedAt` for this - it is stamped
+     * on every terminal outcome, `Failed` included.
+     */
     public function isSettled(): bool
     {
         return $this === self::Completed;

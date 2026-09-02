@@ -21,11 +21,21 @@ final class Sweep extends BaseDto
         /** What triggered this sweep: momentum, threshold or force. */
         public readonly ?string $typeWork = null,
         /**
-         * Confirmations seen on the sweep transaction, and when it reached the network's
-         * confirmation target. Read them with `status`: `completedAt` is absent while the
-         * sweep is still in flight.
+         * Confirmations seen on the sweep transaction. `0` until it is mined, and above
+         * zero once the chain holds the funds - this is the settlement signal.
          */
         public readonly ?int $sweepConfirmations = null,
+        /**
+         * When the sweep reached a TERMINAL OUTCOME - failures and skips included. The
+         * sweeper stamps it at every ending, not only a successful one, so its presence
+         * says the task finished and NOT that money moved: a `failed` sweep carries a
+         * `completedAt` exactly like a settled one does.
+         *
+         * To tell settlement apart, check `sweepConfirmations` is above zero (with
+         * `status` at {@see \CryptoChief\Processing\SweepStatus::Completed}), or take
+         * `confirmedAt` from the `sweep.confirmed` webhook - which exists as a separate
+         * field for this reason.
+         */
         public readonly ?string $completedAt = null,
         /**
          * Fees. `totalFeeUsd` is the whole cost of the sweep; the gas-pump half is the

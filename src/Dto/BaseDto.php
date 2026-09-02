@@ -44,9 +44,16 @@ abstract class BaseDto implements \JsonSerializable
             $instance = $refl->newInstanceWithoutConstructor();
             foreach (self::props(static::class) as $camel => $prop) {
                 $snake = self::toSnake($camel);
-                if (array_key_exists($snake, $wire)) {
-                    $prop->setValue($instance, self::coerceValue($prop, $wire[$snake]));
+                if (!array_key_exists($snake, $wire)) {
+                    continue;
                 }
+                $value = $wire[$snake];
+                // A JSON null against a type that does not accept one: leave the property
+                // at its declared value rather than throwing. See fromWire() below.
+                if ($value === null && !($prop->getType()?->allowsNull() ?? true)) {
+                    continue;
+                }
+                $prop->setValue($instance, self::coerceValue($prop, $value));
             }
             return $instance;
         }
@@ -54,7 +61,7 @@ abstract class BaseDto implements \JsonSerializable
         foreach ($ctor->getParameters() as $param) {
             $camel = $param->getName();
             $snake = self::toSnake($camel);
-            if (array_key_exists($snake, $wire)) {
+            if (array_key_exists($snake, $wire) && !self::isRejectedNull($param, $wire[$snake])) {
                 $args[$camel] = self::coerceConstructorParam($param, $wire[$snake]);
             } elseif ($param->isDefaultValueAvailable()) {
                 $args[$camel] = $param->getDefaultValue();
@@ -143,6 +150,22 @@ abstract class BaseDto implements \JsonSerializable
             self::$reflCache[$class] = $map;
         }
         return self::$reflCache[$class];
+    }
+
+    /**
+     * Whether a wire `null` has to be ignored because the target does not accept one.
+     *
+     * Go marshals an empty slice or map as JSON `null`, so `"tickers": null` means "no
+     * tickers", not "wrong type". Passing that straight through would be a TypeError
+     * against a non-nullable `array` parameter - a decode failure where the honest answer
+     * is an empty list. Ignoring it hands the caller the declared default instead, which
+     * for every list-shaped field here is `[]`.
+     *
+     * @param mixed $value
+     */
+    private static function isRejectedNull(\ReflectionParameter $param, mixed $value): bool
+    {
+        return $value === null && !$param->allowsNull();
     }
 
     /**

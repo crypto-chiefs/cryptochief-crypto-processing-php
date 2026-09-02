@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace CryptoChief\Processing\Service;
 
 use CryptoChief\Processing\Dto\AvailableContractsResponse;
+use CryptoChief\Processing\Dto\SupportedBlockchain;
 use CryptoChief\Processing\Dto\TxStatusRow;
 use CryptoChief\Processing\Dto\WalletBalanceRow;
 
@@ -13,6 +14,38 @@ use CryptoChief\Processing\Dto\WalletBalanceRow;
  */
 final class BlockchainService extends BaseService
 {
+    /**
+     * The chains the platform's scanner is currently connected to - infrastructure, not
+     * your catalogue. Use {@see self::contractsAvailable()} for what your project can
+     * actually be paid in.
+     *
+     * The endpoint answers with a bare JSON array rather than an `items` envelope, which
+     * is why this returns a list and not a response DTO.
+     *
+     * @return SupportedBlockchain[]
+     */
+    public function blockchains(): array
+    {
+        return self::fromWireList(SupportedBlockchain::class, $this->post('/v1/blockchains/list', []));
+    }
+
+    /**
+     * Every coin and token the platform supports, on every network, whatever your project
+     * has enabled - the list to build a "which assets could we turn on" picker from.
+     * {@see self::contractsAvailable()} is the one that governs orders, sweeps and payouts.
+     *
+     * Rows carry the same {@see \CryptoChief\Processing\Dto\AvailableContract} shape as
+     * the project catalogue, `chainFamily` and `isTest` included; `contract` is an empty
+     * string on a native coin.
+     */
+    public function contractsList(): AvailableContractsResponse
+    {
+        return self::fromWire(
+            AvailableContractsResponse::class,
+            $this->post('/v1/blockchain/contracts/list', [])
+        );
+    }
+
     /**
      * Coins / tokens this project may use. Pass a `network` to scope to one chain, or
      * omit for the full set. Each row's `decimals` is what `Amount::humanToBase` /

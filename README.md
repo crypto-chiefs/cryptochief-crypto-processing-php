@@ -14,6 +14,8 @@ verify webhooks.
 - 25 chains across EVM, TRON, Solana, TON, XRP, and the BTC family
 - Single + batch payouts, auto-convert swaps, two-phase sign / execute, static deposits,
   pay-ins, sweeps, withdrawals, fiat ↔ crypto conversion
+- Chain and asset catalogues, fiat and quotable-ticker lists, per-wallet pay-in history,
+  per-wallet auto-sweep policy
 - High-level helpers: ERC-20 / TRC-20 transfers, ABI-encoded EVM calls, Solana Anchor
   instructions, TON Jetton / NFT / text-comment transfers
 - Local RSA-OAEP / SHA-256 decryption of generated wallet private keys
@@ -334,6 +336,105 @@ above — carries `label`. `label`, `masterWalletAddress` and `callbackUrl` come
 `null` when the wallet has no such value: an unnamed wallet reads as `null` and never as
 an empty string, a master has no master of its own, a transit wallet never has a callback.
 
+A deposit address can serve several orders over its lifetime. `payInHistory()` lists them
+— the same order records `payIns()->history()` returns, narrowed to one wallet:
+
+```php
+use CryptoChief\Processing\Dto\WalletPayInHistoryQuery;
+
+$page = $client->wallets()->payInHistory($depositAddress, new WalletPayInHistoryQuery(
+    dateFrom: '2026-01-01T00:00:00+00:00',
+    pageSize: 100,          // max 100, default 20
+));
+foreach ($page->items ?? [] as $order) {
+    echo "{$order->orderId} {$order->status} {$order->amountCrypto} {$order->paymentCoin}\n";
+}
+```
+
+The address is matched case-insensitively, so either spelling of an EVM address works,
+and only your project's orders come back — an address you do not own yields an empty page
+rather than an error.
+
+## Assets and chains
+
+Two different questions, two endpoints. What the platform's scanner is connected to, and
+what you can be paid in:
+
+```php
+// Every chain the scanner reads right now. A bare array, not an items envelope.
+foreach ($client->blockchain()->blockchains() as $chain) {
+    echo "{$chain->name} ({$chain->type})\n";   // ETH_MAINNET (evm)
+}
+
+// Every asset the platform supports anywhere - the "what could we turn on" list.
+$catalogue = $client->blockchain()->contractsList();
+
+// What THIS project can actually be paid in - the list that governs orders,
+// sweeps and payouts.
+$mine = $client->blockchain()->contractsAvailable(Chain::TronMainnet->value);
+
+foreach ($catalogue->items ?? [] as $asset) {
+    // contract is "" on a native coin, never null; isTest marks a test network.
+    echo "{$asset->coin} on {$asset->network} [{$asset->chainFamily}]"
+       . ($asset->isTest ? ' (testnet)' : '')
+       . " decimals={$asset->decimals}\n";
+}
+```
+
+`decimals` is what `Amount::humanToBase()` / `Amount::baseToHuman()` need. Note that
+`SupportedBlockchain::$type` is the scanner's lower-case protocol family (`evm`, `tron`)
+while an asset's `chainFamily` is the upper-case `ChainFamily` value (`EVM`, `TRON`) — the
+two do not compare directly.
+
+## Currencies and rates
+
+What the platform can put a price on — the fiat codes and the crypto tickers:
+
+```php
+// Every fiat you can price an order in. A bare array, not an items envelope.
+foreach ($client->currencies()->fiats() as $fiat) {
+    echo "{$fiat->code} — {$fiat->name}\n";      // SEK — Swedish Krona
+}
+
+// Every ticker the platform has a rate for, and which exchange carries it.
+$c = $client->currencies()->cryptos();
+echo "{$c->count} tickers quoted against {$c->quote}\n";   // 2529 tickers ... USDT
+foreach ($c->byExchange as $exchange => $tickers) {
+    echo "{$exchange}: " . count($tickers) . "\n";         // binance, bybit, exmo, kucoin
+}
+```
+
+All three of these — `blockchains()`, `fiats()` and `cryptos()` — send an empty result as
+JSON `null` rather than `[]`. The SDK reads that as **empty**: `blockchains()` and
+`fiats()` return `[]`, and `cryptos()` returns a `CryptoCurrencies` whose `tickers` and
+`byExchange` are empty arrays, nested nulls included. Nothing is thrown and nothing needs
+a `null` guard before a `foreach`.
+
+**`cryptos()` is rate availability, not payment availability.** A ticker listed there is
+one the platform can quote a price for; it says nothing about whether your project can
+take a deposit, sweep or payout in it. That catalogue is `contractsAvailable()` above —
+build an asset picker from `cryptos()` and it offers customers assets orders will refuse.
+The tell is in the shape: a ticker there carries no network, no contract and no
+`decimals`, and an order needs all three.
+
+The keys of `byExchange` are the values `ConvertRequest::$provider` accepts, which is what
+picks the venue a quote comes from:
+
+```php
+use CryptoChief\Processing\Dto\ConvertRequest;
+
+$quote = $client->currencies()->fiatToCrypto(new ConvertRequest(
+    fromTicker: 'EUR',          // NOT `from:` — the property is `fromTicker`
+    to:         'BTC',
+    amount:     '100',
+    provider:   'binance',      // omit to let the platform choose
+));
+```
+
+The source field is `fromTicker`, not `from`: `from` is what goes on the wire, and the DTO
+renames it there. `fromTicker`, `to` and `amount` are all required; only `provider` is
+optional.
+
 ## Webhooks
 
 ```php
@@ -499,7 +600,61 @@ GitHub organization.
 
   Inheritance is per field: overriding the mode leaves the fee mode inherited. To stop
   overriding a field, pass `Clear::value()` — `null` already means "leave this field
-  alone", so it cannot also mean "reset it".
+  alone", so it cannot also mean "reset it". `fields` accepts four names — `type_work`,
+  `threshold_amount_usd`, `fee_mode` and `gas_source` — and `updateSettings()` fills the
+  mask in from whichever arguments you passed.
+- **Why is my TRON sweep buying energy on my API credits?** Because nothing said
+  otherwise. `gasSource` is `rented` by default — the platform supplies the energy for the
+  transfer and bills it to your credits after it is on chain, whatever your `feeMode`.
+  **Not setting it is not the same as setting `native`.** To have the wallet burn its own
+  TRX instead, send it explicitly:
+
+  ```php
+  use CryptoChief\Processing\SweepGasSource;
+
+  $s = $client->sweeps()->updateSettings(
+      address:   $tronDepositAddress,
+      gasSource: SweepGasSource::Native,
+  );
+  echo $s->effective?->gasSource;   // "native" — the resolved value, always concrete
+  ```
+
+  Read `effective->gasSource` to see what will actually happen. A `null` in the `override`
+  layer means only that this layer does not decide it — inherited, not switched off. TRON
+  only; the value is carried and ignored on every other chain. `Clear::value()` drops the
+  override and goes back to inheriting.
+- **How do I find a sweep by transaction hash?** `search` on `SweepHistoryQuery` — a
+  substring match on the wallet address, the sweep or gas-pump transaction hash, and the
+  `task_id` (the wallet variant matches the hashes and `task_id`, its address already
+  being fixed). `status` narrows to one sweep status; leave it out and every status comes
+  back, `SweepStatus::Skipped` among them, which is a balance below the wallet's threshold
+  and a normal outcome rather than a failure.
+
+  ```php
+  $client->sweeps()->history(new SweepHistoryQuery(
+      status: SweepStatus::Failed->value,
+      search: '0x6269770518fed4...',
+  ));
+  ```
+- **How do I list every payment made to one deposit address?**
+  `$client->wallets()->payInHistory($address)` — the same order records as
+  `payIns()->history()`, narrowed to that wallet, with an optional date window and paging.
+  Useful when a payer says they sent funds and you have the address but not the order.
+- **Which chains and assets can I use?** `$client->blockchain()->blockchains()` lists the
+  chains the platform's scanner is connected to (a bare array of name + protocol family).
+  `contractsList()` is the platform-wide asset catalogue — every coin and token on every
+  network, each with `chainFamily`, `isTest` and `decimals`, and an empty `contract` on a
+  native coin. `contractsAvailable()` is the narrower list your project can actually be
+  paid in, and the one that governs orders, sweeps and payouts.
+- **Which fiat currencies can I price an order in?** `$client->currencies()->fiats()` — the
+  ISO 4217 codes a FIAT-mode pay-in's `currency` and the fiat side of a rate quote accept,
+  each with a display name to render. A bare array, not an items envelope.
+- **Which crypto assets can the platform quote a price for?**
+  `$client->currencies()->cryptos()` — every ticker with a rate against USDT, plus
+  `byExchange` telling you which venue carries which (those keys are what
+  `ConvertRequest::$provider` takes). **Rate availability only**: a ticker there is not an
+  asset your project can be paid in — `contractsAvailable()` is that list, and a picker
+  built from `cryptos()` offers assets orders will refuse.
 - **How do I name a wallet in PHP?** Pass `label` to `GenerateWalletRequest` — it works
   for master, transit and static wallets alike, holds up to 255 characters, and is for
   your own bookkeeping: the platform stores and echoes it, it routes nothing. Leave it
@@ -524,11 +679,25 @@ GitHub organization.
   and the SDK sends it as `""` rather than dropping the field, which
   `clearCallbackUrl($address)` spells out. The new URL applies to deposits announced from
   here on; one already announced is not re-announced to it.
-- **How do I know a sweep actually settled?** Check `status`.
-  `SweepStatus::Broadcasted` means the transaction is out and not yet confirmed;
-  `SweepStatus::Completed` means confirmed, with `sweepConfirmations` and `completedAt`
-  filled in. Earlier platform versions reported `completed` at broadcast, so a sweep could
-  read as settled while its transaction was still unconfirmed.
+- **How do I know a sweep actually settled?** Check `status` together with
+  `sweepConfirmations`. `SweepStatus::Broadcasted` means the transaction is out and not
+  yet confirmed; `SweepStatus::Completed` with `sweepConfirmations` above zero means the
+  chain confirmed it. Earlier platform versions reported `completed` at broadcast, so a
+  sweep could read as settled while its transaction was still unconfirmed — which is why
+  the confirmation count, not the status alone, is the signal.
+
+  **Not `completedAt`.** It is stamped when the sweep reached a *terminal outcome*,
+  failures included — a `failed` sweep carries one exactly like a settled one does, so its
+  presence says the task finished and not that money moved. Take the settlement moment
+  from `confirmedAt` on the `sweep.confirmed` webhook, which exists as a separate field
+  for this reason.
+- **Who pays the gas for a sweep, and does it cost me credits?** A deposit wallet holding
+  enough of the chain's native coin pays for its own transfer whatever `SweepFeeMode`
+  says; the mode only decides who covers a shortfall. `Client` takes it from your own
+  master wallet. `Service` has the platform supply it and **bills the cost to your API
+  credits**. `Mix` — the default — tries `Client` and falls back to `Service` when the
+  master wallet cannot cover it, so a master wallet running dry moves the gas onto your
+  credits rather than stopping the sweep.
 - **How do I keep test payments off real chains?** Set `environment` on
   `CreatePayInRequest` to `Environment::Testnet->value` or `Environment::Mainnet->value`.
   It constrains the asset the platform picks when you have not named a concrete network —

@@ -7,6 +7,9 @@ namespace CryptoChief\Processing\Tests;
 use CryptoChief\Processing\ChainFamily;
 use CryptoChief\Processing\Client;
 use CryptoChief\Processing\Dto\GenerateWalletRequest;
+use CryptoChief\Processing\Dto\HistoryMeta;
+use CryptoChief\Processing\Dto\PayIn;
+use CryptoChief\Processing\Dto\WalletPayInHistoryQuery;
 use CryptoChief\Processing\Sign;
 use GuzzleHttp\Client as GuzzleClient;
 use GuzzleHttp\Handler\MockHandler;
@@ -329,6 +332,105 @@ final class WalletsServiceTest extends TestCase
         self::assertCount(2, $list->items);
         self::assertSame('customer 4242', $list->items[0]->label);
         self::assertNull($list->items[1]->label);
+    }
+
+    public function testPayInHistoryReturnsTheSameOrderShapeAsPayInHistory(): void
+    {
+        $captured = [];
+        // Identical in shape to /v1/payments/history: `items` of orders plus `meta`. The
+        // SDK decodes them with the very same PayIn and HistoryMeta types.
+        $client = $this->client([
+            'items' => [
+                [
+                    'uuid' => '0a1b2c3d-4e5f-6789-abcd-ef0123456789',
+                    'order_id' => 'invoice-1002',
+                    'status' => 'paid',
+                    'amount_crypto' => '10.5',
+                    'payment_coin' => 'USDT',
+                    'payment_network' => 'TRON_MAINNET',
+                    'to_address' => 'TQrY8bYc2yQ8sM8nJ1sZ9c2Zx7L2wq7pQb',
+                ],
+                [
+                    'uuid' => '1b2c3d4e-5f67-89ab-cdef-0123456789ab',
+                    'order_id' => 'invoice-1003',
+                    'status' => 'expired',
+                    'payment_coin' => 'USDT',
+                    'payment_network' => 'TRON_MAINNET',
+                    'to_address' => 'TQrY8bYc2yQ8sM8nJ1sZ9c2Zx7L2wq7pQb',
+                ],
+            ],
+            'meta' => ['page' => 1, 'page_size' => 20, 'total' => 2],
+        ], $captured);
+
+        $out = $client->wallets()->payInHistory('TQrY8bYc2yQ8sM8nJ1sZ9c2Zx7L2wq7pQb');
+
+        $req = $this->sentRequest($captured);
+        self::assertSame('POST', $req->getMethod());
+        self::assertSame('/v1/wallets/history', $req->getUri()->getPath());
+
+        $body = (string) $req->getBody();
+        self::assertSame('{"address":"TQrY8bYc2yQ8sM8nJ1sZ9c2Zx7L2wq7pQb"}', $body);
+        self::assertSame(Sign::sign($body, 'K'), $req->getHeaderLine('Signature'));
+
+        self::assertNotNull($out->items);
+        self::assertCount(2, $out->items);
+        self::assertInstanceOf(PayIn::class, $out->items[0]);
+        self::assertSame('invoice-1002', $out->items[0]->orderId);
+        self::assertSame('paid', $out->items[0]->status);
+        self::assertSame('10.5', $out->items[0]->amountCrypto);
+        self::assertSame('TRON_MAINNET', $out->items[0]->paymentNetwork);
+        // One deposit address can serve several orders over its lifetime - that is the
+        // reason this endpoint exists.
+        self::assertSame($out->items[0]->toAddress, $out->items[1]->toAddress);
+        self::assertTrue($out->items[1]->isTerminal());
+
+        self::assertInstanceOf(HistoryMeta::class, $out->meta);
+        self::assertSame(1, $out->meta->page);
+        self::assertSame(20, $out->meta->pageSize);
+        self::assertSame(2, $out->meta->total);
+    }
+
+    public function testPayInHistorySendsTheDateWindowAndPaging(): void
+    {
+        $captured = [];
+        $client = $this->client(['items' => [], 'meta' => ['page' => 2, 'page_size' => 50, 'total' => 0]], $captured);
+
+        $client->wallets()->payInHistory('0xAbC', new WalletPayInHistoryQuery(
+            dateFrom: '2026-01-01T00:00:00+00:00',
+            dateTo: '2026-02-01T00:00:00+00:00',
+            page: 2,
+            pageSize: 50,
+        ));
+
+        // Keys are canonicalized (sorted) before signing; unset filters stay off the wire.
+        $body = (string) $this->sentRequest($captured)->getBody();
+        self::assertSame(
+            '{"address":"0xAbC","date_from":"2026-01-01T00:00:00+00:00",'
+            . '"date_to":"2026-02-01T00:00:00+00:00","page":2,"page_size":50}',
+            $body
+        );
+        self::assertSame(Sign::sign($body, 'K'), $this->sentRequest($captured)->getHeaderLine('Signature'));
+
+        $captured = [];
+        $client = $this->client(['items' => [], 'meta' => ['page' => 1, 'page_size' => 20, 'total' => 0]], $captured);
+        $client->wallets()->payInHistory('0xAbC', new WalletPayInHistoryQuery(pageSize: 100));
+        self::assertSame('{"address":"0xAbC","page_size":100}', (string) $this->sentRequest($captured)->getBody());
+    }
+
+    public function testPayInHistoryOfAnAddressYouDoNotOwnIsAnEmptyPage(): void
+    {
+        $captured = [];
+        // Not an error: an address outside the project simply has no orders of yours on it.
+        $client = $this->client(
+            ['items' => [], 'meta' => ['page' => 1, 'page_size' => 20, 'total' => 0]],
+            $captured
+        );
+
+        $out = $client->wallets()->payInHistory('0xSomeoneElses');
+
+        self::assertSame([], $out->items);
+        self::assertNotNull($out->meta);
+        self::assertSame(0, $out->meta->total);
     }
 
     public function testWalletInfoShapeSurvivesAnUnknownServerField(): void

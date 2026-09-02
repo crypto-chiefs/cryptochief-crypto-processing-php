@@ -6,7 +6,9 @@ namespace CryptoChief\Processing\Service;
 
 use CryptoChief\Processing\Dto\GenerateWalletRequest;
 use CryptoChief\Processing\Dto\ListWalletsResponse;
+use CryptoChief\Processing\Dto\PayInHistoryResponse;
 use CryptoChief\Processing\Dto\Wallet;
+use CryptoChief\Processing\Dto\WalletPayInHistoryQuery;
 
 /**
  * Wallet management + local RSA private-key decryption.
@@ -37,6 +39,25 @@ final class WalletsService extends BaseService
     public function info(string $address): Wallet
     {
         return self::fromWire(Wallet::class, $this->post('/v1/wallets/info', ['address' => $address]));
+    }
+
+    /**
+     * Every pay-in that used one deposit address - the same order records
+     * {@see PayInsService::history()} returns, narrowed to a single wallet. Useful when a
+     * payer says they sent funds and you have the address but not the order: a deposit
+     * wallet can serve several orders over its lifetime, and this is the list of them.
+     *
+     * The address is matched case-insensitively, so either spelling of an EVM address
+     * works. Only your project's orders come back: an address you do not own yields an
+     * empty page rather than an error.
+     */
+    public function payInHistory(string $address, ?WalletPayInHistoryQuery $query = null): PayInHistoryResponse
+    {
+        $body = ['address' => $address];
+        if ($query !== null) {
+            $body += $query->toWire();
+        }
+        return self::fromWire(PayInHistoryResponse::class, $this->post('/v1/wallets/history', $body));
     }
 
     /** Toggle the frozen flag - the response's `frozen` field is the new state. */
