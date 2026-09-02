@@ -378,6 +378,11 @@ try {
 }
 ```
 
+A refusal the API decided itself carries the code in `error` and a sentence in `msg`; one
+relayed from an upstream service marks `error` as `SERVICE_ERROR` and puts the code in
+`msg`. Both resolve to `$errorCode`, so every `ErrorCode` case is directly comparable.
+`getMessage()` keeps the sentence and `$raw` the untouched body.
+
 Only 5xx and network failures retry; 4xx is the caller's fault and surfaces immediately.
 
 ## Credits balance & top-up

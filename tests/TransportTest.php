@@ -5,8 +5,10 @@ declare(strict_types=1);
 namespace CryptoChief\Processing\Tests;
 
 use CryptoChief\Processing\Client;
+use CryptoChief\Processing\ErrorCode;
 use CryptoChief\Processing\Exception\ApiException;
 use CryptoChief\Processing\Sign;
+use CryptoChief\Processing\Transport;
 use GuzzleHttp\Client as GuzzleClient;
 use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\HandlerStack;
@@ -94,7 +96,7 @@ final class TransportTest extends TestCase
         try {
             $client->request('/v1/payout/estimate', ['x' => 1]);
         } catch (ApiException $e) {
-            self::assertSame('bad', $e->errorCode);
+            self::assertSame('INVALID_PARAMS', $e->errorCode);
             self::assertSame(400, $e->httpStatus);
             self::assertFalse($e->isRetryable());
             throw $e;
@@ -123,5 +125,97 @@ final class TransportTest extends TestCase
             self::assertSame('INSUFFICIENT_FUNDS', $e->errorCode);
             self::assertSame(402, $e->httpStatus);
         }
+    }
+
+    /**
+     * A refusal the API decided itself carries the machine code in `error` and an English
+     * sentence in `msg`. The code has to survive to `errorCode` so `ErrorCode` cases match.
+     */
+    public function testGatewayEnvelopeCodeComesFromErrorNotMsg(): void
+    {
+        $body = '{"ok":false,"error":"LABEL_TOO_LONG","msg":"label is longer than 255 characters"}';
+        $err = Transport::parseApiError(400, $body);
+
+        self::assertSame(ErrorCode::LabelTooLong->value, $err->errorCode);
+        self::assertSame(ErrorCode::LabelTooLong, ErrorCode::tryFrom($err->errorCode));
+        self::assertStringContainsString('label is longer than 255 characters', $err->getMessage());
+        self::assertSame($body, $err->raw);
+    }
+
+    /**
+     * A refusal relayed from an upstream service marks `error` as SERVICE_ERROR and puts
+     * the machine code in `msg`.
+     */
+    public function testUpstreamEnvelopeCodeComesFromMsg(): void
+    {
+        $body = '{"ok":false,"error":"SERVICE_ERROR","msg":"wallet_not_found"}';
+        $err = Transport::parseApiError(400, $body);
+
+        self::assertSame('wallet_not_found', $err->errorCode);
+        self::assertStringContainsString('wallet_not_found', $err->getMessage());
+        self::assertSame($body, $err->raw);
+    }
+
+    /** Every gateway-side constant the SDK publishes must be reachable by equality. */
+    public function testGatewayConstantsMatchEndToEnd(): void
+    {
+        $cases = [
+            [400, '{"ok":false,"error":"LABEL_TOO_LONG","msg":"label is longer than 255 characters"}', ErrorCode::LabelTooLong],
+            [402, '{"ok":false,"error":"INSUFFICIENT_CREDITS","msg":"not enough credits"}', ErrorCode::InsufficientCredits],
+            [402, '{"ok":false,"error":"DEBT_LIMIT_EXCEEDED","msg":"debt limit reached"}', ErrorCode::DebtLimitExceeded],
+            [400, '{"ok":false,"error":"INVALID_PARAMS","msg":"amount must be positive"}', ErrorCode::InvalidParams],
+        ];
+
+        foreach ($cases as [$status, $body, $expected]) {
+            $mock = new MockHandler([new Response($status, [], $body)]);
+            $client = new Client(
+                merchantId: 'M',
+                apiKey: 'K',
+                retries: 0,
+                httpClient: new GuzzleClient(['handler' => HandlerStack::create($mock)]),
+            );
+
+            try {
+                $client->request('/v1/wallets/label');
+                self::fail('expected ApiException for ' . $body);
+            } catch (ApiException $e) {
+                self::assertSame($expected->value, $e->errorCode, $body);
+            }
+        }
+    }
+
+    /**
+     * PREFLIGHT_FAILED is relayed with its reason token appended, so the documented
+     * `str_starts_with` recipe has to keep working.
+     */
+    public function testPreflightFailedKeepsItsReasonSuffix(): void
+    {
+        $err = Transport::parseApiError(
+            400,
+            '{"ok":false,"error":"SERVICE_ERROR","msg":"PREFLIGHT_FAILED: insufficient_native_for_gas: need 0.002 ETH"}'
+        );
+
+        self::assertTrue(str_starts_with($err->errorCode, ErrorCode::PreflightFailed->value));
+        self::assertSame('insufficient_native_for_gas', trim(explode(':', $err->errorCode, 3)[1] ?? ''));
+    }
+
+    /** SERVICE_ERROR is still a code of its own when the envelope carries nothing better. */
+    public function testCodeFallbacks(): void
+    {
+        self::assertSame(
+            ErrorCode::ServiceError->value,
+            Transport::parseApiError(502, '{"ok":false,"error":"SERVICE_ERROR"}')->errorCode
+        );
+        self::assertSame(
+            'wallet_not_found',
+            Transport::parseApiError(400, '{"ok":false,"msg":"wallet_not_found"}')->errorCode
+        );
+        self::assertSame(
+            'ORDER_NOT_LIVE',
+            Transport::parseApiError(400, '{"ok":false,"error":"ORDER_NOT_LIVE"}')->errorCode
+        );
+        self::assertSame('HTTP_500', Transport::parseApiError(500, '')->errorCode);
+        self::assertSame('HTTP_503', Transport::parseApiError(503, '<html>gateway down</html>')->errorCode);
+        self::assertSame('HTTP_400', Transport::parseApiError(400, '{"ok":false}')->errorCode);
     }
 }

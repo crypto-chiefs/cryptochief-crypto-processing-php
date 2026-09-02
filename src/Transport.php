@@ -126,8 +126,12 @@ final class Transport
     /**
      * Parse a non-2xx response body into an ApiException with a stable code.
      *
-     * The code is `msg or error or HTTP_<status>`, and the message prefers `msg` when it
-     * differs from `error`.
+     * A refusal arrives in one of two envelope shapes. When the API decides it itself the
+     * machine code is in `error` and `msg` carries an English sentence; when it relays a
+     * refusal from an upstream service `error` is the generic `SERVICE_ERROR` marker and
+     * the machine code is in `msg`. So the code is `error` unless `error` is missing or
+     * `SERVICE_ERROR`, in which case it is `msg` — falling back to `error` and then to
+     * `HTTP_<status>`. The human-readable message prefers `msg`, falling back to `error`.
      */
     public static function parseApiError(int $status, string $body): ApiException
     {
@@ -143,16 +147,15 @@ final class Transport
             }
         }
 
-        $msg = isset($env['msg']) && is_string($env['msg']) ? $env['msg'] : null;
-        $err = isset($env['error']) && is_string($env['error']) ? $env['error'] : null;
-        $code = $msg ?? $err ?? ('HTTP_' . $status);
+        $msg = isset($env['msg']) && is_string($env['msg']) && $env['msg'] !== '' ? $env['msg'] : null;
+        $err = isset($env['error']) && is_string($env['error']) && $env['error'] !== '' ? $env['error'] : null;
 
-        $message = $err ?? '';
-        if ($msg !== null && $msg !== $err) {
-            $message = $msg;
-        }
+        $code = $err !== null && $err !== ErrorCode::ServiceError->value ? $err : $msg;
+        $code ??= $err ?? ('HTTP_' . $status);
 
-        return new ApiException($code, $status, $message !== '' ? $message : null, $body);
+        $message = $msg ?? $err;
+
+        return new ApiException($code, $status, $message, $body);
     }
 
     /**

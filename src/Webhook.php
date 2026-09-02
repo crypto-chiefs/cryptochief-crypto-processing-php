@@ -56,7 +56,7 @@ final class Webhook
      * Returns the typed event chosen by the `event` name prefix, or the raw associative
      * array for an unrecognized prefix.
      *
-     * @return PayoutEvent|TransactionEvent|PayInEvent|StaticDepositEvent|array<string, mixed>
+     * @return PayoutEvent|TransactionEvent|PayInEvent|StaticDepositEvent|SweepEvent|array<string, mixed>
      */
     public static function parseEvent(string $apiKey, string $rawBody, ?string $signature): mixed
     {
@@ -72,7 +72,7 @@ final class Webhook
      * Map a parsed webhook array to its typed event by the `event` prefix.
      *
      * @param array<string, mixed> $data
-     * @return PayoutEvent|TransactionEvent|PayInEvent|StaticDepositEvent|array<string, mixed>
+     * @return PayoutEvent|TransactionEvent|PayInEvent|StaticDepositEvent|SweepEvent|array<string, mixed>
      */
     public static function coerceEvent(array $data): mixed
     {

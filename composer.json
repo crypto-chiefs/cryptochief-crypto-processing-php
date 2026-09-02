@@ -86,6 +86,9 @@
         "cs-fix": "php-cs-fixer fix"
     },
     "config": {
+        "platform": {
+            "php": "8.1.0"
+        },
         "sort-packages": true,
         "allow-plugins": {}
     },

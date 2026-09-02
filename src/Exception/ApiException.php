@@ -9,9 +9,10 @@ use CryptoChief\Processing\ErrorCode;
 /**
  * A typed Crypto Chief error response.
  *
- * The API returns either {"error":"SERVICE_ERROR","msg":"<CODE>",...} (then `errorCode`
- * is `<CODE>`) or {"error":"<CODE>",...} (then `errorCode` is that value). Either way
- * `errorCode` is the stable identifier to branch on:
+ * `errorCode` is the machine-readable identifier to branch on, whichever envelope shape
+ * the API used: {"error":"<CODE>","msg":"<sentence>"} for a refusal the API decided
+ * itself, or {"error":"SERVICE_ERROR","msg":"<CODE>"} for one relayed from an upstream
+ * service. Both resolve to `<CODE>`, so every `ErrorCode` case is directly comparable:
  *
  *     try {
  *         $client->payouts()->execute($req);
@@ -20,6 +21,9 @@ use CryptoChief\Processing\ErrorCode;
  *             // top up and retry
  *         }
  *     }
+ *
+ * `getMessage()` carries the human-readable sentence the API sent alongside the code, and
+ * `$raw` the untouched response body.
  *
  * The field is named `errorCode` (not `code`) because the parent `\Exception` already
  * declares a non-readonly `$code` property of type `int`, and PHP 8.1 forbids redeclaring

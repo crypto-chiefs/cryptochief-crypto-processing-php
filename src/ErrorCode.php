@@ -5,8 +5,9 @@ declare(strict_types=1);
 namespace CryptoChief\Processing;
 
 /**
- * Stable error codes. Not exhaustive - the API defines more per endpoint and may add new
- * ones, so treat an unknown ApiException::$code as opaque.
+ * Stable error codes, comparable against ApiException::$errorCode. Not exhaustive - the
+ * API defines more per endpoint and may add new ones, so treat an unknown
+ * ApiException::$errorCode as opaque.
  */
 enum ErrorCode: string
 {

@@ -8,8 +8,9 @@ use CryptoChief\Processing\Dto\ConvertRequest;
 use CryptoChief\Processing\Dto\ConvertResponse;
 
 /**
- * Fiat <-> crypto rate calculator. Quotes rates only; does NOT move funds. A swap is a
- * payout with `autoConvert=true`.
+ * Fiat <-> crypto rate calculator. Quotes rates only; does NOT move funds, and there is
+ * no swap endpoint to move them with: `autoConvert` on a payout is refused by the
+ * platform with `AUTO_CONVERT_NOT_IMPLEMENTED`.
  */
 final class CurrenciesService extends BaseService
 {
