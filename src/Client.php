@@ -12,6 +12,7 @@ use CryptoChief\Processing\Service\CurrenciesService;
 use CryptoChief\Processing\Service\PayInsService;
 use CryptoChief\Processing\Service\PayoutsService;
 use CryptoChief\Processing\Service\StaticDepositsService;
+use CryptoChief\Processing\Service\WebhooksService;
 use CryptoChief\Processing\Service\SweepsService;
 use CryptoChief\Processing\Service\TransactionsService;
 use CryptoChief\Processing\Service\WalletsService;
@@ -37,7 +38,7 @@ use Psr\Http\Client\ClientInterface as PsrHttpClient;
  */
 final class Client
 {
-    public const VERSION = '0.7.0';
+    public const VERSION = '0.8.0';
 
     public const DEFAULT_BASE_URL = 'https://api-processing.crypto-chief.com';
 
@@ -58,6 +59,7 @@ final class Client
     private readonly BlockchainService $blockchain;
     private readonly CurrenciesService $currencies;
     private readonly CreditsService $credits;
+    private readonly WebhooksService $webhooks;
 
     public function __construct(
         public readonly string $merchantId,
@@ -107,6 +109,7 @@ final class Client
         $this->blockchain     = new BlockchainService($this);
         $this->currencies     = new CurrenciesService($this);
         $this->credits        = new CreditsService($this);
+        $this->webhooks       = new WebhooksService($this);
     }
 
     public function payouts(): PayoutsService               { return $this->payouts; }
@@ -119,6 +122,7 @@ final class Client
     public function blockchain(): BlockchainService         { return $this->blockchain; }
     public function currencies(): CurrenciesService         { return $this->currencies; }
     public function credits(): CreditsService               { return $this->credits; }
+    public function webhooks(): WebhooksService             { return $this->webhooks; }
 
     /**
      * Low-level signed POST against an API path (e.g. `/v1/payout/estimate`).

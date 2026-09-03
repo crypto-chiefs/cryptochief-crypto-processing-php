@@ -39,4 +39,15 @@ enum ErrorCode: string
     case CallsNotAllowedForTransfer       = 'CALLS_NOT_ALLOWED_FOR_TRANSFER';
     case ContractCallsUnsupportedOnNetwork = 'CONTRACT_CALLS_UNSUPPORTED_ON_NETWORK';
     case NetworkError                     = 'NETWORK_ERROR';
+
+    /** The object does not exist OR is not this project's — deliberately indistinguishable. */
+    case NotFound                         = 'NOT_FOUND';
+    /** Webhook resend: a newer event exists for the same object; only the latest may be resent. Permanent. */
+    case DeliverySuperseded               = 'DELIVERY_SUPERSEDED';
+    /** Webhook resend: a worker holds the delivery, or it is already scheduled for a retry. */
+    case DeliveryInFlight                 = 'DELIVERY_IN_FLIGHT';
+    /** Webhook resend: resent under a minute ago (HTTP 429, Retry-After). */
+    case ResendTooSoon                    = 'RESEND_TOO_SOON';
+    /** Static-deposit resend: no webhook was ever queued — the wallet had no callback_url. */
+    case NoDeliveries                     = 'NO_DELIVERIES';
 }
