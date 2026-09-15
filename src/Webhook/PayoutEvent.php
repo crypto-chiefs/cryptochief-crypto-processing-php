@@ -9,6 +9,9 @@ use CryptoChief\Processing\Dto\BaseDto;
 /**
  * Payout webhook. Fires only on terminal status: `payout.paid` / `payout.system_fail`.
  *
+ * `sources` and `serviceOperations` are raw wire arrays; each item may carry an optional
+ * `confirmations` int.
+ *
  * @phpstan-type FeeInfo array<string, mixed>
  */
 final class PayoutEvent extends BaseDto
@@ -33,5 +36,9 @@ final class PayoutEvent extends BaseDto
         public readonly ?string $createdAt = null,
         public readonly ?string $completedAt = null,
         public readonly ?string $errorReason = null,
+        /** Same as `PayoutInfo::$confirmations`. */
+        public readonly ?int $confirmations = null,
+        /** Same as `PayoutInfo::$requiredConfirmations`. */
+        public readonly ?int $requiredConfirmations = null,
     ) {}
 }

@@ -49,5 +49,11 @@ $payout = $client->payouts()->execute(new ExecutePayoutRequest(
 printf("Submitted payout %s (status=%s)\n", $payout->uuid, $payout->status);
 
 // 3. Wait for terminal status. Webhooks would do this in production.
-$final = $client->payouts()->waitFor($payout->uuid, intervalSec: 5.0, timeoutSec: 600.0);
-printf("Final status: %s (txid=%s)\n", $final->status, $final->txid ?? '-');
+// Raise timeoutSec on slow networks.
+$final = $client->payouts()->waitFor($payout->uuid, intervalSec: 5.0, timeoutSec: 5400.0);
+printf("Final status: %s (txid=%s, confirmations=%s/%s)\n",
+    $final->status,
+    $final->txid ?? '-',
+    $final->confirmations ?? '-',
+    $final->requiredConfirmations ?? '-'
+);

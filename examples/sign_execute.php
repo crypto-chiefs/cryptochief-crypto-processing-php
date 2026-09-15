@@ -35,6 +35,19 @@ printf("Signed: uuid=%s expires=%s\n", $signed->uuid, $signed->expiresAt ?? '-')
 $broadcast = $client->transactions()->execute(new ExecuteTransactionRequest(uuid: $signed->uuid));
 printf("Broadcasted: %s (status=%s)\n", $broadcast->uuid, $broadcast->status);
 
-// 3. Wait for confirmation.
+// 3. Check progress: `broadcasted` while confirmations grow.
+$progress = $client->transactions()->info($signed->uuid);
+printf("In the network: status=%s confirmations=%s/%s\n",
+    $progress->status,
+    $progress->confirmations ?? '-',
+    $progress->requiredConfirmations ?? '-'
+);
+
+// 4. Wait for confirmation.
 $confirmed = $client->transactions()->waitFor($signed->uuid);
-printf("Final: status=%s tx_hash=%s\n", $confirmed->status, $confirmed->txHash ?? '-');
+printf("Final: status=%s tx_hash=%s confirmations=%s/%s\n",
+    $confirmed->status,
+    $confirmed->txHash ?? '-',
+    $confirmed->confirmations ?? '-',
+    $confirmed->requiredConfirmations ?? '-'
+);

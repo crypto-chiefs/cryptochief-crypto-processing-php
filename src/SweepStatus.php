@@ -8,9 +8,8 @@ namespace CryptoChief\Processing;
  * Sweep status.
  *
  * A sweep is broadcast first and confirmed after: `Broadcasted` means the transaction is
- * out and not yet confirmed, `Completed` means the chain confirmed it. The platform used
- * to report `completed` at broadcast, so a sweep could read as settled while its
- * transaction was still unconfirmed or had been dropped.
+ * out and not yet final, `Completed` means the sweep is closed as confirmed. Finality depth
+ * is checked by `Sweep::isFinal()`.
  *
  * `Skipped` is a sweep the platform decided against - almost always a balance below the
  * wallet's threshold. A normal outcome, not a failure.
@@ -25,11 +24,13 @@ enum SweepStatus: string
     case Skipped     = 'skipped';
 
     /**
-     * Whether the chain has confirmed this sweep.
+     * Whether the status is `Completed`.
      *
-     * Pair it with `Sweep::$sweepConfirmations` being above zero on rows written by an
-     * older platform version. Never read `Sweep::$completedAt` for this - it is stamped
-     * on every terminal outcome, `Failed` included.
+     * A `completed` history row with `sweepConfirmations` 0 was never observed on chain. Use
+     * `Sweep::isFinal()`, which also checks `sweepConfirmations >= requiredConfirmations`.
+     *
+     * Never read `Sweep::$completedAt` for this - it is set at broadcast and on
+     * `WaitingGas`/`Failed`/`Skipped`.
      */
     public function isSettled(): bool
     {

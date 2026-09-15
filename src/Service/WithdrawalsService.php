@@ -9,8 +9,8 @@ use CryptoChief\Processing\Dto\Withdrawal;
 use CryptoChief\Processing\Dto\WithdrawalHistoryResponse;
 
 /**
- * Read-only withdrawal endpoints. The public API does not create withdrawals directly;
- * they are produced by the sweep / treasury system.
+ * Read-only withdrawal endpoints. The public API does not create withdrawals; they are
+ * started from the merchant cabinet.
  */
 final class WithdrawalsService extends BaseService
 {

@@ -26,6 +26,16 @@ final class TransactionInfo extends BaseDto
         public readonly ?string $createdAt = null,
         public readonly ?string $updatedAt = null,
         public readonly ?string $error = null,
+        /**
+         * Confirmations of the transaction. Always sent. `0` until it is in a block, then
+         * grows while the status is `broadcasted`.
+         */
+        public readonly ?int $confirmations = null,
+        /**
+         * The network's confirmation threshold. Always sent. The transaction turns
+         * `confirmed` once `confirmations` reaches it.
+         */
+        public readonly ?int $requiredConfirmations = null,
     ) {}
 
     public function isTerminal(): bool

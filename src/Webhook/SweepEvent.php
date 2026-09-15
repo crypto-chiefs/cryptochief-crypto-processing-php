@@ -7,8 +7,9 @@ namespace CryptoChief\Processing\Webhook;
 use CryptoChief\Processing\Dto\BaseDto;
 
 /**
- * Funds swept off a deposit wallet, confirmed on chain. Event name:
- * `sweep.confirmed` - the only sweep event the platform emits.
+ * Funds swept off a deposit wallet, confirmed on chain to the network's
+ * finality depth. Event name: `sweep.confirmed` - the only sweep event the
+ * platform emits.
  *
  * There is deliberately no `sweep.broadcasted`: "we sent it" is not something
  * you can act on, and an event that means "maybe" is one more thing to
@@ -50,18 +51,20 @@ final class SweepEvent extends BaseDto
          * What makes this event true rather than hopeful, and never zero. It
          * travels with the event rather than being implied by it: "confirmed"
          * is not the same number on every chain, so if you run your own
-         * finality policy you need the count to apply it.
+         * finality policy you need the count to apply it. Never below
+         * `requiredConfirmations`.
          */
         public readonly int $sweepConfirmations = 0,
         /**
-         * When the chain was observed to hold the sweep. NOT the task's
-         * completion timestamp, which is stamped on every terminal outcome -
-         * failures included - and so says nothing about settlement.
+         * When the chain was observed to hold the sweep at finality depth. Not
+         * `Sweep::$completedAt`, which is set at broadcast.
          */
         public readonly ?string $confirmedAt = null,
         /** What triggered it: `momentum`, `threshold` or `force`. */
         public readonly ?string $typeWork = null,
         /** What the sweep cost: network fee plus any gas or energy the platform fronted. */
         public readonly ?string $totalFeeUsd = null,
+        /** The network's finality depth the sweep waited for. */
+        public readonly ?int $requiredConfirmations = null,
     ) {}
 }

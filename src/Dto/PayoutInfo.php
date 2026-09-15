@@ -8,6 +8,7 @@ final class PayoutInfo extends BaseDto
 {
     /**
      * @param PayoutSource[]|null $sources
+     * @param array<int, array<string, mixed>>|null $serviceOperations
      */
     public function __construct(
         public readonly string $uuid = '',
@@ -23,6 +24,18 @@ final class PayoutInfo extends BaseDto
         public readonly ?string $createdAt = null,
         public readonly ?string $updatedAt = null,
         public readonly ?string $error = null,
+        /**
+         * Platform transactions made for the payout, e.g. a gas top-up. Raw wire items;
+         * each may carry an optional `confirmations` int.
+         */
+        public readonly ?array $serviceOperations = null,
+        /** The lowest confirmation count among the sources. Optional. */
+        public readonly ?int $confirmations = null,
+        /**
+         * Finality depth of the payout's network. Optional. The payout stays
+         * `confirm_check` until every source reaches it, then turns `paid`.
+         */
+        public readonly ?int $requiredConfirmations = null,
     ) {}
 
     public function isTerminal(): bool

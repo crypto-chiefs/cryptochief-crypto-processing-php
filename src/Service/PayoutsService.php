@@ -62,8 +62,11 @@ final class PayoutsService extends BaseService
         return self::fromWire(BatchPayoutResponse::class, $this->post('/v1/payout/batch/execute', $req));
     }
 
-    /** Poll info until the payout reaches a terminal state (or timeout). */
-    public function waitFor(string $uuid, float $intervalSec = 5.0, float $timeoutSec = 600.0): PayoutInfo
+    /**
+     * Poll info until the payout reaches a terminal state (or timeout). Default timeout
+     * 5400 s. The payout stays `confirm_check` until `requiredConfirmations`.
+     */
+    public function waitFor(string $uuid, float $intervalSec = 5.0, float $timeoutSec = 5400.0): PayoutInfo
     {
         /** @var PayoutInfo $result */
         $result = Poll::waitForTerminal(

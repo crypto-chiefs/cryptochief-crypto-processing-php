@@ -21,20 +21,17 @@ final class Sweep extends BaseDto
         /** What triggered this sweep: momentum, threshold or force. */
         public readonly ?string $typeWork = null,
         /**
-         * Confirmations seen on the sweep transaction. `0` until it is mined, and above
-         * zero once the chain holds the funds - this is the settlement signal.
+         * Confirmations seen on the sweep transaction. `0` until it is mined, then grows
+         * while the sweep is `broadcasted`. Settled: `status` is `completed` and this count
+         * is at or above `requiredConfirmations` ({@see Sweep::isFinal()}).
          */
         public readonly ?int $sweepConfirmations = null,
         /**
-         * When the sweep reached a TERMINAL OUTCOME - failures and skips included. The
-         * sweeper stamps it at every ending, not only a successful one, so its presence
-         * says the task finished and NOT that money moved: a `failed` sweep carries a
-         * `completedAt` exactly like a settled one does.
+         * When the sweep was broadcast; also set on `waiting_gas`, `failed` and `skipped`.
+         * Not settlement.
          *
-         * To tell settlement apart, check `sweepConfirmations` is above zero (with
-         * `status` at {@see \CryptoChief\Processing\SweepStatus::Completed}), or take
-         * `confirmedAt` from the `sweep.confirmed` webhook - which exists as a separate
-         * field for this reason.
+         * To tell settlement apart, use {@see Sweep::isFinal()}, or take `confirmedAt`
+         * from the `sweep.confirmed` webhook.
          */
         public readonly ?string $completedAt = null,
         /**
@@ -65,5 +62,32 @@ final class Sweep extends BaseDto
         public readonly ?string $serviceFeeFiat = null,
         /** @deprecated never populated - sweeps carry `createdAt` and `completedAt`. */
         public readonly ?string $updatedAt = null,
+        /**
+         * Finality depth of the network. Settled: `status` is `completed` and
+         * `sweepConfirmations >= requiredConfirmations`. A `completed` row with
+         * `sweepConfirmations` 0 was never observed on chain; `isFinal()` is false for it.
+         * `null` when the server does not send the field.
+         */
+        public readonly ?int $requiredConfirmations = null,
     ) {}
+
+    /**
+     * Settled: `status` is `completed` and `sweepConfirmations` is at or above
+     * `requiredConfirmations`. Without `requiredConfirmations`: `completed` and
+     * `sweepConfirmations` above zero. `false` when `sweepConfirmations` is absent.
+     */
+    public function isFinal(): bool
+    {
+        if ($this->status !== \CryptoChief\Processing\SweepStatus::Completed->value) {
+            return false;
+        }
+        if ($this->sweepConfirmations === null) {
+            return false;
+        }
+        if ($this->requiredConfirmations === null) {
+            return $this->sweepConfirmations > 0;
+        }
+
+        return $this->sweepConfirmations >= max($this->requiredConfirmations, 1);
+    }
 }

@@ -49,9 +49,15 @@ try {
 }
 
 if ($event instanceof PayoutEvent) {
-    error_log("payout {$event->uuid} -> {$event->status}");
+    error_log(
+        "payout {$event->uuid} -> {$event->status} (confirmations=" . ($event->confirmations ?? '-')
+        . '/' . ($event->requiredConfirmations ?? '-') . ')'
+    );
 } elseif ($event instanceof TransactionEvent) {
-    error_log("transaction {$event->uuid} -> {$event->status} (tx_hash={$event->txHash})");
+    error_log(
+        "transaction {$event->uuid} -> {$event->status} (tx_hash={$event->txHash} "
+        . "confirmations={$event->confirmations}/{$event->requiredConfirmations})"
+    );
 } elseif ($event instanceof PayInEvent) {
     error_log("invoice {$event->uuid} -> {$event->status}");
 } elseif ($event instanceof StaticDepositEvent) {
@@ -65,7 +71,8 @@ if ($event instanceof PayoutEvent) {
     error_log(
         "sweep {$event->taskId}: {$event->amountHuman} {$event->assetSymbol} "
         . "{$event->walletAddress} -> {$event->toAddress} "
-        . "tx={$event->sweepTxHash} confirmations={$event->sweepConfirmations} "
+        . "tx={$event->sweepTxHash} confirmations={$event->sweepConfirmations}/"
+        . ($event->requiredConfirmations ?? '-') . " "
         . "trigger={$event->typeWork} fee_usd={$event->totalFeeUsd}"
     );
 

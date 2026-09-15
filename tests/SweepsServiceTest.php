@@ -150,8 +150,10 @@ final class SweepsServiceTest extends TestCase
                     'wallet_address' => '0xa',
                     'chain' => 'ETH_MAINNET',
                     'sweep_confirmations' => 2,
+                    'required_confirmations' => 12,
                     'type_work' => 'threshold',
                     'total_fee_usd' => '1.20',
+                    'completed_at' => '2026-08-28T09:58:00Z',
                 ],
                 [
                     'task_id' => 't2',
@@ -159,6 +161,7 @@ final class SweepsServiceTest extends TestCase
                     'wallet_address' => '0xb',
                     'chain' => 'ETH_MAINNET',
                     'sweep_confirmations' => 12,
+                    'required_confirmations' => 12,
                     'completed_at' => '2026-08-28T10:00:00Z',
                     'real_sweep_fee_usd' => '0.98',
                 ],
@@ -173,15 +176,22 @@ final class SweepsServiceTest extends TestCase
 
         self::assertSame(SweepStatus::Broadcasted->value, $inFlight->status);
         self::assertSame(2, $inFlight->sweepConfirmations);
-        // Still in flight: there is no settlement moment to report yet.
-        self::assertNull($inFlight->completedAt);
+        // In a block, short of the network's depth: above zero and still not settled.
+        self::assertSame(12, $inFlight->requiredConfirmations);
+        self::assertFalse(SweepStatus::from($inFlight->status)->isSettled());
+        self::assertFalse($inFlight->isFinal());
+        // Set at broadcast: present on a sweep that has not settled.
+        self::assertSame('2026-08-28T09:58:00Z', $inFlight->completedAt);
         self::assertSame('threshold', $inFlight->typeWork);
         self::assertSame('1.20', $inFlight->totalFeeUsd);
 
         self::assertSame(SweepStatus::Completed->value, $settled->status);
         self::assertSame('2026-08-28T10:00:00Z', $settled->completedAt);
         self::assertSame('0.98', $settled->realSweepFeeUsd);
+        self::assertSame(12, $settled->sweepConfirmations);
+        self::assertSame(12, $settled->requiredConfirmations);
         self::assertTrue(SweepStatus::from($settled->status)->isSettled());
+        self::assertTrue($settled->isFinal());
     }
 
     public function testGasSourceIsNullOnTheOverrideAndConcreteOnTheEffectivePolicy(): void

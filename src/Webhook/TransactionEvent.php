@@ -26,5 +26,9 @@ final class TransactionEvent extends BaseDto
         public readonly ?string $createdAt = null,
         public readonly ?string $completedAt = null,
         public readonly ?string $errorReason = null,
+        /** Same as `TransactionInfo::$confirmations`. */
+        public readonly ?int $confirmations = null,
+        /** Same as `TransactionInfo::$requiredConfirmations`. */
+        public readonly ?int $requiredConfirmations = null,
     ) {}
 }

@@ -679,18 +679,49 @@ GitHub organization.
   and the SDK sends it as `""` rather than dropping the field, which
   `clearCallbackUrl($address)` spells out. The new URL applies to deposits announced from
   here on; one already announced is not re-announced to it.
-- **How do I know a sweep actually settled?** Check `status` together with
-  `sweepConfirmations`. `SweepStatus::Broadcasted` means the transaction is out and not
-  yet confirmed; `SweepStatus::Completed` with `sweepConfirmations` above zero means the
-  chain confirmed it. Earlier platform versions reported `completed` at broadcast, so a
-  sweep could read as settled while its transaction was still unconfirmed — which is why
-  the confirmation count, not the status alone, is the signal.
+- **How do I know a sweep actually settled?** `$sweep->isFinal()`: `status` is
+  `completed` and `sweepConfirmations >= requiredConfirmations`; without
+  `requiredConfirmations`, `completed` and `sweepConfirmations` above zero. Or the
+  `sweep.confirmed` webhook arrived. The sweep reads `broadcasted` while
+  `sweepConfirmations` grows, so a count above zero alone is not settlement.
 
-  **Not `completedAt`.** It is stamped when the sweep reached a *terminal outcome*,
-  failures included — a `failed` sweep carries one exactly like a settled one does, so its
-  presence says the task finished and not that money moved. Take the settlement moment
-  from `confirmedAt` on the `sweep.confirmed` webhook, which exists as a separate field
-  for this reason.
+  A `completed` row with `sweepConfirmations` 0 was never observed on chain; `isFinal()`
+  is false for it.
+
+  **Not `completedAt`.** It is set at broadcast, and also on `waiting_gas`, `failed` and
+  `skipped`. Take the settlement moment from `confirmedAt` on the `sweep.confirmed` webhook.
+- **How many confirmations does a payout have?** Each `sources[]` entry carries
+  `confirmations`, and so does each raw `serviceOperations[]` item. The payout's own
+  `confirmations` is the lowest among its sources, and `requiredConfirmations` is the
+  network's finality depth. All four are optional. The payout stays `confirm_check` until
+  every source reaches `requiredConfirmations`, then turns `paid`. `waitFor()` waits up to
+  5400 seconds by default; pass a larger `timeoutSec` for slower networks.
+- **How many confirmations does a sign / execute transaction have?** `confirmations` and
+  `requiredConfirmations` are always present. `confirmations` is 0 until the transaction
+  is in a block, then grows while the status is `broadcasted`; at `requiredConfirmations`
+  the transaction turns `confirmed`. The `transaction.*` webhook is sent only on final
+  statuses, so read the growing count with `info()`.
+- **How do I know a manual withdrawal went through?** Withdrawals are started from the
+  merchant cabinet and have no webhook; read them with `$client->withdrawals()->info($uuid)`
+  or `history()`. A withdrawal reads `confirm_check` until `confirmations` reaches
+  `requiredConfirmations`, then `completed`:
+
+  ```php
+  $w = $client->withdrawals()->info($uuid);
+  if ($w->status === 'completed') {
+      // final; $w->completedAt is the moment, $w->actualFeeFiat the fee in USD
+  } elseif ($w->status === 'failed') {
+      // final, nothing settled; $w->errorReason says why
+  } else {
+      printf("%s: %s/%d confirmations\n", $w->status, $w->confirmations ?? '-', $w->requiredConfirmations ?? 0);
+  }
+  ```
+
+  Statuses: `queue`, `refueling`, `refuel_confirmed`, `broadcasting`, `sending`,
+  `in_mempool`, `confirm_check`, and the final `completed` and `failed`.
+  `confirmations` is optional; `requiredConfirmations` is always sent. `error`,
+  `confirmedAt`, `contract`, `amountFiat` and `updatedAt` are never sent and are
+  deprecated.
 - **Who pays the gas for a sweep, and does it cost me credits?** A deposit wallet holding
   enough of the chain's native coin pays for its own transfer whatever `SweepFeeMode`
   says; the mode only decides who covers a shortfall. `Client` takes it from your own
