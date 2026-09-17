@@ -33,18 +33,26 @@ use Psr\Http\Client\ClientInterface as PsrHttpClient;
  *         toAddress: '0x...',
  *     ));
  *
- * Stateless beyond its configuration. Pass `rsaPrivateKey` (PEM string or path on disk)
- * to enable local decryption of generated wallets' private keys.
+ * Stateless beyond its configuration and the clock offset taken from `server_time`. Pass
+ * `rsaPrivateKey` (PEM string or path on disk) to enable local decryption of generated
+ * wallets' private keys. Requests are signed with HMAC v1 (`X-CC-*` headers).
  */
 final class Client
 {
-    public const VERSION = '0.9.0';
+    public const VERSION = '0.10.0';
 
     public const DEFAULT_BASE_URL = 'https://api-processing.crypto-chief.com';
 
     private readonly Transport $transport;
     private readonly PsrHttpClient $http;
     private readonly string $userAgent;
+    private readonly string $apiKey;
+    private readonly int $retries;
+    private readonly float $timeoutSec;
+    private readonly float $retryBaseMs;
+    private readonly float $retryMaxMs;
+    /** Sent as `Idempotency-Key` by every call; set by {@see self::withIdempotencyKey()}. */
+    private string $idempotencyKey = '';
     private ?PrivateKey $rsaKey = null;
     private ?CryptoChiefException $rsaError = null;
     private ?TonRpc $tonRpc = null;
@@ -77,10 +85,15 @@ final class Client
         if ($merchantId === '') {
             throw new CryptoChiefException('cryptochief: merchantId is required');
         }
-        if ($apiKey === '') {
+        if (Sign::isBlankApiKey($apiKey)) {
             throw new CryptoChiefException('cryptochief: apiKey is required');
         }
 
+        $this->apiKey = $apiKey;
+        $this->retries = $retries;
+        $this->timeoutSec = $timeoutSec;
+        $this->retryBaseMs = $retryBaseMs;
+        $this->retryMaxMs = $retryMaxMs;
         $this->userAgent = $userAgent ?? 'cryptochief-php/' . self::VERSION;
         $this->http = $httpClient ?? new GuzzleClient([
             'timeout' => $timeoutSec,
@@ -125,17 +138,61 @@ final class Client
     public function webhooks(): WebhooksService             { return $this->webhooks; }
 
     /**
-     * Low-level signed POST against an API path (e.g. `/v1/payout/estimate`).
+     * Low-level signed request against an API path (e.g. `/v1/payout/estimate`).
      *
-     * Canonicalizes + signs the body, sends it, retries transient failures, returns the
-     * decoded JSON. Reach for it directly only to hit an endpoint the SDK doesn't model.
+     * Encodes the body to JSON, signs the bytes sent, retries transient failures, returns
+     * the decoded JSON. Object members whose value is `null` are not sent; `null` sends an
+     * empty body. Reach for it directly only to hit an endpoint the SDK doesn't model.
+     *
+     * `$path` starts with `/` and carries the route without the base URL; a query goes on
+     * it as `?a=1&b=2` and is signed as written, while the path itself is signed
+     * percent-decoded — the form the server reads.
+     *
+     * `$idempotencyKey` is sent as `Idempotency-Key` and covered by the signature; it must
+     * be printable ASCII with no space or tab at either edge. `$method` is signed and sent
+     * in upper case — the processing API answers POST, other Crypto Chief APIs taking the
+     * same credentials answer some routes on GET:
+     *
+     *     $balance = $client->request('/v1/balance', method: 'GET');
      *
      * @param mixed $body
      * @return mixed
      */
-    public function request(string $path, $body = null)
+    public function request(string $path, $body = null, ?string $idempotencyKey = null, string $method = 'POST')
     {
-        return $this->transport->post($path, $body);
+        return $this->transport->request($method, $path, $body, $idempotencyKey ?? $this->idempotencyKey);
+    }
+
+    /**
+     * A copy of this client whose every call sends `Idempotency-Key`, services included.
+     *
+     *     $client->withIdempotencyKey('payout-2026-09-16-0001')->payouts()->execute($req);
+     *
+     * The header is part of the string to sign, so it has to be set before the client signs:
+     * one added by an HTTP middleware is not covered by the signature and the server answers
+     * 401 INVALID_SIGNATURE. The key must be printable ASCII with no space or tab at either
+     * edge; an empty one clears the header. The server keeps the value in the billing record
+     * of the call, up to 255 bytes — it does not deduplicate payouts, `ExecutePayoutRequest`
+     * does that on its `orderId`.
+     */
+    public function withIdempotencyKey(string $idempotencyKey): self
+    {
+        $copy = new self(
+            merchantId: $this->merchantId,
+            apiKey: $this->apiKey,
+            baseUrl: $this->baseUrl,
+            userAgent: $this->userAgent,
+            retries: $this->retries,
+            timeoutSec: $this->timeoutSec,
+            retryBaseMs: $this->retryBaseMs,
+            retryMaxMs: $this->retryMaxMs,
+            httpClient: $this->http,
+            rsaPrivateKey: $this->rsaPrivateKey,
+            tonRpcBaseUrl: $this->tonRpcBaseUrl,
+        );
+        $copy->idempotencyKey = $idempotencyKey;
+
+        return $copy;
     }
 
     /**

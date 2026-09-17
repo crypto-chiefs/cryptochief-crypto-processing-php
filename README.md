@@ -438,16 +438,15 @@ optional.
 ## Webhooks
 
 ```php
-use CryptoChief\Processing\Exception\WebhookSignatureException;
+use CryptoChief\Processing\Exception\WebhookVerificationException;
 use CryptoChief\Processing\Webhook;
 use CryptoChief\Processing\Webhook\PayoutEvent;
 
-$raw       = file_get_contents('php://input') ?: '';   // raw bytes - never re-encode
-$signature = $_SERVER['HTTP_SIGNATURE'] ?? null;
+$raw = file_get_contents('php://input') ?: '';   // raw bytes - never re-encode
 
 try {
-    $event = Webhook::parseEvent($apiKey, $raw, $signature);
-} catch (WebhookSignatureException) {
+    $event = Webhook::parseEvent($apiKey, $raw, Webhook::headersFromGlobals());
+} catch (WebhookVerificationException) {
     http_response_code(401);
     return;
 }
@@ -457,9 +456,44 @@ if ($event instanceof PayoutEvent) {
 }
 ```
 
-Laravel / Symfony are the same shape — pass the request's raw body to
-`Webhook::parseEvent()`. Optionally restrict by source IP:
-`Webhook::SENDER_IPS` lists the production webhook IP addresses.
+Laravel / Symfony: `Webhook::parseEvent($apiKey, $request->getContent(), $request->headers->all())`.
+PSR-7: `Webhook::parseEvent($apiKey, (string) $request->getBody(), $request->getHeaders())`.
+Optionally restrict by source IP: `Webhook::SENDER_IPS` lists the production webhook IP
+addresses.
+
+| Header | Value |
+|---|---|
+| `X-Webhook-Delivery` (`Webhook::DELIVERY_HEADER`) | delivery id, 1-128 characters `[A-Za-z0-9_-]`; the same on every attempt and resend |
+| `X-CC-Timestamp` (`Webhook::TIMESTAMP_HEADER`) | Unix time of the attempt, seconds |
+| `X-CC-Signature` (`Webhook::SIGNATURE_HEADER`) | `v1=<64 hex>` |
+
+```
+string_to_sign = "CC-HMAC-SHA256-WEBHOOK-V1\n" . timestamp . "\n" . delivery_id . "\n" . hex(sha256(raw_body))
+X-CC-Signature = "v1=" . hex(hmac_sha256(key = api_key, message = string_to_sign))
+```
+
+`Webhook::verify($apiKey, $rawBody, $headers, $tolerance = 300, $now = null)` returns
+nothing on success and otherwise throws a `WebhookVerificationException` subclass:
+
+| Exception | Reason |
+|---|---|
+| `WebhookHeadersException` | a signature header is missing, repeated or malformed |
+| `WebhookTimestampException` | `X-CC-Timestamp` is more than `$tolerance` seconds from `$now` |
+| `WebhookSignatureException` | the signature does not match |
+
+`$headers` maps header names in any case to a value or a list of values;
+`Webhook::headersFromGlobals()` builds it from `getallheaders()` when the SAPI provides it,
+otherwise from `$_SERVER`. Headers passed to PHP as CGI variables (`$_SERVER`, FPM, CGI, and
+Symfony / Laravel `$request->headers`) do not distinguish `_` from `-` in a name:
+`X_CC_Timestamp` arrives as `X-CC-Timestamp`. Values are trimmed of spaces and tabs only. The signature is compared in constant time, hex in any case. `$tolerance` <= 0
+means 300; `$now` is Unix seconds, the current time when null. An empty API key throws
+`CryptoChiefException`. `Webhook::parseEvent()` takes the same arguments, verifies, and
+throws `CryptoChiefException` when the body is not a JSON object.
+
+A resend arrives with the same `X-Webhook-Delivery` and a new timestamp; deduplicate by the
+delivery id. `Sign::webhookV1Sign($apiKey, $timestamp, $deliveryId, $rawBody)` returns the
+`X-CC-Signature` value and `Sign::webhookV1StringToSign($timestamp, $deliveryId, $rawBody)`
+the string to sign, for testing a receiver.
 
 ## Errors
 
@@ -481,10 +515,15 @@ try {
 
 A refusal the API decided itself carries the code in `error` and a sentence in `msg`; one
 relayed from an upstream service marks `error` as `SERVICE_ERROR` and puts the code in
-`msg`. Both resolve to `$errorCode`, so every `ErrorCode` case is directly comparable.
-`getMessage()` keeps the sentence and `$raw` the untouched body.
+`msg`. A refusal with an `error` object carries the code in `error.details.code`, else in
+`error.name`, and the sentence in `error.message`. A body without a code gives
+`HTTP_<status>`. All resolve to `$errorCode`, so every `ErrorCode` case is
+directly comparable. `getMessage()` keeps the sentence, `$raw` the untouched body and
+`$serverTime` the `server_time` of `SIGNATURE_TIMESTAMP_OUT_OF_RANGE`.
 
 Only 5xx and network failures retry; 4xx is the caller's fault and surfaces immediately.
+The exception is one resend after `SIGNATURE_TIMESTAMP_OUT_OF_RANGE` (see
+[Request signing](#request-signing)).
 
 ## Credits balance & top-up
 
@@ -551,6 +590,69 @@ $client = new Client(
 
 `httpClient` accepts any `Psr\Http\Client\ClientInterface`. The default is Guzzle 7.
 
+## Request signing
+
+Requests are signed with HMAC-SHA256 v1.
+
+| Header | Value |
+|---|---|
+| `Merchant` | merchant ID |
+| `X-CC-Timestamp` | Unix time, seconds |
+| `X-CC-Nonce` | 32 hex characters, new for every attempt |
+| `X-CC-Signature` | `v1=<64 hex>` |
+
+```
+string_to_sign = "CC-HMAC-SHA256-REQ-V1\n" . timestamp . "\n" . nonce . "\n" . METHOD . "\n"
+               . path . "\n" . query . "\n" . merchant . "\n" . idempotency_key . "\n"
+               . hex(sha256(body))
+X-CC-Signature = "v1=" . hex(hmac_sha256(key = api_key, message = string_to_sign))
+```
+
+`path` is the route path (`/v1/payout/execute`) without the base URL prefix, percent-decoded
+(`/v1/a%20b` is signed as `/v1/a b`). `query` is without `?` (empty if none), exactly as
+sent. `body` is the exact bytes sent. Timestamp, nonce and signature
+are computed on every retry. On `SIGNATURE_TIMESTAMP_OUT_OF_RANGE` the client sets its
+clock offset from `server_time` once and resends the request.
+
+```php
+use CryptoChief\Processing\Sign;
+
+$timestamp = (string) time();
+$nonce     = Sign::hmacV1Nonce();
+$signature = 'v1=' . Sign::hmacV1Sign(
+    apiKey:         $apiKey,
+    timestamp:      $timestamp,
+    nonce:          $nonce,
+    method:         'POST',
+    path:           '/v1/payout/execute',
+    query:          '',
+    merchant:       $merchantId,
+    idempotencyKey: '',
+    body:           $rawBody,
+);
+```
+
+`Sign::hmacV1StringToSign()` takes the same fields without `apiKey`. An `apiKey` that is
+empty or only spaces and tabs is refused.
+
+`$client->request()` sends a signed request with any method, for a route the SDK does not
+model; `Idempotency-Key` goes on one call or on every call of a client copy, and is part of
+the string to sign either way.
+
+```php
+$balance = $client->request('/v1/balance?address=' . $address, method: 'GET');
+
+$client->request('/v1/payout/execute', $body, 'payout-2026-09-16-0001');
+$client->withIdempotencyKey('payout-2026-09-16-0001')->payouts()->execute($req);
+```
+
+The body is the request value encoded with `json_encode()`, `/` and non-ASCII characters
+unescaped, and is sent and signed as is. Object members whose value is `null` are not sent,
+including in `$client->request()` bodies; `null` gives an empty body and a top-level `[]`
+gives `{}`. Integers are sent exactly. A `float` is written by `json_encode()` according to
+the `serialize_precision` ini setting; the default `-1` gives the shortest digits that
+round-trip (`0.1 + 0.2` is sent as `0.30000000000000004`).
+
 ## Documentation
 
 - SDK docs: https://docs-sdk.crypto-chief.com/processing/php
@@ -574,7 +676,8 @@ GitHub organization.
   builds the TEP-74 body, auto-resolves the sender's Jetton wallet via the gateway's TON
   RPC proxy, and picks the gas budget.
 - **How do I verify Crypto Chief webhooks in PHP?** `Webhook::parseEvent($apiKey, $rawBody,
-  $signature)` — re-canonicalizes the body, MD5-verifies, and returns a typed event.
+  Webhook::headersFromGlobals())` — verifies the HMAC-SHA256 signature over the raw body and
+  returns a typed event.
 - **How do I check my API credits balance in PHP?** `$client->credits()->balance()` — free
   of charge, and `canExecuteGasOperations` tells you up front whether gas-paying operations
   would pass the billing gate.

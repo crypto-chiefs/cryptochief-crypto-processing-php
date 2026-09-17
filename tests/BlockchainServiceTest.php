@@ -6,7 +6,7 @@ namespace CryptoChief\Processing\Tests;
 
 use CryptoChief\Processing\ChainFamily;
 use CryptoChief\Processing\Client;
-use CryptoChief\Processing\Sign;
+use CryptoChief\Processing\Tests\Support\SignedRequest;
 use GuzzleHttp\Client as GuzzleClient;
 use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\HandlerStack;
@@ -75,10 +75,10 @@ final class BlockchainServiceTest extends TestCase
         self::assertSame('/v1/blockchains/list', $req->getUri()->getPath());
         self::assertSame('M', $req->getHeaderLine('Merchant'));
 
-        // Nothing to filter by, but the empty body is still canonicalized and signed.
+        // Nothing to filter by: the body is an empty object, signed like every other call.
         $body = (string) $req->getBody();
         self::assertSame('{}', $body);
-        self::assertSame(Sign::sign($body, 'K'), $req->getHeaderLine('Signature'));
+        SignedRequest::assertSignedV1($req);
 
         self::assertCount(4, $chains);
         self::assertSame('ETH_MAINNET', $chains[0]->name);
@@ -171,7 +171,7 @@ final class BlockchainServiceTest extends TestCase
         // like every other request.
         $body = (string) $req->getBody();
         self::assertSame('{}', $body);
-        self::assertSame(Sign::sign($body, 'K'), $req->getHeaderLine('Signature'));
+        SignedRequest::assertSignedV1($req);
 
         self::assertNotNull($out->items);
         self::assertCount(3, $out->items);

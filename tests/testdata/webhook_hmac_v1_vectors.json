@@ -1,0 +1,813 @@
+[
+  {
+    "name": "empty_body",
+    "api_key": "test_api_key_123",
+    "timestamp": 1789430400,
+    "delivery_id": "7c9e6679-7425-40de-944b-e07fc1f90ae7",
+    "body": "",
+    "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "string_to_sign": "CC-HMAC-SHA256-WEBHOOK-V1\n1789430400\n7c9e6679-7425-40de-944b-e07fc1f90ae7\ne3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "signature": "v1=4201876feab27acbe4a02582361f89bb6bf215ae078239651aa9855f2ae4bc77",
+    "now": 1789430400,
+    "expect": "ok"
+  },
+  {
+    "name": "payin_invoice_paid_with_nulls",
+    "api_key": "test_api_key_123",
+    "timestamp": 1789430400,
+    "delivery_id": "7c9e6679-7425-40de-944b-e07fc1f90ae7",
+    "body": "{\"accuracy_payment_percent\":0.5,\"additional_data\":null,\"amount_crypto\":\"25.000000\",\"amount_fiat\":\"25.00\",\"can_cancel\":false,\"coins\":null,\"confirmations\":19,\"confirmed_at\":\"2026-09-15T00:04:09Z\",\"convert\":null,\"created_at\":\"2026-09-15T00:00:00Z\",\"currency\":\"USD\",\"event\":\"invoice.paid\",\"expired_at\":\"2026-09-15T01:00:00Z\",\"fact_amount_crypto\":\"25.000000\",\"fact_amount_fiat\":\"25.00\",\"from_address\":\"TJRabPrwbZy45sbavfcjinPJC18kjpRTv8\",\"has_choices\":false,\"is_expired\":false,\"is_test\":false,\"lifetime\":3600,\"memo\":null,\"mode\":\"fixed\",\"order_id\":\"ORD-2026-000187\",\"paid_at\":\"2026-09-15T00:03:12Z\",\"payment_coin\":\"USDT\",\"payment_link\":\"https://pay.crypto-chief.com/invoice/5b0c7a52-8a1e-4c0e-9d7b-2f3e4a5b6c7d?coin=USDT\\u0026network=TRON_MAINNET\",\"payment_network\":\"TRON_MAINNET\",\"prev_status\":\"confirm_check\",\"required_confirmations\":19,\"status\":\"paid\",\"to_address\":\"TLa2f6VPqDgRE67v1736s7bJ8Ray5wYjU7\",\"txid\":\"b3f1c0a4e5d6978812ab34cd56ef7890a1b2c3d4e5f60718293a4b5c6d7e8f90\",\"type\":\"payin\",\"url_callback\":\"https://shop.example/hooks/cc?shop=12\\u0026sig=a\\u003cb\\u003e\",\"url_error\":null,\"url_success\":\"https://shop.example/pay/success?order=ORD-2026-000187\\u0026lang=ru\",\"user_id\":null,\"uuid\":\"5b0c7a52-8a1e-4c0e-9d7b-2f3e4a5b6c7d\"}",
+    "body_sha256": "229f5bdcefd809cda3c2b32c9f2fbd2d87a1fa5318219ebdbb929d7e4fd5158f",
+    "string_to_sign": "CC-HMAC-SHA256-WEBHOOK-V1\n1789430400\n7c9e6679-7425-40de-944b-e07fc1f90ae7\n229f5bdcefd809cda3c2b32c9f2fbd2d87a1fa5318219ebdbb929d7e4fd5158f",
+    "signature": "v1=cb5ce6374884ac150e637a5cea5ca3a0f67f23a062c721eb30aa5d998d77faae",
+    "now": 1789430400,
+    "expect": "ok"
+  },
+  {
+    "name": "payout_paid",
+    "api_key": "test_api_key_123",
+    "timestamp": 1789430400,
+    "delivery_id": "7c9e6679-7425-40de-944b-e07fc1f90ae7",
+    "body": "{\"amount_requested\":\"150.5\",\"amount_to_receive\":\"150.5\",\"completed_at\":\"2026-09-15T00:05:41Z\",\"confirmations\":12,\"created_at\":\"2026-09-15T00:00:00Z\",\"event\":\"payout.paid\",\"fee_info\":{\"estimated_fiat\":\"0.41\",\"fee_mode\":\"service\",\"limit_currency\":\"USD\",\"limit_fiat\":\"2.00\",\"total_fee_paid_fiat\":\"0.38\"},\"order_id\":\"payout?batch=7\\u0026row=3\",\"required_confirmations\":12,\"service_operations\":[],\"sources\":[{\"address\":\"0x5aAeb6053F3E94C9b9A09f33669435E7Ef1BeAed\",\"amount_crypto\":\"150.5\",\"coin\":\"USDT\",\"confirmations\":12,\"estimated_fee\":\"0.000131\",\"estimated_fee_fiat\":\"0.41\",\"fee_paid\":\"0.000121\",\"fee_paid_fiat\":\"0.38\",\"need_refuel\":false,\"network\":\"ETH_MAINNET\",\"refuel_amount\":\"0\",\"txid\":\"0x9fc76417374aa880d4449a1f7f31ec597f00b1f6f3dd2d66f4c9c6c445836d8b\"}],\"status\":\"paid\",\"to_address\":\"0x8ba1f109551bD432803012645Ac136ddd64DBA72\",\"user_id\":\"user-42\",\"uuid\":\"e2d6a3b1-9c4f-4a8e-b7d5-3f1a2c9e8b70\"}",
+    "body_sha256": "ca5617c4f53ff857b51971e8bad25c206b66fcd7300098abb48ccf7d3cf637d1",
+    "string_to_sign": "CC-HMAC-SHA256-WEBHOOK-V1\n1789430400\n7c9e6679-7425-40de-944b-e07fc1f90ae7\nca5617c4f53ff857b51971e8bad25c206b66fcd7300098abb48ccf7d3cf637d1",
+    "signature": "v1=cffe05958238930b0e72e5a2730de6983dd4fbc9a73a810ffce79ebf7a718b58",
+    "now": 1789430400,
+    "expect": "ok"
+  },
+  {
+    "name": "static_deposit_paid",
+    "api_key": "test_api_key_123",
+    "timestamp": 1789430400,
+    "delivery_id": "7c9e6679-7425-40de-944b-e07fc1f90ae7",
+    "body": "{\"amount\":\"1000000.000001\",\"amount_fiat\":\"1000000.00\",\"block_number\":75329814,\"chain_family\":\"TRON\",\"coin\":\"USDT\",\"confirmations\":20,\"confirmed_at\":\"2026-09-15T00:01:03Z\",\"contract\":\"TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t\",\"created_at\":\"2026-09-15T00:00:00Z\",\"decimals\":6,\"event\":\"static_deposit.paid\",\"found_in_mempool\":false,\"from_address\":\"TNPeeaaFB7K9cmo4uQpcU32zGK8G1NYqeL\",\"log_type\":\"trc20\",\"network\":\"TRON_MAINNET\",\"paid_at\":\"2026-09-15T00:01:03Z\",\"required_confirmations\":19,\"status\":\"paid\",\"to_address\":\"TXYZopYRdj2D9XRtbG411XZZ3kM5VkAeBf\",\"tx_hash\":\"c7a3e1f09b8d6c4a2e0f1d3b5a7c9e1f3d5b7a9c1e3f5d7b9a1c3e5f7d9b1a3c\",\"updated_at\":\"2026-09-15T00:01:03Z\",\"uuid\":\"a4c1e8f2-6b3d-4e9a-8c7f-2d1b0e9a8f76\"}",
+    "body_sha256": "f8969a955811c381bae5ba179598febc91c31e06a242249ab3ee0ba45fb5ce9b",
+    "string_to_sign": "CC-HMAC-SHA256-WEBHOOK-V1\n1789430400\n7c9e6679-7425-40de-944b-e07fc1f90ae7\nf8969a955811c381bae5ba179598febc91c31e06a242249ab3ee0ba45fb5ce9b",
+    "signature": "v1=b2c86c5075253016293eb6d40911f32c2f764b5c57251be1353d932f8a4a9096",
+    "now": 1789430400,
+    "expect": "ok"
+  },
+  {
+    "name": "sweep_confirmed",
+    "api_key": "test_api_key_123",
+    "timestamp": 1789430400,
+    "delivery_id": "7c9e6679-7425-40de-944b-e07fc1f90ae7",
+    "body": "{\"amount_human\":\"1000000.000001\",\"amount_raw\":\"1000000000001\",\"asset_contract\":\"TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t\",\"asset_symbol\":\"USDT\",\"asset_type\":\"trc20\",\"chain_family\":\"TRON\",\"confirmed_at\":\"2026-09-15T00:02:30Z\",\"event\":\"sweep.confirmed\",\"gas_pump_tx_hash\":\"1a3c5e7f9b1d3f5a7c9e1b3d5f7a9c1e3b5d7f9a1c3e5b7d9f1a3c5e7b9d1f3a\",\"network\":\"TRON_MAINNET\",\"required_confirmations\":19,\"status\":\"completed\",\"sweep_confirmations\":21,\"sweep_tx_hash\":\"4e8a2c6f0b1d3e5a7c9f1b3d5e7a9c1f3b5d7e9a1c3f5b7d9e1a3c5f7b9d1e3a\",\"task_id\":\"sweep_01J7ZK3Q8R4M2N6P0T5V9W1X3Y\",\"to_address\":\"TMuA6YqfCeX8EhbfYEg5y7S4DqzSJireY9\",\"total_fee_usd\":\"1.27\",\"type_work\":\"static\",\"wallet_address\":\"TXYZopYRdj2D9XRtbG411XZZ3kM5VkAeBf\"}",
+    "body_sha256": "d1313a68c6ae1b80923305356cafffa41bc66a82e3271273a20779f493f1ff83",
+    "string_to_sign": "CC-HMAC-SHA256-WEBHOOK-V1\n1789430400\n7c9e6679-7425-40de-944b-e07fc1f90ae7\nd1313a68c6ae1b80923305356cafffa41bc66a82e3271273a20779f493f1ff83",
+    "signature": "v1=f78b6707a1d7fb7d43d57982c691c247ba29c3adb5452fbf76725927d6005de2",
+    "now": 1789430400,
+    "expect": "ok"
+  },
+  {
+    "name": "transaction_failed",
+    "api_key": "test_api_key_123",
+    "timestamp": 1789430400,
+    "delivery_id": "7c9e6679-7425-40de-944b-e07fc1f90ae7",
+    "body": "{\"chain_family\":\"EVM\",\"completed_at\":\"2026-09-15T00:00:48Z\",\"confirmations\":0,\"contract\":\"0x10ED43C718714eb63d5aA57B78B54704E256024E\",\"created_at\":\"2026-09-15T00:00:00Z\",\"error_reason\":\"EXECUTION_REVERTED\",\"event\":\"transaction.failed\",\"expires_at\":\"2026-09-15T00:10:00Z\",\"from_address\":\"0x71C7656EC7ab88b098defB751B7401B5f6d8976F\",\"network\":\"BSC_MAINNET\",\"required_confirmations\":15,\"status\":\"failed\",\"to_address\":\"0x10ED43C718714eb63d5aA57B78B54704E256024E\",\"tx_hash\":\"0x5c504ed432cb51138bcf09aa5e8a410dd4a1e204ef84bfed1be16dfba1b22060\",\"type\":\"contract_call\",\"uuid\":\"3d2c1b0a-9f8e-4d7c-b6a5-948372615041\",\"value\":\"0\"}",
+    "body_sha256": "a50d288943cdb2d02d76ecccefc4ff75d4af5aba05c046a8b57ba9c6a5575379",
+    "string_to_sign": "CC-HMAC-SHA256-WEBHOOK-V1\n1789430400\n7c9e6679-7425-40de-944b-e07fc1f90ae7\na50d288943cdb2d02d76ecccefc4ff75d4af5aba05c046a8b57ba9c6a5575379",
+    "signature": "v1=6c327262fa31b9ce36c0859545fb789e843fcf4c6b1a0e6f1ee0d217311ece53",
+    "now": 1789430400,
+    "expect": "ok"
+  },
+  {
+    "name": "body_raw_non_ascii_u2028_emoji_html_chars",
+    "api_key": "test_api_key_123",
+    "timestamp": 1789430400,
+    "delivery_id": "7c9e6679-7425-40de-944b-e07fc1f90ae7",
+    "body": "{\"event\":\"invoice.paid\",\"title\":\"<b>Заказ №1</b> & «ёлка» 🚀\",\"note\":\"line\u2028break\u2029end\",\"url\":\"https://shop.example/cb?a=1&b=2\"}",
+    "body_sha256": "21c3d59126f8b4ab2b641698aefa1ff69d554674d63872d1d40f9cb3bda1c041",
+    "string_to_sign": "CC-HMAC-SHA256-WEBHOOK-V1\n1789430400\n7c9e6679-7425-40de-944b-e07fc1f90ae7\n21c3d59126f8b4ab2b641698aefa1ff69d554674d63872d1d40f9cb3bda1c041",
+    "signature": "v1=539032a3b707cf4c272853735cb98ef2789857020911a25a6a0b89ab56a1c12c",
+    "now": 1789430400,
+    "expect": "ok"
+  },
+  {
+    "name": "body_json_u_escapes_as_sent",
+    "api_key": "test_api_key_123",
+    "timestamp": 1789430400,
+    "delivery_id": "7c9e6679-7425-40de-944b-e07fc1f90ae7",
+    "body": "{\"event\":\"invoice.paid\",\"url\":\"https://shop.example/cb?a=1\\u0026b=2\",\"html\":\"\\u003cb\\u003e\",\"ls\":\"a\\u2028b\",\"emoji\":\"\\ud83d\\ude80\",\"cyr\":\"\\u0417\\u0430\\u043a\\u0430\\u0437\",\"esc\":\"q\\\"b\\\\s\\/\",\"tab\":\"a\\tb\\r\\n\"}",
+    "body_sha256": "1072147bd1c4ffc5ba5fd526fbf37baf510c15ad00acfc5707965725cfb9c77d",
+    "string_to_sign": "CC-HMAC-SHA256-WEBHOOK-V1\n1789430400\n7c9e6679-7425-40de-944b-e07fc1f90ae7\n1072147bd1c4ffc5ba5fd526fbf37baf510c15ad00acfc5707965725cfb9c77d",
+    "signature": "v1=5ae9a6284b17d85fdd115cdccaece79b82c5a015d2e1e595302a690f879ea19e",
+    "now": 1789430400,
+    "expect": "ok"
+  },
+  {
+    "name": "body_whitespace_crlf",
+    "api_key": "test_api_key_123",
+    "timestamp": 1789430400,
+    "delivery_id": "7c9e6679-7425-40de-944b-e07fc1f90ae7",
+    "body": "  {\r\n\t\"event\" : \"invoice.paid\",\r\n  \"uuid\": \"5b0c7a52-8a1e-4c0e-9d7b-2f3e4a5b6c7d\"\n}\r\n\r\n ",
+    "body_sha256": "eff86a11bd01b4146667b19710b6619afe0653a225e77d7355cfc697f63b9c02",
+    "string_to_sign": "CC-HMAC-SHA256-WEBHOOK-V1\n1789430400\n7c9e6679-7425-40de-944b-e07fc1f90ae7\neff86a11bd01b4146667b19710b6619afe0653a225e77d7355cfc697f63b9c02",
+    "signature": "v1=023254ccaffab4d0a28601f3a969c458c7812942c88b81dcb13a1472f6230141",
+    "now": 1789430400,
+    "expect": "ok"
+  },
+  {
+    "name": "body_not_utf8",
+    "api_key": "test_api_key_123",
+    "timestamp": 1789430400,
+    "delivery_id": "7c9e6679-7425-40de-944b-e07fc1f90ae7",
+    "body_base64": "eyJuIjoi//7DKOKCIiwieiI6IgCAIn0=",
+    "body_sha256": "17cd1fe013dba09a91f1ff3f47cb07b92a608a5bb93910618bfd3f5ed7b59d96",
+    "string_to_sign": "CC-HMAC-SHA256-WEBHOOK-V1\n1789430400\n7c9e6679-7425-40de-944b-e07fc1f90ae7\n17cd1fe013dba09a91f1ff3f47cb07b92a608a5bb93910618bfd3f5ed7b59d96",
+    "signature": "v1=bd5f9b6091359ad85d1f4e5958ec687e40e2e9b38308d1bc1ff593e8340c9c4e",
+    "now": 1789430400,
+    "expect": "ok"
+  },
+  {
+    "name": "body_large_65536_bytes",
+    "api_key": "test_api_key_123",
+    "timestamp": 1789430400,
+    "delivery_id": "7c9e6679-7425-40de-944b-e07fc1f90ae7",
+    "body": "{\"event\":\"payout.paid\",\"sources\":[{\"i\":0,\"txid\":\"5feceb66ffc86f38d952786c6d696c79c2dbc239dd4e91b46729d73a27fb57e9\",\"amount\":\"0.000000\"},{\"i\":1,\"txid\":\"6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b\",\"amount\":\"1.007919\"},{\"i\":2,\"txid\":\"d4735e3a265e16eee03f59718b9b5d03019c07d8b6c51f90da3a666eec13ab35\",\"amount\":\"2.015838\"},{\"i\":3,\"txid\":\"4e07408562bedb8b60ce05c1decfe3ad16b72230967de01f640b7e4729b49fce\",\"amount\":\"3.023757\"},{\"i\":4,\"txid\":\"4b227777d4dd1fc61c6f884f48641d02b4d121d3fd328cb08b5531fcacdabf8a\",\"amount\":\"4.031676\"},{\"i\":5,\"txid\":\"ef2d127de37b942baad06145e54b0c619a1f22327b2ebbcfbec78f5564afe39d\",\"amount\":\"5.039595\"},{\"i\":6,\"txid\":\"e7f6c011776e8db7cd330b54174fd76f7d0216b612387a5ffcfb81e6f0919683\",\"amount\":\"6.047514\"},{\"i\":7,\"txid\":\"7902699be42c8a8e46fbbb4501726517e86b22c56a189f7625a6da49081b2451\",\"amount\":\"7.055433\"},{\"i\":8,\"txid\":\"2c624232cdd221771294dfbb310aca000a0df6ac8b66b696d90ef06fdefb64a3\",\"amount\":\"8.063352\"},{\"i\":9,\"txid\":\"19581e27de7ced00ff1ce50b2047e7a567c76b1cbaebabe5ef03f7c3017bb5b7\",\"amount\":\"9.071271\"},{\"i\":10,\"txid\":\"4a44dc15364204a80fe80e9039455cc1608281820fe2b24f1e5233ade6af1dd5\",\"amount\":\"10.079190\"},{\"i\":11,\"txid\":\"4fc82b26aecb47d2868c4efbe3581732a3e7cbcc6c2efb32062c08170a05eeb8\",\"amount\":\"11.087109\"},{\"i\":12,\"txid\":\"6b51d431df5d7f141cbececcf79edf3dd861c3b4069f0b11661a3eefacbba918\",\"amount\":\"12.095028\"},{\"i\":13,\"txid\":\"3fdba35f04dc8c462986c992bcf875546257113072a909c162f7e470e581e278\",\"amount\":\"13.102947\"},{\"i\":14,\"txid\":\"8527a891e224136950ff32ca212b45bc93f69fbb801c3b1ebedac52775f99e61\",\"amount\":\"14.110866\"},{\"i\":15,\"txid\":\"e629fa6598d732768f7c726b4b621285f9c3b85303900aa912017db7617d8bdb\",\"amount\":\"15.118785\"},{\"i\":16,\"txid\":\"b17ef6d19c7a5b1ee83b907c595526dcb1eb06db8227d650d5dda0a9f4ce8cd9\",\"amount\":\"16.126704\"},{\"i\":17,\"txid\":\"4523540f1504cd17100c4835e85b7eefd49911580f8efff0599a8f283be6b9e3\",\"amount\":\"17.134623\"},{\"i\":18,\"txid\":\"4ec9599fc203d176a301536c2e091a19bc852759b255bd6818810a42c5fed14a\",\"amount\":\"18.142542\"},{\"i\":19,\"txid\":\"9400f1b21cb527d7fa3d3eabba93557a18ebe7a2ca4e471cfe5e4c5b4ca7f767\",\"amount\":\"19.150461\"},{\"i\":20,\"txid\":\"f5ca38f748a1d6eaf726b8a42fb575c3c71f1864a8143301782de13da2d9202b\",\"amount\":\"20.158380\"},{\"i\":21,\"txid\":\"6f4b6612125fb3a0daecd2799dfd6c9c299424fd920f9b308110a2c1fbd8f443\",\"amount\":\"21.166299\"},{\"i\":22,\"txid\":\"785f3ec7eb32f30b90cd0fcf3657d388b5ff4297f2f9716ff66e9b69c05ddd09\",\"amount\":\"22.174218\"},{\"i\":23,\"txid\":\"535fa30d7e25dd8a49f1536779734ec8286108d115da5045d77f3b4185d8f790\",\"amount\":\"23.182137\"},{\"i\":24,\"txid\":\"c2356069e9d1e79ca924378153cfbbfb4d4416b1f99d41a2940bfdb66c5319db\",\"amount\":\"24.190056\"},{\"i\":25,\"txid\":\"b7a56873cd771f2c446d369b649430b65a756ba278ff97ec81bb6f55b2e73569\",\"amount\":\"25.197975\"},{\"i\":26,\"txid\":\"5f9c4ab08cac7457e9111a30e4664920607ea2c115a1433d7be98e97e64244ca\",\"amount\":\"26.205894\"},{\"i\":27,\"txid\":\"670671cd97404156226e507973f2ab8330d3022ca96e0c93bdbdb320c41adcaf\",\"amount\":\"27.213813\"},{\"i\":28,\"txid\":\"59e19706d51d39f66711c2653cd7eb1291c94d9b55eb14bda74ce4dc636d015a\",\"amount\":\"28.221732\"},{\"i\":29,\"txid\":\"35135aaa6cc23891b40cb3f378c53a17a1127210ce60e125ccf03efcfdaec458\",\"amount\":\"29.229651\"},{\"i\":30,\"txid\":\"624b60c58c9d8bfb6ff1886c2fd605d2adeb6ea4da576068201b6c6958ce93f4\",\"amount\":\"30.237570\"},{\"i\":31,\"txid\":\"eb1e33e8a81b697b75855af6bfcdbcbf7cbbde9f94962ceaec1ed8af21f5a50f\",\"amount\":\"31.245489\"},{\"i\":32,\"txid\":\"e29c9c180c6279b0b02abd6a1801c7c04082cf486ec027aa13515e4f3884bb6b\",\"amount\":\"32.253408\"},{\"i\":33,\"txid\":\"c6f3ac57944a531490cd39902d0f777715fd005efac9a30622d5f5205e7f6894\",\"amount\":\"33.261327\"},{\"i\":34,\"txid\":\"86e50149658661312a9e0b35558d84f6c6d3da797f552a9657fe0558ca40cdef\",\"amount\":\"34.269246\"},{\"i\":35,\"txid\":\"9f14025af0065b30e47e23ebb3b491d39ae8ed17d33739e5ff3827ffb3634953\",\"amount\":\"35.277165\"},{\"i\":36,\"txid\":\"76a50887d8f1c2e9301755428990ad81479ee21c25b43215cf524541e0503269\",\"amount\":\"36.285084\"},{\"i\":37,\"txid\":\"7a61b53701befdae0eeeffaecc73f14e20b537bb0f8b91ad7c2936dc63562b25\",\"amount\":\"37.293003\"},{\"i\":38,\"txid\":\"aea92132c4cbeb263e6ac2bf6c183b5d81737f179f21efdc5863739672f0f470\",\"amount\":\"38.300922\"},{\"i\":39,\"txid\":\"0b918943df0962bc7a1824c0555a389347b4febdc7cf9d1254406d80ce44e3f9\",\"amount\":\"39.308841\"},{\"i\":40,\"txid\":\"d59eced1ded07f84c145592f65bdf854358e009c5cd705f5215bf18697fed103\",\"amount\":\"40.316760\"},{\"i\":41,\"txid\":\"3d914f9348c9cc0ff8a79716700b9fcd4d2f3e711608004eb8f138bcba7f14d9\",\"amount\":\"41.324679\"},{\"i\":42,\"txid\":\"73475cb40a568e8da8a045ced110137e159f890ac4da883b6b17dc651b3a8049\",\"amount\":\"42.332598\"},{\"i\":43,\"txid\":\"44cb730c420480a0477b505ae68af508fb90f96cf0ec54c6ad16949dd427f13a\",\"amount\":\"43.340517\"},{\"i\":44,\"txid\":\"71ee45a3c0db9a9865f7313dd3372cf60dca6479d46261f3542eb9346e4a04d6\",\"amount\":\"44.348436\"},{\"i\":45,\"txid\":\"811786ad1ae74adfdd20dd0372abaaebc6246e343aebd01da0bfc4c02bf0106c\",\"amount\":\"45.356355\"},{\"i\":46,\"txid\":\"25fc0e7096fc653718202dc30b0c580b8ab87eac11a700cba03a7c021bc35b0c\",\"amount\":\"46.364274\"},{\"i\":47,\"txid\":\"31489056e0916d59fe3add79e63f095af3ffb81604691f21cad442a85c7be617\",\"amount\":\"47.372193\"},{\"i\":48,\"txid\":\"98010bd9270f9b100b6214a21754fd33bdc8d41b2bc9f9dd16ff54d3c34ffd71\",\"amount\":\"48.380112\"},{\"i\":49,\"txid\":\"0e17daca5f3e175f448bacace3bc0da47d0655a74c8dd0dc497a3afbdad95f1f\",\"amount\":\"49.388031\"},{\"i\":50,\"txid\":\"1a6562590ef19d1045d06c4055742d38288e9e6dcd71ccde5cee80f1d5a774eb\",\"amount\":\"50.395950\"},{\"i\":51,\"txid\":\"031b4af5197ec30a926f48cf40e11a7dbc470048a21e4003b7a3c07c5dab1baa\",\"amount\":\"51.403869\"},{\"i\":52,\"txid\":\"41cfc0d1f2d127b04555b7246d84019b4d27710a3f3aff6e7764375b1e06e05d\",\"amount\":\"52.411788\"},{\"i\":53,\"txid\":\"2858dcd1057d3eae7f7d5f782167e24b61153c01551450a628cee722509f6529\",\"amount\":\"53.419707\"},{\"i\":54,\"txid\":\"2fca346db656187102ce806ac732e06a62df0dbb2829e511a770556d398e1a6e\",\"amount\":\"54.427626\"},{\"i\":55,\"txid\":\"02d20bbd7e394ad5999a4cebabac9619732c343a4cac99470c03e23ba2bdc2bc\",\"amount\":\"55.435545\"},{\"i\":56,\"txid\":\"7688b6ef52555962d008fff894223582c484517cea7da49ee67800adc7fc8866\",\"amount\":\"56.443464\"},{\"i\":57,\"txid\":\"c837649cce43f2729138e72cc315207057ac82599a59be72765a477f22d14a54\",\"amount\":\"57.451383\"},{\"i\":58,\"txid\":\"6208ef0f7750c111548cf90b6ea1d0d0a66f6bff40dbef07cb45ec436263c7d6\",\"amount\":\"58.459302\"},{\"i\":59,\"txid\":\"3e1e967e9b793e908f8eae83c74dba9bcccce6a5535b4b462bd9994537bfe15c\",\"amount\":\"59.467221\"},{\"i\":60,\"txid\":\"39fa9ec190eee7b6f4dff1100d6343e10918d044c75eac8f9e9a2596173f80c9\",\"amount\":\"60.475140\"},{\"i\":61,\"txid\":\"d029fa3a95e174a19934857f535eb9427d967218a36ea014b70ad704bc6c8d1c\",\"amount\":\"61.483059\"},{\"i\":62,\"txid\":\"81b8a03f97e8787c53fe1a86bda042b6f0de9b0ec9c09357e107c99ba4d6948a\",\"amount\":\"62.490978\"},{\"i\":63,\"txid\":\"da4ea2a5506f2693eae190d9360a1f31793c98a1adade51d93533a6f520ace1c\",\"amount\":\"63.498897\"},{\"i\":64,\"txid\":\"a68b412c4282555f15546cf6e1fc42893b7e07f271557ceb021821098dd66c1b\",\"amount\":\"64.506816\"},{\"i\":65,\"txid\":\"108c995b953c8a35561103e2014cf828eb654a99e310f87fab94c2f4b7d2a04f\",\"amount\":\"65.514735\"},{\"i\":66,\"txid\":\"3ada92f28b4ceda38562ebf047c6ff05400d4c572352a1142eedfef67d21e662\",\"amount\":\"66.522654\"},{\"i\":67,\"txid\":\"49d180ecf56132819571bf39d9b7b342522a2ac6d23c1418d3338251bfe469c8\",\"amount\":\"67.530573\"},{\"i\":68,\"txid\":\"a21855da08cb102d1d217c53dc5824a3a795c1c1a44e971bf01ab9da3a2acbbf\",\"amount\":\"68.538492\"},{\"i\":69,\"txid\":\"c75cb66ae28d8ebc6eded002c28a8ba0d06d3a78c6b5cbf9b2ade051f0775ac4\",\"amount\":\"69.546411\"},{\"i\":70,\"txid\":\"ff5a1ae012afa5d4c889c50ad427aaf545d31a4fac04ffc1c4d03d403ba4250a\",\"amount\":\"70.554330\"},{\"i\":71,\"txid\":\"7f2253d7e228b22a08bda1f09c516f6fead81df6536eb02fa991a34bb38d9be8\",\"amount\":\"71.562249\"},{\"i\":72,\"txid\":\"8722616204217eddb39e7df969e0698aed8e599ba62ed2de1ce49b03ade0fede\",\"amount\":\"72.570168\"},{\"i\":73,\"txid\":\"96061e92f58e4bdcdee73df36183fe3ac64747c81c26f6c83aada8d2aabb1864\",\"amount\":\"73.578087\"},{\"i\":74,\"txid\":\"eb624dbe56eb6620ae62080c10a273cab73ae8eca98ab17b731446a31c79393a\",\"amount\":\"74.586006\"},{\"i\":75,\"txid\":\"f369cb89fc627e668987007d121ed1eacdc01db9e28f8bb26f358b7d8c4f08ac\",\"amount\":\"75.593925\"},{\"i\":76,\"txid\":\"f74efabef12ea619e30b79bddef89cffa9dda494761681ca862cff2871a85980\",\"amount\":\"76.601844\"},{\"i\":77,\"txid\":\"a88a7902cb4ef697ba0b6759c50e8c10297ff58f942243de19b984841bfe1f73\",\"amount\":\"77.609763\"},{\"i\":78,\"txid\":\"349c41201b62db851192665c504b350ff98c6b45fb62a8a2161f78b6534d8de9\",\"amount\":\"78.617682\"},{\"i\":79,\"txid\":\"98a3ab7c340e8a033e7b37b6ef9428751581760af67bbab2b9e05d4964a8874a\",\"amount\":\"79.625601\"},{\"i\":80,\"txid\":\"48449a14a4ff7d79bb7a1b6f3d488eba397c36ef25634c111b49baf362511afc\",\"amount\":\"80.633520\"},{\"i\":81,\"txid\":\"5316ca1c5ddca8e6ceccfce58f3b8540e540ee22f6180fb89492904051b3d531\",\"amount\":\"81.641439\"},{\"i\":82,\"txid\":\"a46e37632fa6ca51a13fe39a567b3c23b28c2f47d8af6be9bd63e030e214ba38\",\"amount\":\"82.649358\"},{\"i\":83,\"txid\":\"bbb965ab0c80d6538cf2184babad2a564a010376712012bd07b0af92dcd3097d\",\"amount\":\"83.657277\"},{\"i\":84,\"txid\":\"44c8031cb036a7350d8b9b8603af662a4b9cdbd2f96e8d5de5af435c9c35da69\",\"amount\":\"84.665196\"},{\"i\":85,\"txid\":\"b4944c6ff08dc6f43da2e9c824669b7d927dd1fa976fadc7b456881f51bf5ccc\",\"amount\":\"85.673115\"},{\"i\":86,\"txid\":\"434c9b5ae514646bbd91b50032ca579efec8f22bf0b4aac12e65997c418e0dd6\",\"amount\":\"86.681034\"},{\"i\":87,\"txid\":\"bdd2d3af3a5a1213497d4f1f7bfcda898274fe9cb5401bbc0190885664708fc2\",\"amount\":\"87.688953\"},{\"i\":88,\"txid\":\"8b940be7fb78aaa6b6567dd7a3987996947460df1c668e698eb92ca77e425349\",\"amount\":\"88.696872\"},{\"i\":89,\"txid\":\"cd70bea023f752a0564abb6ed08d42c1440f2e33e29914e55e0be1595e24f45a\",\"amount\":\"89.704791\"},{\"i\":90,\"txid\":\"69f59c273b6e669ac32a6dd5e1b2cb63333d8b004f9696447aee2d422ce63763\",\"amount\":\"90.712710\"},{\"i\":91,\"txid\":\"1da51b8d8ff98f6a48f80ae79fe3ca6c26e1abb7b7d125259255d6d2b875ea08\",\"amount\":\"91.720629\"},{\"i\":92,\"txid\":\"8241649609f88ccd2a0a5b233a07a538ec313ff6adf695aa44a969dbca39f67d\",\"amount\":\"92.728548\"},{\"i\":93,\"txid\":\"6e4001871c0cf27c7634ef1dc478408f642410fd3a444e2a88e301f5c4a35a4d\",\"amount\":\"93.736467\"},{\"i\":94,\"txid\":\"e3d6c4d4599e00882384ca981ee287ed961fa5f3828e2adb5e9ea890ab0d0525\",\"amount\":\"94.744386\"},{\"i\":95,\"txid\":\"ad48ff99415b2f007dc35b7eb553fd1eb35ebfa2f2f308acd9488eeb86f71fa8\",\"amount\":\"95.752305\"},{\"i\":96,\"txid\":\"7b1a278f5abe8e9da907fc9c29dfd432d60dc76e17b0fabab659d2a508bc65c4\",\"amount\":\"96.760224\"},{\"i\":97,\"txid\":\"d6d824abba4afde81129c71dea75b8100e96338da5f416d2f69088f1960cb091\",\"amount\":\"97.768143\"},{\"i\":98,\"txid\":\"29db0c6782dbd5000559ef4d9e953e300e2b479eed26d887ef3f92b921c06a67\",\"amount\":\"98.776062\"},{\"i\":99,\"txid\":\"8c1f1046219ddd216a023f792356ddf127fce372a72ec9b4cdac989ee5b0b455\",\"amount\":\"99.783981\"},{\"i\":100,\"txid\":\"ad57366865126e55649ecb23ae1d48887544976efea46a48eb5d85a6eeb4d306\",\"amount\":\"100.791900\"},{\"i\":101,\"txid\":\"16dc368a89b428b2485484313ba67a3912ca03f2b2b42429174a4f8b3dc84e44\",\"amount\":\"101.799819\"},{\"i\":102,\"txid\":\"37834f2f25762f23e1f74a531cbe445db73d6765ebe60878a7dfbecd7d4af6e1\",\"amount\":\"102.807738\"},{\"i\":103,\"txid\":\"454f63ac30c8322997ef025edff6abd23e0dbe7b8a3d5126a894e4a168c1b59b\",\"amount\":\"103.815657\"},{\"i\":104,\"txid\":\"5ef6fdf32513aa7cd11f72beccf132b9224d33f271471fff402742887a171edf\",\"amount\":\"104.823576\"},{\"i\":105,\"txid\":\"1253e9373e781b7500266caa55150e08e210bc8cd8cc70d89985e3600155e860\",\"amount\":\"105.831495\"},{\"i\":106,\"txid\":\"482d9673cfee5de391f97fde4d1c84f9f8d6f2cf0784fcffb958b4032de7236c\",\"amount\":\"106.839414\"},{\"i\":107,\"txid\":\"3346f2bbf6c34bd2dbe28bd1bb657d0e9c37392a1d5ec9929e6a5df4763ddc2d\",\"amount\":\"107.847333\"},{\"i\":108,\"txid\":\"9537f32ec7599e1ae953af6c9f929fe747ff9dadf79a9beff1f304c550173011\",\"amount\":\"108.855252\"},{\"i\":109,\"txid\":\"0fd42b3f73c448b34940b339f87d07adf116b05c0227aad72e8f0ee90533e699\",\"amount\":\"109.863171\"},{\"i\":110,\"txid\":\"9bdb2af6799204a299c603994b8e400e4b1fd625efdb74066cc869fee42c9df3\",\"amount\":\"110.871090\"},{\"i\":111,\"txid\":\"f6e0a1e2ac41945a9aa7ff8a8aaa0cebc12a3bcc981a929ad5cf810a090e11ae\",\"amount\":\"111.879009\"},{\"i\":112,\"txid\":\"b1556dea32e9d0cdbfed038fd7787275775ea40939c146a64e205bcb349ad02f\",\"amount\":\"112.886928\"},{\"i\":113,\"txid\":\"6c658ee83fb7e812482494f3e416a876f63f418a0b8a1f5e76d47ee4177035cb\",\"amount\":\"113.894847\"},{\"i\":114,\"txid\":\"9f1f9dce319c4700ef28ec8c53bd3cc8e6abe64c68385479ab89215806a5bdd6\",\"amount\":\"114.902766\"},{\"i\":115,\"txid\":\"28dae7c8bde2f3ca608f86d0e16a214dee74c74bee011cdfdd46bc04b655bc14\",\"amount\":\"115.910685\"},{\"i\":116,\"txid\":\"e5b861a6d8a966dfca7e7341cd3eb6be9901688d547a72ebed0b1f5e14f3d08d\",\"amount\":\"116.918604\"},{\"i\":117,\"txid\":\"2ac878b0e2180616993b4b6aa71e61166fdc86c28d47e359d0ee537eb11d46d3\",\"amount\":\"117.926523\"},{\"i\":118,\"txid\":\"85daaf6f7055cd5736287faed9603d712920092c4f8fd0097ec3b650bf27530e\",\"amount\":\"118.934442\"},{\"i\":119,\"txid\":\"3038bfb575bee6a0e61945eff8784835bb2c720634e42734678c083994b7f018\",\"amount\":\"119.942361\"},{\"i\":120,\"txid\":\"2abaca4911e68fa9bfbf3482ee797fd5b9045b841fdff7253557c5fe15de6477\",\"amount\":\"120.950280\"},{\"i\":121,\"txid\":\"89aa1e580023722db67646e8149eb246c748e180e34a1cf679ab0b41a416d904\",\"amount\":\"121.958199\"},{\"i\":122,\"txid\":\"1be00341082e25c4e251ca6713e767f7131a2823b0052caf9c9b006ec512f6cb\",\"amount\":\"122.966118\"},{\"i\":123,\"txid\":\"a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3\",\"amount\":\"123.974037\"},{\"i\":124,\"txid\":\"6affdae3b3c1aa6aa7689e9b6a7b3225a636aa1ac0025f490cca1285ceaf1487\",\"amount\":\"124.981956\"},{\"i\":125,\"txid\":\"0f8ef3377b30fc47f96b48247f463a726a802f62f3faa03d56403751d2f66c67\",\"amount\":\"125.989875\"},{\"i\":126,\"txid\":\"65a699905c02619370bcf9207f5a477c3d67130ca71ec6f750e07fe8d510b084\",\"amount\":\"126.997794\"},{\"i\":127,\"txid\":\"922c7954216ccfe7a61def609305ce1dc7c67e225f873f256d30d7a8ee4f404c\",\"amount\":\"127.005713\"},{\"i\":128,\"txid\":\"2747b7c718564ba5f066f0523b03e17f6a496b06851333d2d59ab6d863225848\",\"amount\":\"128.013632\"},{\"i\":129,\"txid\":\"6566230e3a3ce3774c1bbc7c18b590ae0f457bbcd511e90e3e7dca2a02e7addc\",\"amount\":\"129.021551\"},{\"i\":130,\"txid\":\"38d66d9692ac590000a91b03a88da1c88d51fab2b78f63171f553ecc551a0c6f\",\"amount\":\"130.029470\"},{\"i\":131,\"txid\":\"eeca91fd439b6d5e827e8fda7fee35046f2def93508637483f6be8a2df7a4392\",\"amount\":\"131.037389\"},{\"i\":132,\"txid\":\"dbb1ded63bc70732626c5dfe6c7f50ced3d560e970f30b15335ac290358748f6\",\"amount\":\"132.045308\"},{\"i\":133,\"txid\":\"d2f483672c0239f6d7dd3c9ecee6deacbcd59185855625902a8b1c1a3bd67440\",\"amount\":\"133.053227\"},{\"i\":134,\"txid\":\"5d389f5e2e34c6b0bad96581c22cee0be36dcf627cd73af4d4cccacd9ef40cc3\",\"amount\":\"134.061146\"},{\"i\":135,\"txid\":\"13671077b66a29874a2578b5240319092ef2a1043228e433e9b006b5e53e7513\",\"amount\":\"135.069065\"},{\"i\":136,\"txid\":\"36ebe205bcdfc499a25e6923f4450fa8d48196ceb4fa0ce077d9d8ec4a36926d\",\"amount\":\"136.076984\"},{\"i\":137,\"txid\":\"d80eae6e96d148b3b2abbbc6760077b66c4ea071f847dab573d507a32c4d99a5\",\"amount\":\"137.084903\"},{\"i\":138,\"txid\":\"d6a4031733610bb080d0bfa794fcc9dbdcff74834aeaab7c6b927e21e9754037\",\"amount\":\"138.092822\"},{\"i\":139,\"txid\":\"8d27ba37c5d810106b55f3fd6cdb35842007e88754184bfc0e6035f9bcede633\",\"amount\":\"139.100741\"},{\"i\":140,\"txid\":\"dbae772db29058a88f9bd830e957c695347c41b6162a7eb9a9ea13def34be56b\",\"amount\":\"140.108660\"},{\"i\":141,\"txid\":\"2c7d5490e6050836f8f2f0d496b1c8d6a38d4ffac2b898e6e77751bdcd20ebf5\",\"amount\":\"141.116579\"},{\"i\":142,\"txid\":\"d4ee9f58e5860574ca98e3b4839391e7a356328d4bd6afecefc2381df5f5b41b\",\"amount\":\"142.124498\"},{\"i\":143,\"txid\":\"d6f0c71ef0c88e45e4b3a2118fcb83b0def392d759c901e9d755d0e879028727\",\"amount\":\"143.132417\"},{\"i\":144,\"txid\":\"5ec1a0c99d428601ce42b407ae9c675e0836a8ba591c8ca6e2a2cf5563d97ff0\",\"amount\":\"144.140336\"},{\"i\":145,\"txid\":\"be47addbcb8f60566a3d7fd5a36f8195798e2848b368195d9a5d20e007c59a0c\",\"amount\":\"145.148255\"},{\"i\":146,\"txid\":\"0a5b046d07f6f971b7776de682f57c5b9cdc8fa060db7ef59de82e721c8098f4\",\"amount\":\"146.156174\"},{\"i\":147,\"txid\":\"1d28c120568c10e19b9d8abe8b66d0983fa3d2e11ee7751aca50f83c6f4a43aa\",\"amount\":\"147.164093\"},{\"i\":148,\"txid\":\"ec2e990b934dde55cb87300629cedfc21b15cd28bbcf77d8bbdc55359d7689da\",\"amount\":\"148.172012\"},{\"i\":149,\"txid\":\"05ada863a4cf9660fd8c68e2295f1d35b2264815f5b605003d6625bd9e0492cf\",\"amount\":\"149.179931\"},{\"i\":150,\"txid\":\"9ae2bdd7beedc2e766c6b76585530e16925115707dc7a06ab5ee4aa2776b2c7b\",\"amount\":\"150.187850\"},{\"i\":151,\"txid\":\"8e612bd1f5d132a339575b8dafb7842c64614e56bcf3d5ab65a0bc4b34329407\",\"amount\":\"151.195769\"},{\"i\":152,\"txid\":\"043066daf2109523a7490d4bfad4766da5719950a2b5f96d192fc0537e84f32a\",\"amount\":\"152.203688\"},{\"i\":153,\"txid\":\"620c9c332101a5bae955c66ae72268fbcd3972766179522c8deede6a249addb7\",\"amount\":\"153.211607\"},{\"i\":154,\"txid\":\"1d0ebea552eb43d0b1e1561f6de8ae92e3de7f1abec52399244d1caed7dbdfa6\",\"amount\":\"154.219526\"},{\"i\":155,\"txid\":\"210e3b160c355818509425b9d9e9fd3ea2e287f2c43a13e5be8817140db0b9e6\",\"amount\":\"155.227445\"},{\"i\":156,\"txid\":\"0fecf9247f3ddc84db8a804fa3065c013baf6b7c2458c2ba2bf56c2e1d42ddd4\",\"amount\":\"156.235364\"},{\"i\":157,\"txid\":\"c75de23d89df36ba921287616ee8edb4c986e328a78e033e57c1e5e2b59c838e\",\"amount\":\"157.243283\"},{\"i\":158,\"txid\":\"7ed8f0f3b707956d9fb1e889e11153e0aa0a854983081d262fbe5eede32da7ca\",\"amount\":\"158.251202\"},{\"i\":159,\"txid\":\"ff2ccb6ba423d356bd549ed4bfb76e96976a0dcde05a09996a1cdb9f83422ec4\",\"amount\":\"159.259121\"},{\"i\":160,\"txid\":\"a512db2741cd20693e4b16f19891e72b9ff12cead72761fc5e92d2aaf34740c1\",\"amount\":\"160.267040\"},{\"i\":161,\"txid\":\"bb668ca95563216088b98a62557fa1e26802563f3919ac78ae30533bb9ed422c\",\"amount\":\"161.274959\"},{\"i\":162,\"txid\":\"79d6eaa2676189eb927f2e16a70091474078e2117c3fc607d35cdc6b591ef355\",\"amount\":\"162.282878\"},{\"i\":163,\"txid\":\"3d3286f7cd19074f04e514b0c6c237e757513fb32820698b790e1dec801d947a\",\"amount\":\"163.290797\"},{\"i\":164,\"txid\":\"3f9807cb9ae9fb6c30942af6139909d27753a5e03fe5a5c6e93b014f5b17366f\",\"amount\":\"164.298716\"},{\"i\":165,\"txid\":\"bc52dd634277c4a34a2d6210994a9a5e2ab6d33bb4a3a8963410e00ca6c15a02\",\"amount\":\"165.306635\"},{\"i\":166,\"txid\":\"e0f05da93a0f5a86a3be5fc0e301606513c9f7e59dac2357348aa0f2f47db984\",\"amount\":\"166.314554\"},{\"i\":167,\"txid\":\"73d3f1ba062585bce51f77d70a26be88c44b55d70f81b8bd7e2ded030ca4454a\",\"amount\":\"167.322473\"},{\"i\":168,\"txid\":\"80c3cd40fa35f9088b8741bd8be6153de05f661cfeeb4625ffbf5f4a6c3c02c4\",\"amount\":\"168.330392\"},{\"i\":169,\"txid\":\"f57e5cb1f4532c008183057ecc94283801fcb5afe2d1c190e3dfd38c4da08042\",\"amount\":\"169.338311\"},{\"i\":170,\"txid\":\"734d0759cdb4e0d0a35e4fd73749aee287e4fdcc8648b71a8d6ed591b7d4cb3f\",\"amount\":\"170.346230\"},{\"i\":171,\"txid\":\"284de502c9847342318c17d474733ef468fbdbe252cddf6e4b4be0676706d9d0\",\"amount\":\"171.354149\"},{\"i\":172,\"txid\":\"68519a9eca55c68c72658a2a1716aac3788c289859d46d6f5c3f14760fa37c9e\",\"amount\":\"172.362068\"},{\"i\":173,\"txid\":\"4a8596a7790b5ca9e067da401c018b3206befbcf95c38121854d1a0158e7678a\",\"amount\":\"173.369987\"},{\"i\":174,\"txid\":\"41e521adf8ae7a0f419ee06e1d9fb794162369237b46f64bf5b2b9969b0bcd2e\",\"amount\":\"174.377906\"},{\"i\":175,\"txid\":\"dac53c17c250fd4d4d81eaf6d88435676dac1f3f3896441e277af839bf50ed8a\",\"amount\":\"175.385825\"},{\"i\":176,\"txid\":\"cba28b89eb859497f544956d64cf2ecf29b76fe2ef7175b33ea59e64293a4461\",\"amount\":\"176.393744\"},{\"i\":177,\"txid\":\"8cd2510271575d8430c05368315a87b9c4784c7389a47496080c1e615a2a00b6\",\"amount\":\"177.401663\"},{\"i\":178,\"txid\":\"01d54579da446ae1e75cda808cd188438834fa6249b151269db0f9123c9ddc61\",\"amount\":\"178.409582\"},{\"i\":179,\"txid\":\"3068430da9e4b7a674184035643d9e19af3dc7483e31cc03b35f75268401df77\",\"amount\":\"179.417501\"},{\"i\":180,\"txid\":\"7b69759630f869f2723875f873935fed29d2d12b10ef763c1c33b8e0004cb405\",\"amount\":\"180.425420\"},{\"i\":181,\"txid\":\"580811fa95269f3ecd4f22d176e079d36093573680b6ef66fa341e687a15b5da\",\"amount\":\"181.433339\"},{\"i\":182,\"txid\":\"bfa7634640c53da7cb5e9c39031128c4e583399f936896f27f999f1d58d7b37e\",\"amount\":\"182.441258\"},{\"i\":183,\"txid\":\"b8aed072d29403ece56ae9641638ddd50d420f950bde0eefc092ee8879554141\",\"amount\":\"183.449177\"},{\"i\":184,\"txid\":\"52f11620e397f867b7d9f19e48caeb64658356a6b5d17138c00dd9feaf5d7ad6\",\"amount\":\"184.457096\"},{\"i\":185,\"txid\":\"61a229bae1e90331edd986b6bbbe617f7035de88a5bf7c018c3add6c762a6e8d\",\"amount\":\"185.465015\"},{\"i\":186,\"txid\":\"2811745d7b8d8874f6e653d176cefdd19e05e920ce389b9b7e83e5b2dfa546c7\",\"amount\":\"186.472934\"},{\"i\":187,\"txid\":\"38b2d03f3256502b1e9db02b2d12aa27a46033ffe6d8c0ef0f2cf6b1530be9d8\",\"amount\":\"187.480853\"},{\"i\":188,\"txid\":\"d6061bbee6cf13bd73765faaea7cdd0af1323e4b125342ac346047f7c4bda1fc\",\"amount\":\"188.488772\"},{\"i\":189,\"txid\":\"7045d16ae7f043ec25774a0a85d6f479e5bb019e9c5a1584bc76736d116b8f33\",\"amount\":\"189.496691\"},{\"i\":190,\"txid\":\"2397346b45823e070f6fc72ac94c0a999d234c472479f0e26b30cdf5942db854\",\"amount\":\"190.504610\"},{\"i\":191,\"txid\":\"70260742c2952154c84e2ea9f68b1a7397f49b6d343da1ed284093c0bd72c742\",\"amount\":\"191.512529\"},{\"i\":192,\"txid\":\"eb3be230bbd2844b1f5d8f2e4fab9ffba8ab22cfeeb69c4c1361993ba4f377b9\",\"amount\":\"192.520448\"},{\"i\":193,\"txid\":\"684fe39f03758de6a882ae61fa62312b67e5b1e665928cbf3dc3d8f4f53e3562\",\"amount\":\"193.528367\"},{\"i\":194,\"txid\":\"7559ca4a957c8c82ba04781cd66a68d6022229fca0e8e88d8e487c96ee4446d0\",\"amount\":\"194.536286\"},{\"i\":195,\"txid\":\"1dfacb2ea5a03e0a915999e03b5a56196f1b1664d2f768d1b7eff60ac059789d\",\"amount\":\"195.544205\"},{\"i\":196,\"txid\":\"b4bbe448fde336bb6a7d7d765f36d3327c772b845e7b54c8282aa08c9775ddd7\",\"amount\":\"196.552124\"},{\"i\":197,\"txid\":\"8bcbb4c131df56f7c79066016241cc4bdf4e58db55c4f674e88b22365bd2e2ad\",\"amount\":\"197.560043\"},{\"i\":198,\"txid\":\"a4e00d7e6aa82111575438c5e5d3e63269d4c475c718b2389f6d02932c47f8a6\",\"amount\":\"198.567962\"},{\"i\":199,\"txid\":\"5a39cadd1b007093db50744797c7a04a34f73b35ed444704206705b02597d6fd\",\"amount\":\"199.575881\"},{\"i\":200,\"txid\":\"27badc983df1780b60c2b3fa9d3a19a00e46aac798451f0febdca52920faaddf\",\"amount\":\"200.583800\"},{\"i\":201,\"txid\":\"43974ed74066b207c30ffd0fed5146762e6c60745ac977004bc14507c7c42b50\",\"amount\":\"201.591719\"},{\"i\":202,\"txid\":\"c17edaae86e4016a583e098582f6dbf3eccade8ef83747df9ba617ded9d31309\",\"amount\":\"202.599638\"},{\"i\":203,\"txid\":\"4621c1d55fa4e86ce0dae4288302641baac86dd53f76227c892df9d300682d41\",\"amount\":\"203.607557\"},{\"i\":204,\"txid\":\"fc56dbc6d4652b315b86b71c8d688c1ccdea9c5f1fd07763d2659fde2e2fc49a\",\"amount\":\"204.615476\"},{\"i\":205,\"txid\":\"f8809aff4d69bece79dabe35be0c708b890d7eafb841f121330667b77d2e2590\",\"amount\":\"205.623395\"},{\"i\":206,\"txid\":\"5cf4e26bd3d87da5e03f80a43a64f1220a1f4ba9e1d6348caea83c06353c3f39\",\"amount\":\"206.631314\"},{\"i\":207,\"txid\":\"968076be2e38cf897d4d6cea3faca9c037e1a4e3b4b7744fb2533e07751bd30a\",\"amount\":\"207.639233\"},{\"i\":208,\"txid\":\"8df66f64b57424391d363fd6b811fed3c430c77597da265025728bd637bad804\",\"amount\":\"208.647152\"},{\"i\":209,\"txid\":\"83f814f7a92e365cbd79f9addceed185761a8d38a06a2d4350bb1fe4b7632b34\",\"amount\":\"209.655071\"},{\"i\":210,\"txid\":\"d29d53701d3c859e29e1b90028eec1ca8e2f29439198b6e036c60951fb458aa1\",\"amount\":\"210.662990\"},{\"i\":211,\"txid\":\"093434a3ee9e0a010bb2c2aae06c2614dd24894062a1caf26718a01e175569b8\",\"amount\":\"211.670909\"},{\"i\":212,\"txid\":\"fa2b7af0a811b9acde602aacb78e3638e8506dfead5fe6c3425b10b526f94bdd\",\"amount\":\"212.678828\"},{\"i\":213,\"txid\":\"d48ff4b2f68a10fd7c86f185a6ccede0dc0f2c48538d697cb33b6ada3f1e85db\",\"amount\":\"213.686747\"},{\"i\":214,\"txid\":\"802b906a18591ead8a6dd809b262ace4c65c16e89764c40ae326cfcff811e10c\",\"amount\":\"214.694666\"},{\"i\":215,\"txid\":\"d86580a57f7bf542e85202283cb845953c9d28f80a8e651db08b2fc0b2d6a731\",\"amount\":\"215.702585\"},{\"i\":216,\"txid\":\"0f4121d0ef1df4c86854c7ebb47ae1c93de8aec8f944035eeaa6495dd71a0678\",\"amount\":\"216.710504\"},{\"i\":217,\"txid\":\"16badfc6202cb3f8889e0f2779b19218af4cbb736e56acadce8148aba9a7a9f8\",\"amount\":\"217.718423\"},{\"i\":218,\"txid\":\"5966abd0cbfc86f98a186531b2b4ee5f6e910120ce13222f98207203dfc9a9a2\",\"amount\":\"218.726342\"},{\"i\":219,\"txid\":\"314f04b30f62e0056bd059354a5536fb2e302107eed143b5fa2aa0bbba07f608\",\"amount\":\"219.734261\"},{\"i\":220,\"txid\":\"36790ecd55c2030dc553685bef719df653f413a20cdad1bfd1dc934c76686ddd\",\"amount\":\"220.742180\"},{\"i\":221,\"txid\":\"67e9c3acebb154a282f326d4ff1951cd1f342e58e74d562b556b517da5e56132\",\"amount\":\"221.750099\"},{\"i\":222,\"txid\":\"9b871512327c09ce91dd649b3f96a63b7408ef267c8cc5710114e629730cb61f\",\"amount\":\"222.758018\"},{\"i\":223,\"txid\":\"56f4da26ed956730309fa1488611ee0f13b0ac95ebb1bc9b5d210e31ff70e79c\",\"amount\":\"223.765937\"},{\"i\":224,\"txid\":\"84a5092e4a5b6fe968fd523fb2fc917dbffae44105f82b6b94c8ed5b9a800223\",\"amount\":\"224.773856\"},{\"i\":225,\"txid\":\"0e6523810856a138a75dec70a9cf3778a5c70b83ac915f22c33f05db97cb3e68\",\"amount\":\"225.781775\"},{\"i\":226,\"txid\":\"8f1f64db81c40ea10e1e9080c9ae60a7acb8925968c431ee16784dea9841c66f\",\"amount\":\"226.789694\"},{\"i\":227,\"txid\":\"dfe62e836a0a6f2633422230c81287700a56e2639652c73f264e6562220c207a\",\"amount\":\"227.797613\"},{\"i\":228,\"txid\":\"9d693eeee1d1899cbc50b6d45df953d3835acf28ee869879b45565fccc814765\",\"amount\":\"228.805532\"},{\"i\":229,\"txid\":\"08490295488a1189099751ebeddb5992313dd2a831e07a92e66d196ddc261777\",\"amount\":\"229.813451\"},{\"i\":230,\"txid\":\"a0eaec5a55dc2f5b2ba523018adc485ff620b9d83509b9f37186a7716e438d21\",\"amount\":\"230.821370\"},{\"i\":231,\"txid\":\"138d9e809e386a7b800791d1f664f56d1c55f3d1ba411b950862729bc486c5ce\",\"amount\":\"231.829289\"},{\"i\":232,\"txid\":\"835d5e8314340ab852a2f979ab4cd53e994dbe38366afb6eed84fe4957b980c8\",\"amount\":\"232.837208\"},{\"i\":233,\"txid\":\"c0509a487a18b003ba05e505419ebb63e57a29158073e381f57160b5c5b86426\",\"amount\":\"233.845127\"},{\"i\":234,\"txid\":\"114bd151f8fb0c58642d2170da4ae7d7c57977260ac2cc8905306cab6b2acabc\",\"amount\":\"234.853046\"},{\"i\":235,\"txid\":\"0a2d643bfd24a028cd236e76575d828424ccffbfa47392bd09d8ca9dc85e2f8d\",\"amount\":\"235.860965\"},{\"i\":236,\"txid\":\"9a049b03f6fc40bfcf2f136320359257ed4af8513f71aa6fef47f17059bbae23\",\"amount\":\"236.868884\"},{\"i\":237,\"txid\":\"f0bc318fb8965cad8d73d578cd03c63b7987dc6a79b906aada091e1b6a13443f\",\"amount\":\"237.876803\"},{\"i\":238,\"txid\":\"8ae4c23b80d1e7c8ff79e515fe791ebd68190bae842dda7af193db125f700452\",\"amount\":\"238.884722\"},{\"i\":239,\"txid\":\"79bf08685d3138f9b109c3546780f056bc954fd69377b84a2cf23622e464897b\",\"amount\":\"239.892641\"},{\"i\":240,\"txid\":\"6af1f692e9496c6d0b668316eccb93276ae6b6774fa728aac31ff40a38318760\",\"amount\":\"240.900560\"},{\"i\":241,\"txid\":\"749fc650cacb0f06547520d53c31505c8156e0a3be07073eddb2ef3ad9e383ba\",\"amount\":\"241.908479\"},{\"i\":242,\"txid\":\"14063697603e22d600d336bee6cff12c8be93509ce84a0642918d89b2aef1753\",\"amount\":\"242.916398\"},{\"i\":243,\"txid\":\"72440a20f54075ac43f51a2cf0dbb2a14366b38a5c01b110ae174abc1cb44238\",\"amount\":\"243.924317\"},{\"i\":244,\"txid\":\"82c01ce15b431d420eb6a1febfba7d7a2b69e5bcdcb929cb42cd3e9179d43fc4\",\"amount\":\"244.932236\"},{\"i\":245,\"txid\":\"011af72a910ac4acf367eef9e6b761e0980842c30d4e9809840f4141d5163ede\",\"amount\":\"245.940155\"},{\"i\":246,\"txid\":\"37c20f19f3272b5ccc3a5d80587eb9deb3f4afcf568c4280fb195568da8eb1a2\",\"amount\":\"246.948074\"},{\"i\":247,\"txid\":\"396f804443825586c1283a27fdcadf74abb82008bcd9b260a30912a26563f27d\",\"amount\":\"247.955993\"},{\"i\":248,\"txid\":\"766cb53c753baedac5dc782593e04694b3bae3aed057ac2ff98cc1aef6413137\",\"amount\":\"248.963912\"},{\"i\":249,\"txid\":\"9f484139a27415ae2e8612bf6c65a8101a18eb5e9b7809e74ca63a45a65f17f4\",\"amount\":\"249.971831\"},{\"i\":250,\"txid\":\"1e472b39b105d349bcd069c4a711b44a2fffb8e274714bb07ecfff69a9a7f67b\",\"amount\":\"250.979750\"},{\"i\":251,\"txid\":\"c75d3f1f5bcd6914d0331ce5ec17c0db8f2070a2d4285f8e3ff11c6ca19168ff\",\"amount\":\"251.987669\"},{\"i\":252,\"txid\":\"d6e5a20b30f87216b2c758f5e7a23c437dbc3dfa1ccb177c474de152bb0ef731\",\"amount\":\"252.995588\"},{\"i\":253,\"txid\":\"e7866fdc6672f827c76f6124ca3eeaff44aff8b7caf4ee1469b2ab887e7e7875\",\"amount\":\"253.003507\"},{\"i\":254,\"txid\":\"9512d95d00d61bdec03d2b99d6ecc455ee5644ae52d10e7c4a61c93062dc97a3\",\"amount\":\"254.011426\"},{\"i\":255,\"txid\":\"9556b82499cc0aaf86aee7f0d253e17c61b7ef73d48a295f37d98f08b04ffa7f\",\"amount\":\"255.019345\"},{\"i\":256,\"txid\":\"51e8ea280b44e16934d4d611901f3d3afc41789840acdff81942c2f65009cd52\",\"amount\":\"256.027264\"},{\"i\":257,\"txid\":\"4c970004b0678d439f177e77d3cabdb7e9a44df770948ddc2467cbc76b7211c3\",\"amount\":\"257.035183\"},{\"i\":258,\"txid\":\"a30f4ef42176d28f0e2293533c5f532e9c9c5696c68813b35315d17edc44f6b1\",\"amount\":\"258.043102\"},{\"i\":259,\"txid\":\"7c252ab334fb8fd88e8242c4972c21db9c7ce0b47c9acc4ebfe40c14614cb734\",\"amount\":\"259.051021\"},{\"i\":260,\"txid\":\"39bb88f40d3aa2b2fe9dea67be27c74765db0ebb3ff3cf8fb779af6319fa2045\",\"amount\":\"260.058940\"},{\"i\":261,\"txid\":\"e888a676e1926d0c08b5f11fb9116df58b62604b05846f39f8d6fc4dd0ba31f1\",\"amount\":\"261.066859\"},{\"i\":262,\"txid\":\"9e6a72557ada15d02001f024f43f06edc4a31437e0e1bb3eeac36ca2d0c4fda7\",\"amount\":\"262.074778\"},{\"i\":263,\"txid\":\"4be84111a613654b362415e563cb7607df7b203b5d303802a8a546061bbc7847\",\"amount\":\"263.082697\"},{\"i\":264,\"txid\":\"bba58959c32abe688d9cb5222b97de973002a67c412d6a8c8d2a79ac692f32b7\",\"amount\":\"264.090616\"},{\"i\":265,\"txid\":\"768b84ef05f655d57fe22d488451f075365f6cd18a13073466aa826cc0ebdbfb\",\"amount\":\"265.098535\"},{\"i\":266,\"txid\":\"ea5b27556fbb134def2c2fbf944d9cdda3dbdb6b10473a1aec59f6f170c4ca3a\",\"amount\":\"266.106454\"},{\"i\":267,\"txid\":\"8acc23987b8960d83c44541f9f0eb46454cea080ea94d916f56fccf033db866f\",\"amount\":\"267.114373\"},{\"i\":268,\"txid\":\"8b496bf96bbcc9e5ac11c068b6cfb00c32f9d163bb8a3d5af107217499de997a\",\"amount\":\"268.122292\"},{\"i\":269,\"txid\":\"f747870ae666c39b589f577856a0f7198b3b81269cb0326de86d8046f2cf72db\",\"amount\":\"269.130211\"},{\"i\":270,\"txid\":\"d8d1790737d57ac4fe91a2c0a28087c0a97c81f5dc6b19d5e4aec20c08bb95ae\",\"amount\":\"270.138130\"},{\"i\":271,\"txid\":\"3635a91e3da857f7847f68185a116a5260d2593f3913f6b1b66cc2d75b0d6ec0\",\"amount\":\"271.146049\"},{\"i\":272,\"txid\":\"1c6c0bb2c7ecdc3be8e134f79b9de45155258c1f554ae7542dce48f5cc8d63f0\",\"amount\":\"272.153968\"},{\"i\":273,\"txid\":\"303c8bd55875dda240897db158acf70afe4226f300757f3518b86e6817c00022\",\"amount\":\"273.161887\"},{\"i\":274,\"txid\":\"718127812c05853f0bec61582a4a3840b1c844fe11fe1a004b5b7eb8b8b59846\",\"amount\":\"274.169806\"},{\"i\":275,\"txid\":\"3a1dfb05d7257530e6349233688c3e121945c5de50f1273a7620537755d61e45\",\"amount\":\"275.177725\"},{\"i\":276,\"txid\":\"c76b405781134be1dab7fe45adfb8c32104805a01de7b863e1004b66d56edf9f\",\"amount\":\"276.185644\"},{\"i\":277,\"txid\":\"27d719c754aacd492a6dc8a1b76619355abcf5ef473cbec02018d3c57ebbf0d5\",\"amount\":\"277.193563\"},{\"i\":278,\"txid\":\"ee62de25ccc2b55d3a0495244b246fb97055b6f1c2697d837b8e94976c03756f\",\"amount\":\"278.201482\"},{\"i\":279,\"txid\":\"efd96aedf377e20afd95285a7c751a864260bd6a149656a4040c5b7757bdbbb6\",\"amount\":\"279.209401\"},{\"i\":280,\"txid\":\"7f0a22117f8fe0172cf9209ff622b64a51aaeda21d58b5b62685a93dbe2dad25\",\"amount\":\"280.217320\"},{\"i\":281,\"txid\":\"71a1c003a2b855d85582c8f6c7648c49d3fe836408a7e1b5d9b222448acb3c1b\",\"amount\":\"281.225239\"},{\"i\":282,\"txid\":\"27e1615212f3c6ea846ed6c412df1361ce97f006ee20bb5aa2483a3b61d5cadd\",\"amount\":\"282.233158\"},{\"i\":283,\"txid\":\"e0850a775c17a87060c0cf6efad1020e0cbef5a44ba942bef6add5776598de53\",\"amount\":\"283.241077\"},{\"i\":284,\"txid\":\"1e68ed4e3d58a51096a7feea3947f40debf1fd9246ec977eb62ab93c81823ad9\",\"amount\":\"284.248996\"},{\"i\":285,\"txid\":\"a0d177b4967a6d99f4ff117defe1c0d23d4e78ca4630febcb948ee9e4520eff3\",\"amount\":\"285.256915\"},{\"i\":286,\"txid\":\"00328ce57bbc14b33bd6695bc8eb32cdf2fb5f3a7d89ec14a42825e15d39df60\",\"amount\":\"286.264834\"},{\"i\":287,\"txid\":\"d7cdaa5ca0582076c8e772cce739e32c5077cfd24f2ea33f04bb754594989a56\",\"amount\":\"287.272753\"},{\"i\":288,\"txid\":\"23c657f2efda7731a3c1990b25f318fa2eb1332208f97ab9cc2a7eac70ab5a76\",\"amount\":\"288.280672\"},{\"i\":289,\"txid\":\"af180e4359fc6179dc953abdcbdcaf7c146b53e1bee2b335e50dead11ccefa07\",\"amount\":\"289.288591\"},{\"i\":290,\"txid\":\"09895de0407bcb0386733daa14bdb5dfa544505530c634334a05a60f161b71fc\",\"amount\":\"290.296510\"},{\"i\":291,\"txid\":\"33512007840ced1bb0aab68f47cb5f702abd494a15f26bcbe26a1e47af03d841\",\"amount\":\"291.304429\"},{\"i\":292,\"txid\":\"6db6eb4af1e18ab81d3878e44672185d60ca8c988c9e2f7783de220735534c33\",\"amount\":\"292.312348\"},{\"i\":293,\"txid\":\"7cb676d57114874e00c536916e6dcad2a5d3cb8c9a5abc06335df359cd9a6ef9\",\"amount\":\"293.320267\"},{\"i\":294,\"txid\":\"2cfc8ccbd7c0b17615323b41e815651ff2ae9ffae45a4599c0499b98ff940429\",\"amount\":\"294.328186\"},{\"i\":295,\"txid\":\"9cfd3c755be26b4e1645918e2a64a26e3d851ede421e0b257f783b443bc443d1\",\"amount\":\"295.336105\"},{\"i\":296,\"txid\":\"a0f8b2c4cb1ac82abdb37f0fe5203b97be556c4468c83bba18684d620fd8eaf9\",\"amount\":\"296.344024\"},{\"i\":297,\"txid\":\"4c15f47afe7f817fd559e12ddbc276f4930c5822f2049088d6f6605bec7cea56\",\"amount\":\"297.351943\"},{\"i\":298,\"txid\":\"76ebdb6d45c61ca12e622118cc90939ade672adf7890aa2b246405d4884dd75a\",\"amount\":\"298.359862\"},{\"i\":299,\"txid\":\"308831041ea4863c3f87d222c31f759411898c874a9006b4bd6c745858b8f3bd\",\"amount\":\"299.367781\"},{\"i\":300,\"txid\":\"983bd614bb5afece5ab3b6023f71147cd7b6bc2314f9d27af7422541c6558389\",\"amount\":\"300.375700\"},{\"i\":301,\"txid\":\"c3ea99f86b2f8a74ef4145bb245155ff5f91cd856f287523481c15a1959d5fd1\",\"amount\":\"301.383619\"},{\"i\":302,\"txid\":\"f32828acecb4282c87eaa554d2e1db74e418cd6845843012463a3324028bdd9d\",\"amount\":\"302.391538\"},{\"i\":303,\"txid\":\"8bd9c0d453533757387ed019c45617cdc440ba680a67b1a101c85b998ef715c0\",\"amount\":\"303.399457\"},{\"i\":304,\"txid\":\"d874e4e4a5df21173b0f83e313151f813bea4f488686efe670ae47f87c177595\",\"amount\":\"304.407376\"},{\"i\":305,\"txid\":\"090d3859ff6840b2280f4708cf08cdaed873d967183a4d1deedc1a7964a21eee\",\"amount\":\"305.415295\"},{\"i\":306,\"txid\":\"38b83caefa1ef26940f1d07bd4ec94c60809b0f88f2118e82ef8ec2d98938a84\",\"amount\":\"306.423214\"},{\"i\":307,\"txid\":\"6d976934be74941fba578b143ba964eded443d10384e3f3d62a1ba7b4d339df8\",\"amount\":\"307.431133\"},{\"i\":308,\"txid\":\"48a1706eca5ee6148f748ca91a0f7db6ebcf59943532044a7bf60bbe44e5b1d2\",\"amount\":\"308.439052\"},{\"i\":309,\"txid\":\"43c727ee4fc7250574d2ef90cfa16626388a10e1b30d36ece1c272953ad2ed9e\",\"amount\":\"309.446971\"},{\"i\":310,\"txid\":\"226f76b55acb49701e06ded1d95165d179458f6fc37f5c6fc760ae30dec1c378\",\"amount\":\"310.454890\"},{\"i\":311,\"txid\":\"20e9c64c05a54d199610fb7e38135361324b5ed5dcf39c23afe9b48926c07376\",\"amount\":\"311.462809\"},{\"i\":312,\"txid\":\"865736a1c30a82dc67aba820360a01b1d9d0da5643234cd07c4d60b06eb530c5\",\"amount\":\"312.470728\"},{\"i\":313,\"txid\":\"8efbbe9bc19ad2e043c6cdb187c0a0fedde70b6458443ce0b5648ec04ccf4cdf\",\"amount\":\"313.478647\"},{\"i\":314,\"txid\":\"748064be03a08df81e31bd6f9e7e7c4cc9f84b4401b9a3c6e85b7ff816d3ba68\",\"amount\":\"314.486566\"},{\"i\":315,\"txid\":\"377adeb4cd4096adc7ca64b533938cffc6294a9b3534f883b2336a26252cda9a\",\"amount\":\"315.494485\"},{\"i\":316,\"txid\":\"7a20311cf7a4b222d436424480bc65dd0f9d2cefcbbb1fa148ca0d7e1d5bb55a\",\"amount\":\"316.502404\"},{\"i\":317,\"txid\":\"8d1ede4f889e0ed6f0823d8c1821905b9de37a0f851dc270df0dbf72b3c93641\",\"amount\":\"317.510323\"},{\"i\":318,\"txid\":\"aae02129362d611717b6c00ad8d73bf820a0f6d88fca8e515cafe78d3a335965\",\"amount\":\"318.518242\"},{\"i\":319,\"txid\":\"156091ee0884f36de9836d58b6f05f357ec6ef0620c571577ac61f7beac35f8e\",\"amount\":\"319.526161\"},{\"i\":320,\"txid\":\"88820462180e5c893eff2ed73f4ec33e205d1cd5acc4d17fa7b2bca2495d3448\",\"amount\":\"320.534080\"},{\"i\":321,\"txid\":\"8d23cf6c86e834a7aa6eded54c26ce2bb2e74903538c61bdd5d2197997ab2f72\",\"amount\":\"321.541999\"},{\"i\":322,\"txid\":\"f10d91a7596bf5a6773579ff1306afdc363b0be08602c768907c09261cad3a56\",\"amount\":\"322.549918\"},{\"i\":323,\"txid\":\"3949ac1596ec77106a709a618bf5adcb19b77537ce8bcbdf54ff830169cdd084\",\"amount\":\"323.557837\"},{\"i\":324,\"txid\":\"1038e0b72d98745fac0fb015fd9c56704862adf11392936242a2ff5a65629f50\",\"amount\":\"324.565756\"},{\"i\":325,\"txid\":\"9e11c362bc3d3572970b973d5cd86c073da358b6f9bceaa3be65d1a6487f8819\",\"amount\":\"325.573675\"},{\"i\":326,\"txid\":\"a4e987d17584557e2fbed011cddf66dc5185338bc3ef33d4226f86c32b7364dd\",\"amount\":\"326.581594\"},{\"i\":327,\"txid\":\"02cca3803b564ede11ccf9f303c9910b39c532061e7a8c3b773169bc3d3c140b\",\"amount\":\"327.589513\"},{\"i\":328,\"txid\":\"2452984f72ef1195df62ab3f23748777dbf39767229425f1bfd0862d476e5840\",\"amount\":\"328.597432\"},{\"i\":329,\"txid\":\"0791963ca2667a23cf3268ad25d7bb6ca0ed287b192869703cdbcf0e87934c33\",\"amount\":\"329.605351\"},{\"i\":330,\"txid\":\"5426d2ca50f244fb43fe9eafc82da08f33f3b4f8d9140802bd0102e780b629d6\",\"amount\":\"330.613270\"},{\"i\":331,\"txid\":\"0bba869d7f392cbcaca6b8935ddc7fc3a8c50846d884959333fb7da475957511\",\"amount\":\"331.621189\"},{\"i\":332,\"txid\":\"7104741a92e73eb6c5d69cd04cf0afbe50a8796a010d8fa25daaf79e5e173bf3\",\"amount\":\"332.629108\"},{\"i\":333,\"txid\":\"556d7dc3a115356350f1f9910b1af1ab0e312d4b3e4fc788d2da63668f36d017\",\"amount\":\"333.637027\"},{\"i\":334,\"txid\":\"058d5d43bf485bf78dda1ed4eaf8b78e3106f3c6364c625ead2cc3aeb1908237\",\"amount\":\"334.644946\"},{\"i\":335,\"txid\":\"7acc684a848a9b954959fdd22493f48cf44eed028275b6b9999c7cade8956fc7\",\"amount\":\"335.652865\"},{\"i\":336,\"txid\":\"eaa0689a095d4394a05fb51b84b0175a47f68221261377e4829444cbfcae23ca\",\"amount\":\"336.660784\"},{\"i\":337,\"txid\":\"8ede6b26343305e05c3c0029f4e830d4e8c2016869a9d1cd97b100b2a16dfd1c\",\"amount\":\"337.668703\"},{\"i\":338,\"txid\":\"5d8f6cce532a7aeb57196be62344095936793400b3aeb3580d248b17d5518a86\",\"amount\":\"338.676622\"},{\"i\":339,\"txid\":\"fc95ce176603e9e1d1ffee39023b31dd856e00ad030526902604ed2a68a12c4b\",\"amount\":\"339.684541\"},{\"i\":340,\"txid\":\"9644294ac4ffb3091eef01219b3fe4fe467f05890cc56af961dce68fddbb7704\",\"amount\":\"340.692460\"},{\"i\":341,\"txid\":\"524b2d27a1e7fbc3a1614fa661e2dcad68462352feeb8bf633deaccfb8aa84f3\",\"amount\":\"341.700379\"},{\"i\":342,\"txid\":\"023849c38925e2af028a2eb4e1dc41afd7dc7a238195c1c2ae00438d1dae00e1\",\"amount\":\"342.708298\"},{\"i\":343,\"txid\":\"3c15285c04fff40024bb8714b93e58178bf8d3bebe6943178e1c5412957b7aa1\",\"amount\":\"343.716217\"},{\"i\":344,\"txid\":\"02e6295d8f522840f09b5194b3f023799ad6ed3306d9296005787e792224df20\",\"amount\":\"344.724136\"},{\"i\":345,\"txid\":\"da70dfa4d9f95ac979f921e8e623358236313f334afcd06cddf8a5621cf6a1e9\",\"amount\":\"345.732055\"},{\"i\":346,\"txid\":\"6aac0cf87a32e631536122c3f2f9a2df215f56f28792a43a8658b0593f2e5255\",\"amount\":\"346.739974\"},{\"i\":347,\"txid\":\"2289b221b39605c3494e7290856218e931c00af556cf7a07827108193b276511\",\"amount\":\"347.747893\"},{\"i\":348,\"txid\":\"06b2d82840e43ed8432b3f444de18b57dbe60637c99379c708aa8e66de83dbc1\",\"amount\":\"348.755812\"},{\"i\":349,\"txid\":\"72ba187b05e705de2dced5824d716a71872dedccf21f0c179bd2d5f2c7c974b1\",\"amount\":\"349.763731\"},{\"i\":350,\"txid\":\"deeeb5df3f2cee6bf4e597a8a3a878a6ce49b932b9e90b416922d4499f54fae6\",\"amount\":\"350.771650\"},{\"i\":351,\"txid\":\"04a8708c3a481ced13845a30de522486895de0592222c29326d9139ec2b9df25\",\"amount\":\"351.779569\"},{\"i\":352,\"txid\":\"9a72c24f2fd76561729110d804c69f38a7088f2ec41fdf8fbfea20d07e8bcff8\",\"amount\":\"352.787488\"},{\"i\":353,\"txid\":\"459535faa370a3b5f8b87203b089623c7aeb9325abf241ec8a685b9c325047a3\",\"amount\":\"353.795407\"},{\"i\":354,\"txid\":\"09a1b036b82baba3177d83c27c1f7d0beacaac6de1c5fdcc9680c49f638c5fb9\",\"amount\":\"354.803326\"},{\"i\":355,\"txid\":\"355d8c0ee4e5698eaed38b96aab64dbf0ad72eca3e352183be6e957e9d9230a7\",\"amount\":\"355.811245\"},{\"i\":356,\"txid\":\"03a3d955b8799a90f1ff5a39479fde8e618f8ca3282d5b187186f2cf361abd32\",\"amount\":\"356.819164\"},{\"i\":357,\"txid\":\"2ab0ce7632a611e907a40710ff46da13c5ba832f5a402c6f51e15f53d6e8fa0e\",\"amount\":\"357.827083\"},{\"i\":358,\"txid\":\"62a0eae98b9fc0bd0ad941ae07ae5e2af545a64c8ddc43407bdfe6ae82addb4c\",\"amount\":\"358.835002\"},{\"i\":359,\"txid\":\"9197e4844abed2fea3569a2acf7b0d584c979c333ab7ae10ba6c339898776f5a\",\"amount\":\"359.842921\"},{\"i\":360,\"txid\":\"838f461c2fa673cec73e6eecdafa88b127802d6cb0a61c53175197a122cb645a\",\"amount\":\"360.850840\"},{\"i\":361,\"txid\":\"73daa9289ddd08a53ba86f065ddb07bf915aba208bec652e999613d2a8444228\",\"amount\":\"361.858759\"},{\"i\":362,\"txid\":\"3963317a2b410e5357f4d839787aedb9ceef495514fe5cd91f846ab3a59621e0\",\"amount\":\"362.866678\"},{\"i\":363,\"txid\":\"a43231c2216f23db8d65bbd57e0ce6573654f9a102365cd4b345723f1437ab2b\",\"amount\":\"363.874597\"},{\"i\":364,\"txid\":\"b3dfdc6efe322a6feccb0d081e88ffac20b0f28e8495efa76188c8dc3ada6181\",\"amount\":\"364.882516\"},{\"i\":365,\"txid\":\"4e47eb5525df25f94da777993dafa41d9ab2bfa80a89e28f76d42cd46ab082e7\",\"amount\":\"365.890435\"},{\"i\":366,\"txid\":\"600b4cdf20cc06a7b5a5cca5f7464296861815519af6d8a14604201b13965ab8\",\"amount\":\"366.898354\"},{\"i\":367,\"txid\":\"0788979fc9366e21cd56311511b897a222cf91711481bcd7dc837eac2172d087\",\"amount\":\"367.906273\"},{\"i\":368,\"txid\":\"8e6aee9efac8086ebac545d45c63e0d0dfcddd0d77d53e45c04d05cafdd2a8a8\",\"amount\":\"368.914192\"},{\"i\":369,\"txid\":\"5f193b350c8aba4883dedf97367ef3080821470661d0a2e1faf420a300cb5ca8\",\"amount\":\"369.922111\"},{\"i\":370,\"txid\":\"f1607c19a0f910ca1b8dce18843bc34e46a533c87e3524ea75798949f7a352d5\",\"amount\":\"370.930030\"},{\"i\":371,\"txid\":\"9b15fed64ef16980f625aeed46ab4cd2c498690551d3a2d1e5254d551d7d6ddf\",\"amount\":\"371.937949\"},{\"i\":372,\"txid\":\"62f77e7d6197863ac98d9e0cfa76bea0c8e05379ed5281afbe72f7fc206fe37b\",\"amount\":\"372.945868\"},{\"i\":373,\"txid\":\"e52d08747b9d7a6d04551bb86ee3f7ee6c49f7477c8cd66f77448378cc30b92b\",\"amount\":\"373.953787\"},{\"i\":374,\"txid\":\"01299ac65733b5a3d774265fbfe8396b8611e5e3321855dbc541cd301e71fe5e\",\"amount\":\"374.961706\"},{\"i\":375,\"txid\":\"de5872c6bb4494cebd250152ce148cd6231654e4469229f2f993984b3950b422\",\"amount\":\"375.969625\"},{\"i\":376,\"txid\":\"12e2c8df501501b2bb531e941a737ffa7a2a491e849c5c5841e3b6132291bc35\",\"amount\":\"376.977544\"},{\"i\":377,\"txid\":\"2c4cf657337835125bc4258d0e2e546af4185bdb70f64e1b0aa46d1d78017404\",\"amount\":\"377.985463\"},{\"i\":378,\"txid\":\"21ef779311a43f0e067d0f4f600bb5451a8a7e093662086a1fe6a75d27d7892a\",\"amount\":\"378.993382\"},{\"i\":379,\"txid\":\"64c212df34c66e6fe9fccbfebc8899c10584cfa1669c42a175d65db073b13bc0\",\"amount\":\"379.001301\"},{\"i\":380,\"txid\":\"2af4dd48399a5cf64c23fc7933e11aaf6171d80001b4b1377498ae6056b1acbf\",\"amount\":\"380.009220\"},{\"i\":381,\"txid\":\"392a52e4f77c40bf3321dc2feac356fac2a906a80c961748170af4ce2bce1e6a\",\"amount\":\"381.017139\"},{\"i\":382,\"txid\":\"f65ccfbfec288565c1d414275985547799fde0ed286c85a50bd0ec5faa01d1ac\",\"amount\":\"382.025058\"},{\"i\":383,\"txid\":\"48b361d46638bfa4eee090c158a750a69c7beec3a62e703e2801125551b1b157\",\"amount\":\"383.032977\"},{\"i\":384,\"txid\":\"37b73510175057c633ebe4beb0a34917fa2a0696432db43a4eeb2c3ff83a4c3b\",\"amount\":\"384.040896\"},{\"i\":385,\"txid\":\"131b0c35e2d7edef9dd63f48eff39341ef0a5f770538aa4e0017f41b9cdb135d\",\"amount\":\"385.048815\"},{\"i\":386,\"txid\":\"15a26c6fa5151c712acc7ee45a1fd525ab85b801f096847c7d5fdf49efeabb4d\",\"amount\":\"386.056734\"},{\"i\":387,\"txid\":\"25dac95b8f595046bc435139636b0e2f1ff6e0ea31a54f3c19e7e726fb98738b\",\"amount\":\"387.064653\"},{\"i\":388,\"txid\":\"ab5e292db6495899871d889aaab28308f7da8dfc3693a477ee73de9ad894ce44\",\"amount\":\"388.072572\"},{\"i\":389,\"txid\":\"b98880883fd8d975260f1807fa46a5156fcc4cc82bf6d657a417d8bb4e42cd55\",\"amount\":\"389.080491\"},{\"i\":390,\"txid\":\"48a1a756f2d83f1dc57bbf14052b70a6f40d0fceed6662812e34903a9fe90924\",\"amount\":\"390.088410\"},{\"i\":391,\"txid\":\"a934c244755c66aebb0d6f9f5687038ffae8f00b00b28b4e17521016393f38b9\",\"amount\":\"391.096329\"},{\"i\":392,\"txid\":\"6ea2fdb3399f4d2e806beb01e9a3371bd622bed6a409acf3151818d738c370ec\",\"amount\":\"392.104248\"},{\"i\":393,\"txid\":\"99a0b871c9047c4f5555fcf062e0623174bae38746fece6efdf032d80fb2221a\",\"amount\":\"393.112167\"},{\"i\":394,\"txid\":\"04d19fde0a08b17aca69491e714bea43565384d12a63626e08477662cc03780e\",\"amount\":\"394.120086\"},{\"i\":395,\"txid\":\"a3af7b3808c4cf72478d05c9bab9c0d47e31c1d2cb3a29e7481669f7ea278c4e\",\"amount\":\"395.128005\"},{\"i\":396,\"txid\":\"3c1b7053f0edd447b778edbc0ad8359b0fa892d69857d9bd5e6b19007bb3f01e\",\"amount\":\"396.135924\"},{\"i\":397,\"txid\":\"1d2028ddcd746a7ee87dd0739d7435602b77d4908f96e27ebdad57b09aa27b69\",\"amount\":\"397.143843\"},{\"i\":398,\"txid\":\"188c1fdca79d927f6e812133173fc41d3a4e57074de521020274caa9bb29af7d\",\"amount\":\"398.151762\"},{\"i\":399,\"txid\":\"0f78540965a86402578f8188c826c1cb6c7ddcb608ae3a3201e532c7cacb6ce3\",\"amount\":\"399.159681\"},{\"i\":400,\"txid\":\"26d228663f13a88592a12d16cf9587caab0388b262d6d9f126ed62f9333aca94\",\"amount\":\"400.167600\"},{\"i\":401,\"txid\":\"dcaadad1cfce437735b81ab025f776e5857e48558c47f6960e6a5f2595664a85\",\"amount\":\"401.175519\"},{\"i\":402,\"txid\":\"b7c7470e59e2a2df1bfd0a4705488ee6fe0c5c125de15cccdfab0e00d6c03dc0\",\"amount\":\"402.183438\"},{\"i\":403,\"txid\":\"d26eae87829adde551bf4b852f9da6b8c3c2db9b65b8b68870632a2db5f53e00\",\"amount\":\"403.191357\"},{\"i\":404,\"txid\":\"6b3c238ebcf1f3c07cf0e556faa82c6b8fe96840ff4b6b7e9962a2d855843a0b\",\"amount\":\"404.199276\"},{\"i\":405,\"txid\":\"a73b320dc0d3a57c03f897eb28ca91e623c5ee635db59476ba3178c90b94019f\",\"amount\":\"405.207195\"},{\"i\":406,\"txid\":\"f64f410744d9470ffe2d6b9ee6f042cdffcc42a745d2568146e8782ea828ff48\",\"amount\":\"406.215114\"},{\"i\":407,\"txid\":\"a5abb1500bdeaef41e2edd598c015edfaa46793051b82d7da60a70efbf786da4\",\"amount\":\"407.223033\"},{\"i\":408,\"txid\":\"e6f47e008cc58b38596e6fdf2f50a0fea93fd10543e652522aeab3aa71355719\",\"amount\":\"408.230952\"},{\"i\":409,\"txid\":\"480f5a496560ae4228bb7977ecf29b2c589d7a7aa6b609534566af8cbc229a9e\",\"amount\":\"409.238871\"},{\"i\":410,\"txid\":\"612111a352a571cbed3927ec6f74948849bcc9fe8489bf4f0d6235afdc0a4ad7\",\"amount\":\"410.246790\"},{\"i\":411,\"txid\":\"52f14fc33ef45dd80ac2626077948f44d8d211d5f24bf9db333c9403968e634a\",\"amount\":\"411.254709\"},{\"i\":412,\"txid\":\"fabf5b7fedb3e62a81c9298b19706249ee128011bf9d94867681020c16f8b741\",\"amount\":\"412.262628\"},{\"i\":413,\"txid\":\"1c49f22f6de9bd15e5e566fa8983be4cfa4709abf0f95edf96dcd3d6249c2649\",\"amount\":\"413.270547\"},{\"i\":414,\"txid\":\"8111eb1556229541d7d2720a51203037e78ee57fb2e407e0da4a805473dab7af\",\"amount\":\"414.278466\"},{\"i\":415,\"txid\":\"fc72c98a6c2916c1bbf9f39fce094f5785bb6f1d656971520b660b2e8a760fe3\",\"amount\":\"415.286385\"},{\"i\":416,\"txid\":\"67e0bdb7b6c549d4fa834d0f6848ce6a3a12e07de9cea949ad41932bd5881bc4\",\"amount\":\"416.294304\"},{\"i\":417,\"txid\":\"afcf8bc077e68eb94dfe783205f32cabdeead61fd32ff5710947b6111ff2ff77\",\"amount\":\"417.302223\"},{\"i\":418,\"txid\":\"4c8d5b6c695d265fb63dd73f275a21043a5887b37cb4fea0552ecc7b417c8f88\",\"amount\":\"418.310142\"},{\"i\":419,\"txid\":\"cc6aed2709b80e146bebc151f1cf1dec5e323b58148535a433529155030e3a52\",\"amount\":\"419.318061\"},{\"i\":420,\"txid\":\"db55da3fc3098e9c42311c6013304ff36b19ef73d12ea932054b5ad51df4f49d\",\"amount\":\"420.325980\"},{\"i\":421,\"txid\":\"5092c37bcbc9f0fb33cb0f9cab7aa5ae94ed0f1219773c380b143b7c1224d01b\",\"amount\":\"421.333899\"},{\"i\":422,\"txid\":\"5658b88806a236b6439a7ecd0a87af2475a02a848095304c6d25981ae5e7e9a9\",\"amount\":\"422.341818\"},{\"i\":423,\"txid\":\"814bb6b8dc12188a44b71e378dc20a4292e01979aa9ab95b09b8a681391dfc9d\",\"amount\":\"423.349737\"},{\"i\":424,\"txid\":\"814fd2e8e45e9a6d3e1f6ff86867aaf2251ccd07f3eed02708fae286192c29e3\",\"amount\":\"424.357656\"},{\"i\":425,\"txid\":\"0dfcddb0440e967f05bb68ca09a5e2188b8abc36bfb5b95b83b88be59c42c6e7\",\"amount\":\"425.365575\"},{\"i\":426,\"txid\":\"9be3da431e0a833d2b07781de97ebbd0b14c274d16c0597820d9982a5f547cb3\",\"amount\":\"426.373494\"},{\"i\":427,\"txid\":\"42f25adecf47629878e89e31b2073d1af009c9c76f4140a06313af5e5950eabc\",\"amount\":\"427.381413\"},{\"i\":428,\"txid\":\"cbf2f7864f1c988391a9ab199627a29bd60987da067748c2812b75785d7ec151\",\"amount\":\"428.389332\"},{\"i\":429,\"txid\":\"2d1007980f49215311f7f1012e84f99b801eb5daeca04dedea3ada41cc45353b\",\"amount\":\"429.397251\"},{\"i\":430,\"txid\":\"fed88b40aba63cac05eadd5db0088c036005ec235c7be6fd87d656946b733332\",\"amount\":\"430.405170\"},{\"i\":431,\"txid\":\"0a1f1256f9bac68e806442aa76455bb761af5414855efa23c1b3fd54477c0ba1\",\"amount\":\"431.413089\"},{\"i\":432,\"txid\":\"98f1f17f9a73ccfe3e25940add8d9ce9bf05513104cacb84f2f1185bf5886a84\",\"amount\":\"432.421008\"},{\"i\":433,\"txid\":\"aaf01d71b55e51b1a3051cbb3cdc0646578dcda722b2922072a81f257b1a9821\",\"amount\":\"433.428927\"},{\"i\":434,\"txid\":\"ea415bf50eb65ade427d8d80222df4627e28cd9a418f830bfd9b81d4149bb2ab\",\"amount\":\"434.436846\"},{\"i\":435,\"txid\":\"5f2703a5211db19a9020f7443f6a440fbc95cda90b7c2d53912f5ce47d050056\",\"amount\":\"435.444765\"},{\"i\":436,\"txid\":\"155d1cf609cedded2fbc27a4646de87ce7f7de2913b1e5a1bbf148a6df483e19\",\"amount\":\"436.452684\"},{\"i\":437,\"txid\":\"0ef962215cc055786d516355238a80dacc204ecf9b160d0a252190bf5c0cc370\",\"amount\":\"437.460603\"},{\"i\":438,\"txid\":\"18d37c950a3e810d9b9a84c72c230ca16b7cec19f7fb55c625e5441790d448ef\",\"amount\":\"438.468522\"},{\"i\":439,\"txid\":\"050a010ce24d0896056e9a36a1940738d38f469d644b3682cfcc47569739c525\",\"amount\":\"439.476441\"},{\"i\":440,\"txid\":\"e3f6959781c353c201d378e02d9da532601673e08a1706fa15a5ebbd9ea1bd36\",\"amount\":\"440.484360\"},{\"i\":441,\"txid\":\"2dfe70c43208f52b9ef4ea7e134705283947116491e81fbac05f0aedc25c5956\",\"amount\":\"441.492279\"},{\"i\":442,\"txid\":\"5627b4a8f9efbd8fbdadaf4177824186f8c734f320935c88e926bc027af6c50f\",\"amount\":\"442.500198\"},{\"i\":443,\"txid\":\"6d05621ab7cb7b4fb796ca2ffbe1a141e0d4319d3deb6a05322b9de85d69b923\",\"amount\":\"443.508117\"},{\"i\":444,\"txid\":\"3538a1ef2e113da64249eea7bd068b585ec7ce5df73b2d1e319d8c9bf47eb314\",\"amount\":\"444.516036\"},{\"i\":445,\"txid\":\"0e12831a7047f759733b21f028525039607350b1b1b4fe904595427e72ea0d9b\",\"amount\":\"445.523955\"},{\"i\":446,\"txid\":\"75c3e223190bf1a1fa2af808d1dfcdffe33727d57eb0028b5a52ad893480eeb9\",\"amount\":\"446.531874\"},{\"i\":447,\"txid\":\"c498f3fe97c0df55ee8dea01a72572059b93f42d235a5e439e9c9a1654d6d4e1\",\"amount\":\"447.539793\"},{\"i\":448,\"txid\":\"a4ecdd704d258aa841bb3f9a1e3b0cafc59bd88810e542f8e7a0519809d78fe7\",\"amount\":\"448.547712\"},{\"i\":449,\"txid\":\"4a30a219a9d7663fdd35c0a5df49c8d55018f13a0c53e10dd8efe8f7e4cc5d89\",\"amount\":\"449.555631\"},{\"i\":450,\"txid\":\"83151157c10d85af7c84657c71c3e3603d955160f0526fce672481da83a2e090\",\"amount\":\"450.563550\"},{\"i\":451,\"txid\":\"caa1aedb2a6ce96b39b9fde1a49e1ebcb431b6da4586da0aef56df9b78221d60\",\"amount\":\"451.571469\"},{\"i\":452,\"txid\":\"549a2fac47d713cc00f2db498ad6b5574fb03c9293aef6c7ad50a11b394c197d\",\"amount\":\"452.579388\"},{\"i\":453,\"txid\":\"d83c7ee736be931d85b78a4a60881ced3ff9a31bb417804e45b1d30de40f94f2\",\"amount\":\"453.587307\"},{\"i\":454,\"txid\":\"48f89b630677c2cbb70e2ba05bf7a3633294e368a45bdc2c7df9d832f9e0c941\",\"amount\":\"454.595226\"},{\"i\":455,\"txid\":\"f626051bc94422f26f4b774a2bca105e122df36a2f32f51bd7ee470daa620b0b\",\"amount\":\"455.603145\"},{\"i\":456,\"txid\":\"b3a8e0e1f9ab1bfe3a36f231f676f78bb30a519d2b21e6c530c0eee8ebb4a5d0\",\"amount\":\"456.611064\"},{\"i\":457,\"txid\":\"353767b239099863e13ca954e20a66c9d75f777baf239f56e399958de49bf79d\",\"amount\":\"457.618983\"},{\"i\":458,\"txid\":\"ad21a2b810af49a8b9241e10dfce3a016987441cc93aa72feae47dd017ddf0bb\",\"amount\":\"458.626902\"},{\"i\":459,\"txid\":\"42f0bec3310ddd8a55e8d62817337ca49c55a898c14ab073d07c16dee24d73d4\",\"amount\":\"459.634821\"},{\"i\":460,\"txid\":\"841a05fd378a2c067058585e3691c2a3f5399206fded7a580fdbbc281003168e\",\"amount\":\"460.642740\"},{\"i\":461,\"txid\":\"de482c7ed5ca67ae135ef25bf3b13194970a2f3902318f1eda3c64af2a2eb344\",\"amount\":\"461.650659\"},{\"i\":462,\"txid\":\"da4d43f295ce92630829272fad6d2e7237c6248e9cd9499e6382d6fa6d758e7b\",\"amount\":\"462.658578\"},{\"i\":463,\"txid\":\"06de973bb45531d52cdbd483c5e50bcddaa2095f9515e03cfad490061cc9831e\",\"amount\":\"463.666497\"},{\"i\":464,\"txid\":\"88b54564b232405ab2165996517fece1149259cf1ea262a375db0f66039294d0\",\"amount\":\"464.674416\"},{\"i\":465,\"txid\":\"ad3b83575249b68aab9602de378314fc221ab07a9b2ab0bb4a245ec649219f45\",\"amount\":\"465.682335\"},{\"i\":466,\"txid\":\"826e27285307a923759de350de081d6218a04f4cff82b20c5ddaa8c60138c066\",\"amount\":\"466.690254\"},{\"i\":467,\"txid\":\"e078af3026edb42cc26b32784baa142a79970078f7ac58f8c7b74115f4f7fb60\",\"amount\":\"467.698173\"},{\"i\":468,\"txid\":\"1e5ee5e58c8f490ae68e7e91b1575ebefc2bf6c211f302a553ff0c4925e85321\",\"amount\":\"468.706092\"},{\"i\":469,\"txid\":\"c6bd343ae0007cdb979de7540f2668fe849d68ff47fa1a650a28f89104f41f1e\",\"amount\":\"469.714011\"},{\"i\":470,\"txid\":\"30eec89ddd9c342ef28a87f731d6e50ba977baf12d7caa7045a9d56b0e923f03\",\"amount\":\"470.721930\"},{\"i\":471,\"txid\":\"064c3e311ef63912b0cc91db9681ce2d301c3e76c447febf8faa303de38cc005\",\"amount\":\"471.729849\"},{\"i\":472,\"txid\":\"b6cb293891dd62748d85aa2e00eb97e267870905edefdfe53a2ea0f3da49e88d\",\"amount\":\"472.737768\"},{\"i\":473,\"txid\":\"3a8f6d79cd434dc10588606993976b7b2bc038ff4a2481e857ac0168fc29a683\",\"amount\":\"473.745687\"},{\"i\":474,\"txid\":\"98144d79af44407273f26589afc01901b7b296deada61a4740b0d404c5043c53\",\"amount\":\"474.753606\"},{\"i\":475,\"txid\":\"b1585fdb272b31401eaac5dd46a936c1c09b4861e53e23f12ac72fc077b3c82c\",\"amount\":\"475.761525\"},{\"i\":476,\"txid\":\"e73cb135243c08ab2c2adc333b150b9237093315f6b38e3361f07caf2bfb4d6b\",\"amount\":\"476.769444\"},{\"i\":477,\"txid\":\"6e82b8197ce29396936a07b1eb951c88650a2fc0fe1201a51b15b6ca8a73318a\",\"amount\":\"477.777363\"},{\"i\":478,\"txid\":\"200dd69b70a88134b3a939de5f0b10c44a1675344329b9d9a5ad6b7342f978b2\",\"amount\":\"478.785282\"},{\"i\":479,\"txid\":\"9869a8a3a11a33284dc2bcc3d2e6ffd52cad30e2009c11dfe604e74dc21a887e\",\"amount\":\"479.793201\"},{\"i\":480,\"txid\":\"ddfe0e8d462af661f81db36589c39882dc0f2330785b5d80cd34f2f520ad618f\",\"amount\":\"480.801120\"},{\"i\":481,\"txid\":\"51d089cdaf0c968c94b80671489d22b6f79b1c57de80df880b008e9b37b49788\",\"amount\":\"481.809039\"},{\"i\":482,\"txid\":\"d4679c618f1af07ee8570edd4b931e2e68e1c2d4b7d3c2f1033a9b597f85d4b0\",\"amount\":\"482.816958\"},{\"i\":483,\"txid\":\"48ce32e8ec7741594c8786e445fbed501f5a735a49522314b8e24878e2544b9e\",\"amount\":\"483.824877\"},{\"i\":484,\"txid\":\"a42e815c58f3977fe531a80ffd4659121c3b9f876a89869042816c369ed80776\",\"amount\":\"484.832796\"},{\"i\":485,\"txid\":\"5844a72aee9269a68da28cae55c706d824b02ffb92189aaacd746a0d6097f549\",\"amount\":\"485.840715\"},{\"i\":486,\"txid\":\"86b700fab5db37977a73700b53a0654b21bdad0896914cc19ad70dee5f5fb3f6\",\"amount\":\"486.848634\"},{\"i\":487,\"txid\":\"9b19f9ab816598a0809e4afd5d60800f2dbef9cbb9b03ad2ce766b3c237b9059\",\"amount\":\"487.856553\"},{\"i\":488,\"txid\":\"a77b6cbdf6fae1676369dea1e1ea675e4c2400c9e43bd535fdfd9395cb48cbaa\",\"amount\":\"488.864472\"},{\"i\":489,\"txid\":\"e4be97ce765e6cfcd703884cc31db7478fa7befca7cf6dc15420ba20ed718abe\",\"amount\":\"489.872391\"},{\"i\":490,\"txid\":\"cbd02d97b0731d88c78d30c20d90492b2d4c3f2f983931c38fef2dedc7ce48d4\",\"amount\":\"490.880310\"},{\"i\":491,\"txid\":\"227445a988500528d7826c6921d2e3b4a79ccf3a94cc3bcf7b667e3ae4990b36\",\"amount\":\"491.888229\"},{\"i\":492,\"txid\":\"23e8b0175874e1bb3b4799e13a6634a8eddb456c1b8675b871e07ec09abc0c07\",\"amount\":\"492.896148\"},{\"i\":493,\"txid\":\"560aa3e6e94314c78236109e209ac79e15e05ec8bf2dcb78300ae65e720edf9e\",\"amount\":\"493.904067\"},{\"i\":494,\"txid\":\"d18b29d80a8bd366b77c952d9775510507c2d006eec917ab2f89ef93acc5452f\",\"amount\":\"494.911986\"},{\"i\":495,\"txid\":\"ac1270c5058af65025e5b2a3e3014cea69460e7d9f159ae667028e1b6eab433e\",\"amount\":\"495.919905\"},{\"i\":496,\"txid\":\"35bbce4007c5cd57a4c6dcabbdf5b347c9557ec11898111c280a788f8396e2c5\",\"amount\":\"496.927824\"},{\"i\":497,\"txid\":\"dcb5d6e69e4ded78464ae2843f509daf65c9ca09dfdc9b5ad69166341963a877\",\"amount\":\"497.935743\"},{\"i\":498,\"txid\":\"f138665c5aa6600801452ebb40df70c46e73f2c51f4cb72f66b438139c5ec3f6\",\"amount\":\"498.943662\"},{\"i\":499,\"txid\":\"db3defda18fafc0c197740438051c690d98b551a7e449d66390d38fa2db09b77\",\"amount\":\"499.951581\"},{\"i\":500,\"txid\":\"0604cd3138feed202ef293e062da2f4720f77a05d25ee036a7a01c9cfcdd1f0a\",\"amount\":\"500.959500\"},{\"i\":501,\"txid\":\"1158e7e12c5e7362318e5e3c2e1f2f1ab49578ab1d1691e9818a7c3f6b30b528\",\"amount\":\"501.967419\"},{\"i\":502,\"txid\":\"5344c4110f483793dc352c388e67776724c36b4bea3ffda6cab7c75b9c65aceb\",\"amount\":\"502.975338\"},{\"i\":503,\"txid\":\"7182dd431b5c8833ed3c8a02c8615780df8dca7d83ed4166962b207f45a656b5\",\"amount\":\"503.983257\"},{\"i\":504,\"txid\":\"ba689abd93c9c6a7d08b5b5c04dd27f6d69755ebe9a87fb969e73dfc11660e38\",\"amount\":\"504.991176\"},{\"i\":505,\"txid\":\"e13b778ae833ca8c5d757c58e4a85bd71e08c05caedbd096e13ec3f7b228b43a\",\"amount\":\"505.999095\"},{\"i\":506,\"txid\":\"a2075145d3cc47b2b56aeec5e9c78fe7e0055169961b6823629772c96f1f0319\",\"amount\":\"506.007014\"},{\"i\":507,\"txid\":\"a435270b90e9b7091c77f478df0b8f78dddd32079b75698b8de902061f74efaf\",\"amount\":\"507.014933\"},{\"i\":508,\"txid\":\"ecac903ea62dc1d5446a88330af0a17ce89c7787e5aaf450113a4a426813e3cc\",\"amount\":\"508.022852\"},{\"i\":509,\"txid\":\"a05198938c6ca8cd56289c6dba6bb8aaa68dfe8e0d7a37df2fb76e48eeba4244\",\"amount\":\"509.030771\"},{\"i\":510,\"txid\":\"5e5c743a015ff8d81e2374d5bca1bdf8ed87ce18484fce8cf4062183dde08493\",\"amount\":\"510.038690\"},{\"i\":511,\"txid\":\"2c69bc9b34fb0800a44a702e45019c107dfdc8273b9feb62c9615addc7138bde\",\"amount\":\"511.046609\"},{\"i\":512,\"txid\":\"94f8607915dff25f013e45fc0642fb9830b0fb25ab0ab46d477eaf1061def379\",\"amount\":\"512.054528\"},{\"i\":513,\"txid\":\"39700d452c77592c9710a4a34c6fe97d6150e26d550a5cfa553b0177d7b23e95\",\"amount\":\"513.062447\"},{\"i\":514,\"txid\":\"b027feeb60b70f0d34ece10aead660113cf06408da4c6477c7b2606839475de4\",\"amount\":\"514.070366\"},{\"i\":515,\"txid\":\"d4b9aead1dd10a596542d1d8211a5021b9c3e894751d019ac64b15a55b9b69ba\",\"amount\":\"515.078285\"},{\"i\":516,\"txid\":\"4771bef2c04a34b548b77ea7581cf821152d9dea9c2c85151a07856fe3639314\",\"amount\":\"516.086204\"},{\"i\":517,\"txid\":\"5088c1bc42f5cc6a32cdb92d7524ea06febe006baac86a0fc8986a8ee00602bc\",\"amount\":\"517.094123\"},{\"i\":518,\"txid\":\"8952115444bab6de66aab97501f75fee64be3448203a91b47818e5e8943e0dfb\",\"amount\":\"518.102042\"},{\"i\":519,\"txid\":\"0cce0bd361c46fcde41daebc801da75e21320763dc2b1a5a62d9b28e7c3e1d10\",\"amount\":\"519.109961\"},{\"i\":520,\"txid\":\"0b35b06a22779418f775a804f36485f7bc978071d1709ad263a68f4f18117b11\",\"amount\":\"520.117880\"},{\"i\":521,\"txid\":\"72933e3b31f0070af6478edc3becf96e1ee59917620e8c509cf0e6b360e29c02\",\"amount\":\"521.125799\"},{\"i\":522,\"txid\":\"a9346b0068335c634304afa5de1d51232a80966775613d8c1c5a0f6d231c8b1a\",\"amount\":\"522.133718\"},{\"i\":523,\"txid\":\"a1e8154bd1a4c96efad1d5bd4a3ecbd73f4f39a44b14b6025cff18b31ddef7f0\",\"amount\":\"523.141637\"},{\"i\":524,\"txid\":\"388c2eafe5afd475492698c0995a2daf157eb3b3be8207391d3a023c97c8c034\",\"amount\":\"524.149556\"},{\"i\":525,\"txid\":\"c32ffef1ae0cabc0576614cb4d2064cea5bd9c0fa13c7b8bb9fb9b4e8ba950a9\",\"amount\":\"525.157475\"},{\"i\":526,\"txid\":\"f7c2599681e9284ce1c403459e22b730e997d67d16c45c4f593108e8372029a9\",\"amount\":\"526.165394\"},{\"i\":527,\"txid\":\"e1bb74a7794720edf4935a8813538e8113491318168b1fa61a0ac3528e7b0440\",\"amount\":\"527.173313\"},{\"i\":528,\"txid\":\"bd3a797ba948938978965781bd341bc0fc7711ed00e513b9c63a61cf3d916562\",\"amount\":\"528.181232\"},{\"i\":529,\"txid\":\"8920a14a7f6469b955b114111564cb9736440238d220fc9fd525efdb9a056d3e\",\"amount\":\"529.189151\"},{\"i\":530,\"txid\":\"87e29676d583c04a1682dbd5bc0d989f8311c888655ca66bc486b6f7f76d4702\",\"amount\":\"530.197070\"},{\"i\":531,\"txid\":\"891d46993a36d78392247c642138cede01d9841daab1d945709755b5194597c4\",\"amount\":\"531.204989\"},{\"i\":532,\"txid\":\"68f10bf021d7734e071e07bbf561aa0f1bfc7974f266f71311b9177b177d39d1\",\"amount\":\"532.212908\"},{\"i\":533,\"txid\":\"fb8a0d2da8683cec6cc64542f95ae11e085c72d56c744b2be5be335295976610\",\"amount\":\"533.220827\"},{\"i\":534,\"txid\":\"5ef6514ed3304cf62b950982541114ac352c52729dbf80747775a9d1a733af93\",\"amount\":\"534.228746\"},{\"i\":535,\"txid\":\"20ca98162ba780883712eb701c84e4c06f73aba78e903935a9ad799193b4627f\",\"amount\":\"535.236665\"},{\"i\":536,\"txid\":\"d11501b090fb2749f2c49284394dd36fe0ac76eb1a52cb3bba260dbc119ec46e\",\"amount\":\"536.244584\"},{\"i\":537,\"txid\":\"da6813d10025369ac0411363a16ab750adb21c6d0b38a03a9fc5ce58134da875\",\"amount\":\"537.252503\"},{\"i\":538,\"txid\":\"8def3488486c17dfbc2861301b63237c3c3a05b4c23afed03d59829fba57e10c\",\"amount\":\"538.260422\"},{\"i\":539,\"txid\":\"5109a4e14cbbfda6b4512fc17ff13814ff9427f7b602694236f2c5be4d9875af\",\"amount\":\"539.268341\"},{\"i\":540,\"txid\":\"84f01dd97c687fb28a296bcc2ef1801446ea7405860595924eb2b5bb634718d1\",\"amount\":\"540.276260\"},{\"i\":541,\"txid\":\"5de664ef205f95d4a68b69b148eecb04f110ac95ef77f4e5158ae315a76ddd8a\",\"amount\":\"541.284179\"},{\"i\":542,\"txid\":\"2d86377d4cc3e6c85bab00dd407f8c5b657c239c6af3109de6cdf4d418aa2d89\",\"amount\":\"542.292098\"},{\"i\":543,\"txid\":\"18beb4813723e788a1d79bcbf80802538ec813aa19ded2e9c21cbf08bed6bee3\",\"amount\":\"543.300017\"},{\"i\":544,\"txid\":\"d359f8b537f1888bc71fe20b3d79eae6674be7aca9b645b0279c7015f6ff19fd\",\"amount\":\"544.307936\"},{\"i\":545,\"txid\":\"68e476b5d5aeca7b0e3b5ca867106c32e40cad05a490f6b08a24063cceed7e7e\",\"amount\":\"545.315855\"},{\"i\":546,\"txid\":\"6fc8f95bc6465849249d974d53eecc56c00ffda0fc3c7024bfa5b8e4d794b072\",\"amount\":\"546.323774\"},{\"i\":547,\"txid\":\"fadb19bfbddde11ed6828a22e742cc97f5589ce48ac8ec8f94a6510ad5f16b8b\",\"amount\":\"547.331693\"},{\"i\":548,\"txid\":\"6e2d4d3a3d4c4bb21b095657230061140c63b1ff4d89d85e32fb9a312319b35f\",\"amount\":\"548.339612\"},{\"i\":549,\"txid\":\"068814875fcdfb8faf539ef43cf5d109a22b7cfd28770e90b00be8c48bfc722f\",\"amount\":\"549.347531\"},{\"i\":550,\"txid\":\"f89f8d0e735a91c5269ab08d72fa27670d000e7561698d6e664e7b603f5c4e40\",\"amount\":\"550.355450\"},{\"i\":551,\"txid\":\"1f09802c4beac758321ae8a9f94d752b0976c7d54baa6e511bba8a7374107bef\",\"amount\":\"551.363369\"},{\"i\":552,\"txid\":\"cc6bb91d4a9aec9fe2e20ae49fd18166f522a7918a2ff2ecd1c2c35b5d4649e1\",\"amount\":\"552.371288\"},{\"i\":553,\"txid\":\"d40fbd13d527595c47eacbf0d7c87d256139d9d45261c25c2840d30a4756495b\",\"amount\":\"553.379207\"},{\"i\":554,\"txid\":\"833cd8c0e698745b16dac196a511327c3b30258a0d9b96710745d28eca932533\",\"amount\":\"554.387126\"},{\"i\":555,\"txid\":\"91a73fd806ab2c005c13b4dc19130a884e909dea3f72d46e30266fe1a1f588d8\",\"amount\":\"555.395045\"},{\"i\":556,\"txid\":\"9d6aa3d89c0171b9c2ccd57e6d41ccec3053d3c3f118386e7f10b89ebaa7b8e4\",\"amount\":\"556.402964\"},{\"i\":557,\"txid\":\"5fbc314fb0b511345465b5b907ec6961328e5e393ff831c8d74912184098bf41\",\"amount\":\"557.410883\"},{\"i\":558,\"txid\":\"dd8e8c8c9dae8978f122d7bcf3d0d49f6a0e86b9fc35528f55e78f7408927bb1\",\"amount\":\"558.418802\"},{\"i\":559,\"txid\":\"0d6f9709edaeba4bebf576d6b886b8c7083374f521f5256bf571add42fc7465c\",\"amount\":\"559.426721\"},{\"i\":560,\"txid\":\"6bcaea9882504292b2f6ea37a84b215463e71ab73b824ee90ecdc10c8dde71ed\",\"amount\":\"560.434640\"},{\"i\":561,\"txid\":\"04edd1d7736883194af3ddb232c337e53d17bc93cfd2140c4f4c4e0d966798b1\",\"amount\":\"561.442559\"},{\"i\":562,\"txid\":\"4eef24c6b8248c2271f6663f44ec0de3c2535ca396a22cf60051137d71721309\",\"amount\":\"562.450478\"},{\"i\":563,\"txid\":\"fa4ddf29f41b575377ce14a7900d1e26b669163ca53b80ea3168c6801cf7e114\",\"amount\":\"563.458397\"},{\"i\":564,\"txid\":\"621cb5d0bdea9584dc9f7ede1479e7cca67f8d9778d7e3c8c5cb8aa9eaef47ef\",\"amount\":\"564.466316\"},{\"i\":565,\"txid\":\"236b565af6b512826fd89dbbde2e88b94465f780985c134e58b62dea6ee258b2\",\"amount\":\"565.474235\"},{\"i\":566,\"txid\":\"c57727d64e318e2ea42af2b4c3360999ced134403066d050c980e7c6b70d49e4\",\"amount\":\"566.482154\"},{\"i\":567,\"txid\":\"97a6d21df7c51e8289ac1a8c026aaac143e15aa1957f54f42e30d8f8a85c3a55\",\"amount\":\"567.490073\"},{\"i\":568,\"txid\":\"f8818b67ab25419ad5b1bd61440573498e0785aad6c634c987fe5a637570f464\",\"amount\":\"568.497992\"},{\"i\":569,\"txid\":\"c7ce483fd1cc5fd498e7e2a09851c65f89a33a6837f66d9fbb36e5e5f70b41a2\",\"amount\":\"569.505911\"},{\"i\":570,\"txid\":\"085b2a38876eeddc33e3fbf612912d3d52a45c37cee95cf42cd3099d0a3fd8cb\",\"amount\":\"570.513830\"},{\"i\":571,\"txid\":\"f292c8c5c2fe9fd30ef1c632e6936edabe42f087e3cb50ceef0324b729383d82\",\"amount\":\"571.521749\"},{\"i\":572,\"txid\":\"5e74cb2ad4e2c9e2d3f59a1e6c8a5d4999df48e5dd69871d2798e0a146b91ee9\",\"amount\":\"572.529668\"},{\"i\":573,\"txid\":\"5b4afb8d2ed60a5777760a1cd17fb91b7c940c125cc7f74ae40b75df92036e5b\",\"amount\":\"573.537587\"},{\"i\":574,\"txid\":\"8e28c5eb829e92abf7a5a921f42364cbb8b255d7c9861a68a3814a9de95d9d67\",\"amount\":\"574.545506\"},{\"i\":575,\"txid\":\"fb84a9739699e1a2c6c56b5baa0a16047a4d845a5c6615ab9e18bafe688f45d6\",\"amount\":\"575.553425\"},{\"i\":576,\"txid\":\"f3457dabe1b412ed6374d56fe8fe3b969c761b77dcc80ecc0964b7c7641d219b\",\"amount\":\"576.561344\"},{\"i\":577,\"txid\":\"1086d35563c495c1cecbce12135cab3b945e01dd185ea2c1dc8ace5ad988977e\",\"amount\":\"577.569263\"},{\"i\":578,\"txid\":\"b2cc86ae48fd3b8775335b586b3549e53af3d749f07748a7343f893522ae63ea\",\"amount\":\"578.577182\"},{\"i\":579,\"txid\":\"59b524f8de039389005bce58385cae1d9241abd663e87647727abc8802e85c3b\",\"amount\":\"579.585101\"},{\"i\":580,\"txid\":\"de0023e398111d43424845aaeee2e119249cc0567e7b585eaba5f44080b458c6\",\"amount\":\"580.593020\"},{\"i\":581,\"txid\":\"4299da7466df09516d290f7a99c8b7a2fa94766eb94a61c24e1ce8f6ca80af44\",\"amount\":\"581.600939\"},{\"i\":582,\"txid\":\"421c0a7b6d0ee1c34e3d78f1685b6d95113fb2f1091919efaab45f1156a4e428\",\"amount\":\"582.608858\"},{\"i\":583,\"txid\":\"62bfa285013f08807d394266cdf8261dd060a704959ae9c20e4ad262b65da12a\",\"amount\":\"583.616777\"},{\"i\":584,\"txid\":\"085bcb597bbd610a7f0f955301d0fe3734b92a7144e87f68e8b5beec1a09b55b\",\"amount\":\"584.624696\"},{\"i\":585,\"txid\":\"c403741c4121989ac12c0829be88b8bec6f27b270f3cf8a7be3fe72cba473897\",\"amount\":\"585.632615\"},{\"i\":586,\"txid\":\"219de1387a6743e583e805aad3bf0ffc69dc2107e6d233d43ee8ab62434729e9\",\"amount\":\"586.640534\"},{\"i\":587,\"txid\":\"82a93b152b275d4c8de67c3d05c9b00e92477eeb024f117c7632cdb26fd874aa\",\"amount\":\"587.648453\"},{\"i\":588,\"txid\":\"a917ca757ac59f9d568616140c2f72362fc2722ab277e7b5019008f280f17beb\",\"amount\":\"588.656372\"},{\"i\":589,\"txid\":\"fbe697429f16141bc71e3b91f3823641c8dd258dd58bf076241514754954cb8c\",\"amount\":\"589.664291\"},{\"i\":590,\"txid\":\"e6fcc0253ed7a328a10eb6e2e1ad6abcad60c374c64dbac4b76da610085b43d8\",\"amount\":\"590.672210\"},{\"i\":591,\"txid\":\"60f070e3393291d6f836bf0acdca6138eadc4dd1d168ccaf03ab17cf0464f81b\",\"amount\":\"591.680129\"},{\"i\":592,\"txid\":\"793733573a1dfd14a2e889a11b2ad7b6981de29df813863b528dc1ae99416eeb\",\"amount\":\"592.688048\"},{\"i\":593,\"txid\":\"d4e33e2934280979f580a63f992daa7d0de2cd64a145d5c403a75c3dc5c0004e\",\"amount\":\"593.695967\"},{\"i\":594,\"txid\":\"e2fa8f5b4364b8ef4dd1f26ab47105d908d06ec84d835e3d1aac404a63f1464a\",\"amount\":\"594.703886\"},{\"i\":595,\"txid\":\"a3aaf5a0e9ad2901ab35ce73910be7fbbe1731a3ed1ff947a6ac395c5024a8b3\",\"amount\":\"595.711805\"},{\"i\":596,\"txid\":\"be6b5b7140b02bff9ad8fa5aaaeca5973791521c5029c9f6b42390f8b87ce2bd\",\"amount\":\"596.719724\"},{\"i\":597,\"txid\":\"fcf1e4bf9cc9c1083647b91463e86f49c6961406c37055c7eb8ad13937a519db\",\"amount\":\"597.727643\"},{\"i\":598,\"txid\":\"bf7db3a1fea244ba0c173404b5abb382def24d3bc547ca4f410bae2a311cdf85\",\"amount\":\"598.735562\"},{\"i\":599,\"txid\":\"182dc6b90f1c9cd913c39a6b5506f582caba9ddeadafe32f5bdbac25efd705ac\",\"amount\":\"599.743481\"},{\"i\":600,\"txid\":\"284b7e6d788f363f910f7beb1910473e23ce9d6c871f1ce0f31f22a982d48ad4\",\"amount\":\"600.751400\"},{\"i\":601,\"txid\":\"36c1cc2f9d7022bf6beacb6248a89e7e677b3bf9a91e6457a5ffdbade55b76da\",\"amount\":\"601.759319\"},{\"i\":602,\"txid\":\"aee4848a8580f31102073d34012cb3700fee3e61f9fcfd725fcfe5fa4a220ec3\",\"amount\":\"602.767238\"},{\"i\":603,\"txid\":\"97468f679ad305fa4dbbf17fd4bf18c41fb655f2d86162b1d91ad4f1e09814c1\",\"amount\":\"603.775157\"},{\"i\":604,\"txid\":\"3b86df3ff95ad2fd72102e34f3a721f2bdc876e12e3bd1434af8ab4cabbd5547\",\"amount\":\"604.783076\"},{\"i\":605,\"txid\":\"90b5bc7f03c840b2efddb22ffdfc37dd12cb391b49aa0fc8751726c04d32ff30\",\"amount\":\"605.790995\"},{\"i\":606,\"txid\":\"f57b8252cea0e3cad78056cbf96b9fc041279769afd2228f8c9a8a904550aeb0\",\"amount\":\"606.798914\"},{\"i\":607,\"txid\":\"67eab6db6703cdf9acf656bbb09640fcde2ff197786adbd9ae9c14936fc8d159\",\"amount\":\"607.806833\"},{\"i\":608,\"txid\":\"1de4d95a81eb1780d5c21a880a8be6595306670af426e40872b2a03c5cfb9996\",\"amount\":\"608.814752\"},{\"i\":609,\"txid\":\"1f594da9b409f7f4b9dc5015a81761b2fc2dd60eec773f74539bdfd30c552c89\",\"amount\":\"609.822671\"},{\"i\":610,\"txid\":\"01ce4b291ad3ecd240be71870340051b755e74e91e05d5c5baa0d7830c1b75d4\",\"amount\":\"610.830590\"},{\"i\":611,\"txid\":\"97623535a9ed79620c0c749a7c0a785de0f8a895807195daf2b0e58893db160e\",\"amount\":\"611.838509\"},{\"i\":612,\"txid\":\"55f0124bb79f5c53d868ca45bbb0f4d04da15eea4fb29c6b95087fe8801bf0a3\",\"amount\":\"612.846428\"},{\"i\":613,\"txid\":\"7595dae9cde82218336a5457ed9d55ec898c51623f73a69eefaa57a2cc9194fc\",\"amount\":\"613.854347\"},{\"i\":614,\"txid\":\"fa7aec4efb728534ef32c172197c9560097c6d0e4893fe6b20242a566ef033d1\",\"amount\":\"614.862266\"},{\"i\":615,\"txid\":\"3de8392541ace28284aca7f2724273739fcf4cf73de276a8ddd3547c0011323c\",\"amount\":\"615.870185\"},{\"i\":616,\"txid\":\"683d098205b11550f2d71016c82c4377a96c9f808e132f83f15ba9bd058c7b20\",\"amount\":\"616.878104\"},{\"i\":617,\"txid\":\"85ea151b8c5b5ab0d3349100e441bd4b8dc20740d429c16c3b85b77066386e75\",\"amount\":\"617.886023\"},{\"i\":618,\"txid\":\"ee377871c73631fd6543ddb5164d0b48ea072daa207a91ac696051e0838135dd\",\"amount\":\"618.893942\"}],\"pad\":\"0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef01\"}",
+    "body_sha256": "e554f47f4ac22cfe59ca77bb3b6bb7572f535cc86068a3caceed627013c6dd28",
+    "string_to_sign": "CC-HMAC-SHA256-WEBHOOK-V1\n1789430400\n7c9e6679-7425-40de-944b-e07fc1f90ae7\ne554f47f4ac22cfe59ca77bb3b6bb7572f535cc86068a3caceed627013c6dd28",
+    "signature": "v1=e97a2a16c0680590ca1fead31ce759675f51d6b0f6982272cb9198f7892d197d",
+    "now": 1789430400,
+    "expect": "ok"
+  },
+  {
+    "name": "key_ascii_hex",
+    "api_key": "9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08",
+    "timestamp": 1789430400,
+    "delivery_id": "7c9e6679-7425-40de-944b-e07fc1f90ae7",
+    "body": "{\"accuracy_payment_percent\":0.5,\"additional_data\":null,\"amount_crypto\":\"25.000000\",\"amount_fiat\":\"25.00\",\"can_cancel\":false,\"coins\":null,\"confirmations\":19,\"confirmed_at\":\"2026-09-15T00:04:09Z\",\"convert\":null,\"created_at\":\"2026-09-15T00:00:00Z\",\"currency\":\"USD\",\"event\":\"invoice.paid\",\"expired_at\":\"2026-09-15T01:00:00Z\",\"fact_amount_crypto\":\"25.000000\",\"fact_amount_fiat\":\"25.00\",\"from_address\":\"TJRabPrwbZy45sbavfcjinPJC18kjpRTv8\",\"has_choices\":false,\"is_expired\":false,\"is_test\":false,\"lifetime\":3600,\"memo\":null,\"mode\":\"fixed\",\"order_id\":\"ORD-2026-000187\",\"paid_at\":\"2026-09-15T00:03:12Z\",\"payment_coin\":\"USDT\",\"payment_link\":\"https://pay.crypto-chief.com/invoice/5b0c7a52-8a1e-4c0e-9d7b-2f3e4a5b6c7d?coin=USDT\\u0026network=TRON_MAINNET\",\"payment_network\":\"TRON_MAINNET\",\"prev_status\":\"confirm_check\",\"required_confirmations\":19,\"status\":\"paid\",\"to_address\":\"TLa2f6VPqDgRE67v1736s7bJ8Ray5wYjU7\",\"txid\":\"b3f1c0a4e5d6978812ab34cd56ef7890a1b2c3d4e5f60718293a4b5c6d7e8f90\",\"type\":\"payin\",\"url_callback\":\"https://shop.example/hooks/cc?shop=12\\u0026sig=a\\u003cb\\u003e\",\"url_error\":null,\"url_success\":\"https://shop.example/pay/success?order=ORD-2026-000187\\u0026lang=ru\",\"user_id\":null,\"uuid\":\"5b0c7a52-8a1e-4c0e-9d7b-2f3e4a5b6c7d\"}",
+    "body_sha256": "229f5bdcefd809cda3c2b32c9f2fbd2d87a1fa5318219ebdbb929d7e4fd5158f",
+    "string_to_sign": "CC-HMAC-SHA256-WEBHOOK-V1\n1789430400\n7c9e6679-7425-40de-944b-e07fc1f90ae7\n229f5bdcefd809cda3c2b32c9f2fbd2d87a1fa5318219ebdbb929d7e4fd5158f",
+    "signature": "v1=e728cbd3d3b8e6d17565c9cf604f68dc0ee1ee9e8ad8e72eeabc64a047f05082",
+    "now": 1789430400,
+    "expect": "ok"
+  },
+  {
+    "name": "key_non_ascii",
+    "api_key": "ключ-äpi-🔑",
+    "timestamp": 1789430400,
+    "delivery_id": "7c9e6679-7425-40de-944b-e07fc1f90ae7",
+    "body": "{\"accuracy_payment_percent\":0.5,\"additional_data\":null,\"amount_crypto\":\"25.000000\",\"amount_fiat\":\"25.00\",\"can_cancel\":false,\"coins\":null,\"confirmations\":19,\"confirmed_at\":\"2026-09-15T00:04:09Z\",\"convert\":null,\"created_at\":\"2026-09-15T00:00:00Z\",\"currency\":\"USD\",\"event\":\"invoice.paid\",\"expired_at\":\"2026-09-15T01:00:00Z\",\"fact_amount_crypto\":\"25.000000\",\"fact_amount_fiat\":\"25.00\",\"from_address\":\"TJRabPrwbZy45sbavfcjinPJC18kjpRTv8\",\"has_choices\":false,\"is_expired\":false,\"is_test\":false,\"lifetime\":3600,\"memo\":null,\"mode\":\"fixed\",\"order_id\":\"ORD-2026-000187\",\"paid_at\":\"2026-09-15T00:03:12Z\",\"payment_coin\":\"USDT\",\"payment_link\":\"https://pay.crypto-chief.com/invoice/5b0c7a52-8a1e-4c0e-9d7b-2f3e4a5b6c7d?coin=USDT\\u0026network=TRON_MAINNET\",\"payment_network\":\"TRON_MAINNET\",\"prev_status\":\"confirm_check\",\"required_confirmations\":19,\"status\":\"paid\",\"to_address\":\"TLa2f6VPqDgRE67v1736s7bJ8Ray5wYjU7\",\"txid\":\"b3f1c0a4e5d6978812ab34cd56ef7890a1b2c3d4e5f60718293a4b5c6d7e8f90\",\"type\":\"payin\",\"url_callback\":\"https://shop.example/hooks/cc?shop=12\\u0026sig=a\\u003cb\\u003e\",\"url_error\":null,\"url_success\":\"https://shop.example/pay/success?order=ORD-2026-000187\\u0026lang=ru\",\"user_id\":null,\"uuid\":\"5b0c7a52-8a1e-4c0e-9d7b-2f3e4a5b6c7d\"}",
+    "body_sha256": "229f5bdcefd809cda3c2b32c9f2fbd2d87a1fa5318219ebdbb929d7e4fd5158f",
+    "string_to_sign": "CC-HMAC-SHA256-WEBHOOK-V1\n1789430400\n7c9e6679-7425-40de-944b-e07fc1f90ae7\n229f5bdcefd809cda3c2b32c9f2fbd2d87a1fa5318219ebdbb929d7e4fd5158f",
+    "signature": "v1=dd11d05fd3b3a45a58d8997602ce0db4d17e9814732c423098711b00b978f483",
+    "now": 1789430400,
+    "expect": "ok"
+  },
+  {
+    "name": "delivery_id_uuid_uppercase",
+    "api_key": "test_api_key_123",
+    "timestamp": 1789430400,
+    "delivery_id": "7C9E6679-7425-40DE-944B-E07FC1F90AE7",
+    "body": "{\"event\":\"invoice.paid\",\"uuid\":\"5b0c7a52-8a1e-4c0e-9d7b-2f3e4a5b6c7d\"}",
+    "body_sha256": "d3ec852c09a153be0952d28981c995e9450e2a534919cece6001ac4e65bc52d8",
+    "string_to_sign": "CC-HMAC-SHA256-WEBHOOK-V1\n1789430400\n7C9E6679-7425-40DE-944B-E07FC1F90AE7\nd3ec852c09a153be0952d28981c995e9450e2a534919cece6001ac4e65bc52d8",
+    "signature": "v1=e6949eab3a5d671a6023d051224799c8a5283ee8a3751fda31351794818aca2d",
+    "now": 1789430400,
+    "expect": "ok"
+  },
+  {
+    "name": "delivery_id_one_char",
+    "api_key": "test_api_key_123",
+    "timestamp": 1789430400,
+    "delivery_id": "a",
+    "body": "{\"event\":\"invoice.paid\",\"uuid\":\"5b0c7a52-8a1e-4c0e-9d7b-2f3e4a5b6c7d\"}",
+    "body_sha256": "d3ec852c09a153be0952d28981c995e9450e2a534919cece6001ac4e65bc52d8",
+    "string_to_sign": "CC-HMAC-SHA256-WEBHOOK-V1\n1789430400\na\nd3ec852c09a153be0952d28981c995e9450e2a534919cece6001ac4e65bc52d8",
+    "signature": "v1=6518eeba702edf089f9dce40b91d3ffe09a335e0a4ed2b4910fc8fcb27e8d3f8",
+    "now": 1789430400,
+    "expect": "ok"
+  },
+  {
+    "name": "delivery_id_128_chars",
+    "api_key": "test_api_key_123",
+    "timestamp": 1789430400,
+    "delivery_id": "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_-0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_-",
+    "body": "{\"event\":\"invoice.paid\",\"uuid\":\"5b0c7a52-8a1e-4c0e-9d7b-2f3e4a5b6c7d\"}",
+    "body_sha256": "d3ec852c09a153be0952d28981c995e9450e2a534919cece6001ac4e65bc52d8",
+    "string_to_sign": "CC-HMAC-SHA256-WEBHOOK-V1\n1789430400\n0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_-0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_-\nd3ec852c09a153be0952d28981c995e9450e2a534919cece6001ac4e65bc52d8",
+    "signature": "v1=a90b2639d0529d9eb330ddd2c4752f382a8dac10594746f9918352a54e957067",
+    "now": 1789430400,
+    "expect": "ok"
+  },
+  {
+    "name": "delivery_id_underscore_hyphen",
+    "api_key": "test_api_key_123",
+    "timestamp": 1789430400,
+    "delivery_id": "dlv_2026-09-15_000001",
+    "body": "{\"event\":\"invoice.paid\",\"uuid\":\"5b0c7a52-8a1e-4c0e-9d7b-2f3e4a5b6c7d\"}",
+    "body_sha256": "d3ec852c09a153be0952d28981c995e9450e2a534919cece6001ac4e65bc52d8",
+    "string_to_sign": "CC-HMAC-SHA256-WEBHOOK-V1\n1789430400\ndlv_2026-09-15_000001\nd3ec852c09a153be0952d28981c995e9450e2a534919cece6001ac4e65bc52d8",
+    "signature": "v1=4f8424855c90a66429739b888979c943f6fc8d6f82bd1f793bce0a9252ef8407",
+    "now": 1789430400,
+    "expect": "ok"
+  },
+  {
+    "name": "timestamp_one_digit",
+    "api_key": "test_api_key_123",
+    "timestamp": 7,
+    "delivery_id": "7c9e6679-7425-40de-944b-e07fc1f90ae7",
+    "body": "{\"event\":\"invoice.paid\",\"uuid\":\"5b0c7a52-8a1e-4c0e-9d7b-2f3e4a5b6c7d\"}",
+    "body_sha256": "d3ec852c09a153be0952d28981c995e9450e2a534919cece6001ac4e65bc52d8",
+    "string_to_sign": "CC-HMAC-SHA256-WEBHOOK-V1\n7\n7c9e6679-7425-40de-944b-e07fc1f90ae7\nd3ec852c09a153be0952d28981c995e9450e2a534919cece6001ac4e65bc52d8",
+    "signature": "v1=068e80742d418c0d746c470e7e5d16f9bf036584cad4f1c5582358fcad492907",
+    "now": 7,
+    "expect": "ok"
+  },
+  {
+    "name": "timestamp_10_digits_now_plus_300",
+    "api_key": "test_api_key_123",
+    "timestamp": 1789430400,
+    "delivery_id": "7c9e6679-7425-40de-944b-e07fc1f90ae7",
+    "body": "{\"event\":\"invoice.paid\",\"uuid\":\"5b0c7a52-8a1e-4c0e-9d7b-2f3e4a5b6c7d\"}",
+    "body_sha256": "d3ec852c09a153be0952d28981c995e9450e2a534919cece6001ac4e65bc52d8",
+    "string_to_sign": "CC-HMAC-SHA256-WEBHOOK-V1\n1789430400\n7c9e6679-7425-40de-944b-e07fc1f90ae7\nd3ec852c09a153be0952d28981c995e9450e2a534919cece6001ac4e65bc52d8",
+    "signature": "v1=d2d99893c7d92bdb272a9a6241d056fefc9a89d42f0dbac9d4d0441f39aae057",
+    "now": 1789430700,
+    "expect": "ok"
+  },
+  {
+    "name": "timestamp_10_digits_now_minus_300",
+    "api_key": "test_api_key_123",
+    "timestamp": 1789430400,
+    "delivery_id": "7c9e6679-7425-40de-944b-e07fc1f90ae7",
+    "body": "{\"event\":\"invoice.paid\",\"uuid\":\"5b0c7a52-8a1e-4c0e-9d7b-2f3e4a5b6c7d\"}",
+    "body_sha256": "d3ec852c09a153be0952d28981c995e9450e2a534919cece6001ac4e65bc52d8",
+    "string_to_sign": "CC-HMAC-SHA256-WEBHOOK-V1\n1789430400\n7c9e6679-7425-40de-944b-e07fc1f90ae7\nd3ec852c09a153be0952d28981c995e9450e2a534919cece6001ac4e65bc52d8",
+    "signature": "v1=d2d99893c7d92bdb272a9a6241d056fefc9a89d42f0dbac9d4d0441f39aae057",
+    "now": 1789430100,
+    "expect": "ok"
+  },
+  {
+    "name": "timestamp_now_plus_301",
+    "api_key": "test_api_key_123",
+    "timestamp": 1789430400,
+    "delivery_id": "7c9e6679-7425-40de-944b-e07fc1f90ae7",
+    "body": "{\"event\":\"invoice.paid\",\"uuid\":\"5b0c7a52-8a1e-4c0e-9d7b-2f3e4a5b6c7d\"}",
+    "body_sha256": "d3ec852c09a153be0952d28981c995e9450e2a534919cece6001ac4e65bc52d8",
+    "string_to_sign": "CC-HMAC-SHA256-WEBHOOK-V1\n1789430400\n7c9e6679-7425-40de-944b-e07fc1f90ae7\nd3ec852c09a153be0952d28981c995e9450e2a534919cece6001ac4e65bc52d8",
+    "signature": "v1=d2d99893c7d92bdb272a9a6241d056fefc9a89d42f0dbac9d4d0441f39aae057",
+    "now": 1789430701,
+    "expect": "timestamp_out_of_range"
+  },
+  {
+    "name": "timestamp_now_minus_301",
+    "api_key": "test_api_key_123",
+    "timestamp": 1789430400,
+    "delivery_id": "7c9e6679-7425-40de-944b-e07fc1f90ae7",
+    "body": "{\"event\":\"invoice.paid\",\"uuid\":\"5b0c7a52-8a1e-4c0e-9d7b-2f3e4a5b6c7d\"}",
+    "body_sha256": "d3ec852c09a153be0952d28981c995e9450e2a534919cece6001ac4e65bc52d8",
+    "string_to_sign": "CC-HMAC-SHA256-WEBHOOK-V1\n1789430400\n7c9e6679-7425-40de-944b-e07fc1f90ae7\nd3ec852c09a153be0952d28981c995e9450e2a534919cece6001ac4e65bc52d8",
+    "signature": "v1=d2d99893c7d92bdb272a9a6241d056fefc9a89d42f0dbac9d4d0441f39aae057",
+    "now": 1789430099,
+    "expect": "timestamp_out_of_range"
+  },
+  {
+    "name": "signature_uppercase_hex",
+    "api_key": "test_api_key_123",
+    "timestamp": 1789430400,
+    "delivery_id": "7c9e6679-7425-40de-944b-e07fc1f90ae7",
+    "body": "{\"event\":\"invoice.paid\",\"uuid\":\"5b0c7a52-8a1e-4c0e-9d7b-2f3e4a5b6c7d\"}",
+    "body_sha256": "d3ec852c09a153be0952d28981c995e9450e2a534919cece6001ac4e65bc52d8",
+    "string_to_sign": "CC-HMAC-SHA256-WEBHOOK-V1\n1789430400\n7c9e6679-7425-40de-944b-e07fc1f90ae7\nd3ec852c09a153be0952d28981c995e9450e2a534919cece6001ac4e65bc52d8",
+    "signature": "v1=d2d99893c7d92bdb272a9a6241d056fefc9a89d42f0dbac9d4d0441f39aae057",
+    "now": 1789430400,
+    "expect": "ok",
+    "headers": {
+      "X-CC-Signature": [
+        "v1=D2D99893C7D92BDB272A9A6241D056FEFC9A89D42F0DBAC9D4D0441F39AAE057"
+      ]
+    }
+  },
+  {
+    "name": "signature_from_other_key",
+    "api_key": "test_api_key_123",
+    "timestamp": 1789430400,
+    "delivery_id": "7c9e6679-7425-40de-944b-e07fc1f90ae7",
+    "body": "{\"event\":\"invoice.paid\",\"uuid\":\"5b0c7a52-8a1e-4c0e-9d7b-2f3e4a5b6c7d\"}",
+    "body_sha256": "d3ec852c09a153be0952d28981c995e9450e2a534919cece6001ac4e65bc52d8",
+    "string_to_sign": "CC-HMAC-SHA256-WEBHOOK-V1\n1789430400\n7c9e6679-7425-40de-944b-e07fc1f90ae7\nd3ec852c09a153be0952d28981c995e9450e2a534919cece6001ac4e65bc52d8",
+    "signature": "v1=d2d99893c7d92bdb272a9a6241d056fefc9a89d42f0dbac9d4d0441f39aae057",
+    "now": 1789430400,
+    "expect": "bad_signature",
+    "headers": {
+      "X-CC-Signature": [
+        "v1=576f9b9a570e75201b8c0b5952779254c8b83e9236e6b8420c9af48eebe39c03"
+      ]
+    }
+  },
+  {
+    "name": "signature_from_other_body",
+    "api_key": "test_api_key_123",
+    "timestamp": 1789430400,
+    "delivery_id": "7c9e6679-7425-40de-944b-e07fc1f90ae7",
+    "body": "{\"event\":\"invoice.paid\",\"uuid\":\"5b0c7a52-8a1e-4c0e-9d7b-2f3e4a5b6c7d\"}",
+    "body_sha256": "d3ec852c09a153be0952d28981c995e9450e2a534919cece6001ac4e65bc52d8",
+    "string_to_sign": "CC-HMAC-SHA256-WEBHOOK-V1\n1789430400\n7c9e6679-7425-40de-944b-e07fc1f90ae7\nd3ec852c09a153be0952d28981c995e9450e2a534919cece6001ac4e65bc52d8",
+    "signature": "v1=d2d99893c7d92bdb272a9a6241d056fefc9a89d42f0dbac9d4d0441f39aae057",
+    "now": 1789430400,
+    "expect": "bad_signature",
+    "headers": {
+      "X-CC-Signature": [
+        "v1=6ba0cd639b8321714eab353f5e9c76ed05ca1da28574414c23c7e8c962eb1f39"
+      ]
+    }
+  },
+  {
+    "name": "signature_for_other_delivery_id",
+    "api_key": "test_api_key_123",
+    "timestamp": 1789430400,
+    "delivery_id": "7c9e6679-7425-40de-944b-e07fc1f90ae7",
+    "body": "{\"event\":\"invoice.paid\",\"uuid\":\"5b0c7a52-8a1e-4c0e-9d7b-2f3e4a5b6c7d\"}",
+    "body_sha256": "d3ec852c09a153be0952d28981c995e9450e2a534919cece6001ac4e65bc52d8",
+    "string_to_sign": "CC-HMAC-SHA256-WEBHOOK-V1\n1789430400\n7c9e6679-7425-40de-944b-e07fc1f90ae7\nd3ec852c09a153be0952d28981c995e9450e2a534919cece6001ac4e65bc52d8",
+    "signature": "v1=d2d99893c7d92bdb272a9a6241d056fefc9a89d42f0dbac9d4d0441f39aae057",
+    "now": 1789430400,
+    "expect": "bad_signature",
+    "headers": {
+      "X-Webhook-Delivery": [
+        "0b8f4d2e-3a71-4c5e-9f06-1d2c3b4a5e6f"
+      ]
+    }
+  },
+  {
+    "name": "signature_for_other_timestamp",
+    "api_key": "test_api_key_123",
+    "timestamp": 1789430400,
+    "delivery_id": "7c9e6679-7425-40de-944b-e07fc1f90ae7",
+    "body": "{\"event\":\"invoice.paid\",\"uuid\":\"5b0c7a52-8a1e-4c0e-9d7b-2f3e4a5b6c7d\"}",
+    "body_sha256": "d3ec852c09a153be0952d28981c995e9450e2a534919cece6001ac4e65bc52d8",
+    "string_to_sign": "CC-HMAC-SHA256-WEBHOOK-V1\n1789430400\n7c9e6679-7425-40de-944b-e07fc1f90ae7\nd3ec852c09a153be0952d28981c995e9450e2a534919cece6001ac4e65bc52d8",
+    "signature": "v1=d2d99893c7d92bdb272a9a6241d056fefc9a89d42f0dbac9d4d0441f39aae057",
+    "now": 1789430700,
+    "expect": "bad_signature",
+    "headers": {
+      "X-CC-Timestamp": [
+        "1789430700"
+      ]
+    }
+  },
+  {
+    "name": "signature_prefix_uppercase",
+    "api_key": "test_api_key_123",
+    "timestamp": 1789430400,
+    "delivery_id": "7c9e6679-7425-40de-944b-e07fc1f90ae7",
+    "body": "{\"event\":\"invoice.paid\",\"uuid\":\"5b0c7a52-8a1e-4c0e-9d7b-2f3e4a5b6c7d\"}",
+    "body_sha256": "d3ec852c09a153be0952d28981c995e9450e2a534919cece6001ac4e65bc52d8",
+    "string_to_sign": "CC-HMAC-SHA256-WEBHOOK-V1\n1789430400\n7c9e6679-7425-40de-944b-e07fc1f90ae7\nd3ec852c09a153be0952d28981c995e9450e2a534919cece6001ac4e65bc52d8",
+    "signature": "v1=d2d99893c7d92bdb272a9a6241d056fefc9a89d42f0dbac9d4d0441f39aae057",
+    "now": 1789430400,
+    "expect": "bad_headers",
+    "headers": {
+      "X-CC-Signature": [
+        "V1=d2d99893c7d92bdb272a9a6241d056fefc9a89d42f0dbac9d4d0441f39aae057"
+      ]
+    }
+  },
+  {
+    "name": "signature_without_prefix",
+    "api_key": "test_api_key_123",
+    "timestamp": 1789430400,
+    "delivery_id": "7c9e6679-7425-40de-944b-e07fc1f90ae7",
+    "body": "{\"event\":\"invoice.paid\",\"uuid\":\"5b0c7a52-8a1e-4c0e-9d7b-2f3e4a5b6c7d\"}",
+    "body_sha256": "d3ec852c09a153be0952d28981c995e9450e2a534919cece6001ac4e65bc52d8",
+    "string_to_sign": "CC-HMAC-SHA256-WEBHOOK-V1\n1789430400\n7c9e6679-7425-40de-944b-e07fc1f90ae7\nd3ec852c09a153be0952d28981c995e9450e2a534919cece6001ac4e65bc52d8",
+    "signature": "v1=d2d99893c7d92bdb272a9a6241d056fefc9a89d42f0dbac9d4d0441f39aae057",
+    "now": 1789430400,
+    "expect": "bad_headers",
+    "headers": {
+      "X-CC-Signature": [
+        "d2d99893c7d92bdb272a9a6241d056fefc9a89d42f0dbac9d4d0441f39aae057"
+      ]
+    }
+  },
+  {
+    "name": "signature_63_hex",
+    "api_key": "test_api_key_123",
+    "timestamp": 1789430400,
+    "delivery_id": "7c9e6679-7425-40de-944b-e07fc1f90ae7",
+    "body": "{\"event\":\"invoice.paid\",\"uuid\":\"5b0c7a52-8a1e-4c0e-9d7b-2f3e4a5b6c7d\"}",
+    "body_sha256": "d3ec852c09a153be0952d28981c995e9450e2a534919cece6001ac4e65bc52d8",
+    "string_to_sign": "CC-HMAC-SHA256-WEBHOOK-V1\n1789430400\n7c9e6679-7425-40de-944b-e07fc1f90ae7\nd3ec852c09a153be0952d28981c995e9450e2a534919cece6001ac4e65bc52d8",
+    "signature": "v1=d2d99893c7d92bdb272a9a6241d056fefc9a89d42f0dbac9d4d0441f39aae057",
+    "now": 1789430400,
+    "expect": "bad_headers",
+    "headers": {
+      "X-CC-Signature": [
+        "v1=d2d99893c7d92bdb272a9a6241d056fefc9a89d42f0dbac9d4d0441f39aae05"
+      ]
+    }
+  },
+  {
+    "name": "signature_65_hex",
+    "api_key": "test_api_key_123",
+    "timestamp": 1789430400,
+    "delivery_id": "7c9e6679-7425-40de-944b-e07fc1f90ae7",
+    "body": "{\"event\":\"invoice.paid\",\"uuid\":\"5b0c7a52-8a1e-4c0e-9d7b-2f3e4a5b6c7d\"}",
+    "body_sha256": "d3ec852c09a153be0952d28981c995e9450e2a534919cece6001ac4e65bc52d8",
+    "string_to_sign": "CC-HMAC-SHA256-WEBHOOK-V1\n1789430400\n7c9e6679-7425-40de-944b-e07fc1f90ae7\nd3ec852c09a153be0952d28981c995e9450e2a534919cece6001ac4e65bc52d8",
+    "signature": "v1=d2d99893c7d92bdb272a9a6241d056fefc9a89d42f0dbac9d4d0441f39aae057",
+    "now": 1789430400,
+    "expect": "bad_headers",
+    "headers": {
+      "X-CC-Signature": [
+        "v1=d2d99893c7d92bdb272a9a6241d056fefc9a89d42f0dbac9d4d0441f39aae0570"
+      ]
+    }
+  },
+  {
+    "name": "signature_non_hex_char",
+    "api_key": "test_api_key_123",
+    "timestamp": 1789430400,
+    "delivery_id": "7c9e6679-7425-40de-944b-e07fc1f90ae7",
+    "body": "{\"event\":\"invoice.paid\",\"uuid\":\"5b0c7a52-8a1e-4c0e-9d7b-2f3e4a5b6c7d\"}",
+    "body_sha256": "d3ec852c09a153be0952d28981c995e9450e2a534919cece6001ac4e65bc52d8",
+    "string_to_sign": "CC-HMAC-SHA256-WEBHOOK-V1\n1789430400\n7c9e6679-7425-40de-944b-e07fc1f90ae7\nd3ec852c09a153be0952d28981c995e9450e2a534919cece6001ac4e65bc52d8",
+    "signature": "v1=d2d99893c7d92bdb272a9a6241d056fefc9a89d42f0dbac9d4d0441f39aae057",
+    "now": 1789430400,
+    "expect": "bad_headers",
+    "headers": {
+      "X-CC-Signature": [
+        "v1=d2d99893c7d92bdb272a9a6241d056fefc9a89d42f0dbac9d4d0441f39aae05g"
+      ]
+    }
+  },
+  {
+    "name": "signature_header_empty_value",
+    "api_key": "test_api_key_123",
+    "timestamp": 1789430400,
+    "delivery_id": "7c9e6679-7425-40de-944b-e07fc1f90ae7",
+    "body": "{\"event\":\"invoice.paid\",\"uuid\":\"5b0c7a52-8a1e-4c0e-9d7b-2f3e4a5b6c7d\"}",
+    "body_sha256": "d3ec852c09a153be0952d28981c995e9450e2a534919cece6001ac4e65bc52d8",
+    "string_to_sign": "CC-HMAC-SHA256-WEBHOOK-V1\n1789430400\n7c9e6679-7425-40de-944b-e07fc1f90ae7\nd3ec852c09a153be0952d28981c995e9450e2a534919cece6001ac4e65bc52d8",
+    "signature": "v1=d2d99893c7d92bdb272a9a6241d056fefc9a89d42f0dbac9d4d0441f39aae057",
+    "now": 1789430400,
+    "expect": "bad_headers",
+    "headers": {
+      "X-CC-Signature": [
+        ""
+      ]
+    }
+  },
+  {
+    "name": "headers_space_tab_padding",
+    "api_key": "test_api_key_123",
+    "timestamp": 1789430400,
+    "delivery_id": "7c9e6679-7425-40de-944b-e07fc1f90ae7",
+    "body": "{\"event\":\"invoice.paid\",\"uuid\":\"5b0c7a52-8a1e-4c0e-9d7b-2f3e4a5b6c7d\"}",
+    "body_sha256": "d3ec852c09a153be0952d28981c995e9450e2a534919cece6001ac4e65bc52d8",
+    "string_to_sign": "CC-HMAC-SHA256-WEBHOOK-V1\n1789430400\n7c9e6679-7425-40de-944b-e07fc1f90ae7\nd3ec852c09a153be0952d28981c995e9450e2a534919cece6001ac4e65bc52d8",
+    "signature": "v1=d2d99893c7d92bdb272a9a6241d056fefc9a89d42f0dbac9d4d0441f39aae057",
+    "now": 1789430400,
+    "expect": "ok",
+    "headers": {
+      "X-CC-Signature": [
+        "  v1=d2d99893c7d92bdb272a9a6241d056fefc9a89d42f0dbac9d4d0441f39aae057\t"
+      ],
+      "X-CC-Timestamp": [
+        " \t1789430400\t "
+      ],
+      "X-Webhook-Delivery": [
+        "\t7c9e6679-7425-40de-944b-e07fc1f90ae7  "
+      ]
+    }
+  },
+  {
+    "name": "signature_nbsp_padding",
+    "api_key": "test_api_key_123",
+    "timestamp": 1789430400,
+    "delivery_id": "7c9e6679-7425-40de-944b-e07fc1f90ae7",
+    "body": "{\"event\":\"invoice.paid\",\"uuid\":\"5b0c7a52-8a1e-4c0e-9d7b-2f3e4a5b6c7d\"}",
+    "body_sha256": "d3ec852c09a153be0952d28981c995e9450e2a534919cece6001ac4e65bc52d8",
+    "string_to_sign": "CC-HMAC-SHA256-WEBHOOK-V1\n1789430400\n7c9e6679-7425-40de-944b-e07fc1f90ae7\nd3ec852c09a153be0952d28981c995e9450e2a534919cece6001ac4e65bc52d8",
+    "signature": "v1=d2d99893c7d92bdb272a9a6241d056fefc9a89d42f0dbac9d4d0441f39aae057",
+    "now": 1789430400,
+    "expect": "bad_headers",
+    "headers": {
+      "X-CC-Signature": [
+        "\u00a0v1=d2d99893c7d92bdb272a9a6241d056fefc9a89d42f0dbac9d4d0441f39aae057\u00a0"
+      ]
+    }
+  },
+  {
+    "name": "timestamp_nbsp_padding",
+    "api_key": "test_api_key_123",
+    "timestamp": 1789430400,
+    "delivery_id": "7c9e6679-7425-40de-944b-e07fc1f90ae7",
+    "body": "{\"event\":\"invoice.paid\",\"uuid\":\"5b0c7a52-8a1e-4c0e-9d7b-2f3e4a5b6c7d\"}",
+    "body_sha256": "d3ec852c09a153be0952d28981c995e9450e2a534919cece6001ac4e65bc52d8",
+    "string_to_sign": "CC-HMAC-SHA256-WEBHOOK-V1\n1789430400\n7c9e6679-7425-40de-944b-e07fc1f90ae7\nd3ec852c09a153be0952d28981c995e9450e2a534919cece6001ac4e65bc52d8",
+    "signature": "v1=d2d99893c7d92bdb272a9a6241d056fefc9a89d42f0dbac9d4d0441f39aae057",
+    "now": 1789430400,
+    "expect": "bad_headers",
+    "headers": {
+      "X-CC-Timestamp": [
+        "\u00a01789430400\u00a0"
+      ]
+    }
+  },
+  {
+    "name": "delivery_id_nbsp_padding",
+    "api_key": "test_api_key_123",
+    "timestamp": 1789430400,
+    "delivery_id": "7c9e6679-7425-40de-944b-e07fc1f90ae7",
+    "body": "{\"event\":\"invoice.paid\",\"uuid\":\"5b0c7a52-8a1e-4c0e-9d7b-2f3e4a5b6c7d\"}",
+    "body_sha256": "d3ec852c09a153be0952d28981c995e9450e2a534919cece6001ac4e65bc52d8",
+    "string_to_sign": "CC-HMAC-SHA256-WEBHOOK-V1\n1789430400\n7c9e6679-7425-40de-944b-e07fc1f90ae7\nd3ec852c09a153be0952d28981c995e9450e2a534919cece6001ac4e65bc52d8",
+    "signature": "v1=d2d99893c7d92bdb272a9a6241d056fefc9a89d42f0dbac9d4d0441f39aae057",
+    "now": 1789430400,
+    "expect": "bad_headers",
+    "headers": {
+      "X-Webhook-Delivery": [
+        "\u00a07c9e6679-7425-40de-944b-e07fc1f90ae7\u00a0"
+      ]
+    }
+  },
+  {
+    "name": "timestamp_missing",
+    "api_key": "test_api_key_123",
+    "timestamp": 1789430400,
+    "delivery_id": "7c9e6679-7425-40de-944b-e07fc1f90ae7",
+    "body": "{\"event\":\"invoice.paid\",\"uuid\":\"5b0c7a52-8a1e-4c0e-9d7b-2f3e4a5b6c7d\"}",
+    "body_sha256": "d3ec852c09a153be0952d28981c995e9450e2a534919cece6001ac4e65bc52d8",
+    "string_to_sign": "CC-HMAC-SHA256-WEBHOOK-V1\n1789430400\n7c9e6679-7425-40de-944b-e07fc1f90ae7\nd3ec852c09a153be0952d28981c995e9450e2a534919cece6001ac4e65bc52d8",
+    "signature": "v1=d2d99893c7d92bdb272a9a6241d056fefc9a89d42f0dbac9d4d0441f39aae057",
+    "now": 1789430400,
+    "expect": "bad_headers",
+    "headers": {
+      "X-CC-Timestamp": []
+    }
+  },
+  {
+    "name": "delivery_id_missing",
+    "api_key": "test_api_key_123",
+    "timestamp": 1789430400,
+    "delivery_id": "7c9e6679-7425-40de-944b-e07fc1f90ae7",
+    "body": "{\"event\":\"invoice.paid\",\"uuid\":\"5b0c7a52-8a1e-4c0e-9d7b-2f3e4a5b6c7d\"}",
+    "body_sha256": "d3ec852c09a153be0952d28981c995e9450e2a534919cece6001ac4e65bc52d8",
+    "string_to_sign": "CC-HMAC-SHA256-WEBHOOK-V1\n1789430400\n7c9e6679-7425-40de-944b-e07fc1f90ae7\nd3ec852c09a153be0952d28981c995e9450e2a534919cece6001ac4e65bc52d8",
+    "signature": "v1=d2d99893c7d92bdb272a9a6241d056fefc9a89d42f0dbac9d4d0441f39aae057",
+    "now": 1789430400,
+    "expect": "bad_headers",
+    "headers": {
+      "X-Webhook-Delivery": []
+    }
+  },
+  {
+    "name": "signature_missing",
+    "api_key": "test_api_key_123",
+    "timestamp": 1789430400,
+    "delivery_id": "7c9e6679-7425-40de-944b-e07fc1f90ae7",
+    "body": "{\"event\":\"invoice.paid\",\"uuid\":\"5b0c7a52-8a1e-4c0e-9d7b-2f3e4a5b6c7d\"}",
+    "body_sha256": "d3ec852c09a153be0952d28981c995e9450e2a534919cece6001ac4e65bc52d8",
+    "string_to_sign": "CC-HMAC-SHA256-WEBHOOK-V1\n1789430400\n7c9e6679-7425-40de-944b-e07fc1f90ae7\nd3ec852c09a153be0952d28981c995e9450e2a534919cece6001ac4e65bc52d8",
+    "signature": "v1=d2d99893c7d92bdb272a9a6241d056fefc9a89d42f0dbac9d4d0441f39aae057",
+    "now": 1789430400,
+    "expect": "bad_headers",
+    "headers": {
+      "X-CC-Signature": []
+    }
+  },
+  {
+    "name": "timestamp_leading_plus",
+    "api_key": "test_api_key_123",
+    "timestamp": 1789430400,
+    "delivery_id": "7c9e6679-7425-40de-944b-e07fc1f90ae7",
+    "body": "{\"event\":\"invoice.paid\",\"uuid\":\"5b0c7a52-8a1e-4c0e-9d7b-2f3e4a5b6c7d\"}",
+    "body_sha256": "d3ec852c09a153be0952d28981c995e9450e2a534919cece6001ac4e65bc52d8",
+    "string_to_sign": "CC-HMAC-SHA256-WEBHOOK-V1\n1789430400\n7c9e6679-7425-40de-944b-e07fc1f90ae7\nd3ec852c09a153be0952d28981c995e9450e2a534919cece6001ac4e65bc52d8",
+    "signature": "v1=d2d99893c7d92bdb272a9a6241d056fefc9a89d42f0dbac9d4d0441f39aae057",
+    "now": 1789430400,
+    "expect": "bad_headers",
+    "headers": {
+      "X-CC-Timestamp": [
+        "+1789430400"
+      ]
+    }
+  },
+  {
+    "name": "timestamp_leading_zero",
+    "api_key": "test_api_key_123",
+    "timestamp": 1789430400,
+    "delivery_id": "7c9e6679-7425-40de-944b-e07fc1f90ae7",
+    "body": "{\"event\":\"invoice.paid\",\"uuid\":\"5b0c7a52-8a1e-4c0e-9d7b-2f3e4a5b6c7d\"}",
+    "body_sha256": "d3ec852c09a153be0952d28981c995e9450e2a534919cece6001ac4e65bc52d8",
+    "string_to_sign": "CC-HMAC-SHA256-WEBHOOK-V1\n1789430400\n7c9e6679-7425-40de-944b-e07fc1f90ae7\nd3ec852c09a153be0952d28981c995e9450e2a534919cece6001ac4e65bc52d8",
+    "signature": "v1=d2d99893c7d92bdb272a9a6241d056fefc9a89d42f0dbac9d4d0441f39aae057",
+    "now": 1789430400,
+    "expect": "bad_headers",
+    "headers": {
+      "X-CC-Timestamp": [
+        "01789430400"
+      ]
+    }
+  },
+  {
+    "name": "timestamp_fraction",
+    "api_key": "test_api_key_123",
+    "timestamp": 1789430400,
+    "delivery_id": "7c9e6679-7425-40de-944b-e07fc1f90ae7",
+    "body": "{\"event\":\"invoice.paid\",\"uuid\":\"5b0c7a52-8a1e-4c0e-9d7b-2f3e4a5b6c7d\"}",
+    "body_sha256": "d3ec852c09a153be0952d28981c995e9450e2a534919cece6001ac4e65bc52d8",
+    "string_to_sign": "CC-HMAC-SHA256-WEBHOOK-V1\n1789430400\n7c9e6679-7425-40de-944b-e07fc1f90ae7\nd3ec852c09a153be0952d28981c995e9450e2a534919cece6001ac4e65bc52d8",
+    "signature": "v1=d2d99893c7d92bdb272a9a6241d056fefc9a89d42f0dbac9d4d0441f39aae057",
+    "now": 1789430400,
+    "expect": "bad_headers",
+    "headers": {
+      "X-CC-Timestamp": [
+        "1789430400.0"
+      ]
+    }
+  },
+  {
+    "name": "timestamp_negative",
+    "api_key": "test_api_key_123",
+    "timestamp": 1789430400,
+    "delivery_id": "7c9e6679-7425-40de-944b-e07fc1f90ae7",
+    "body": "{\"event\":\"invoice.paid\",\"uuid\":\"5b0c7a52-8a1e-4c0e-9d7b-2f3e4a5b6c7d\"}",
+    "body_sha256": "d3ec852c09a153be0952d28981c995e9450e2a534919cece6001ac4e65bc52d8",
+    "string_to_sign": "CC-HMAC-SHA256-WEBHOOK-V1\n1789430400\n7c9e6679-7425-40de-944b-e07fc1f90ae7\nd3ec852c09a153be0952d28981c995e9450e2a534919cece6001ac4e65bc52d8",
+    "signature": "v1=d2d99893c7d92bdb272a9a6241d056fefc9a89d42f0dbac9d4d0441f39aae057",
+    "now": 1789430400,
+    "expect": "bad_headers",
+    "headers": {
+      "X-CC-Timestamp": [
+        "-1789430400"
+      ]
+    }
+  },
+  {
+    "name": "timestamp_empty",
+    "api_key": "test_api_key_123",
+    "timestamp": 1789430400,
+    "delivery_id": "7c9e6679-7425-40de-944b-e07fc1f90ae7",
+    "body": "{\"event\":\"invoice.paid\",\"uuid\":\"5b0c7a52-8a1e-4c0e-9d7b-2f3e4a5b6c7d\"}",
+    "body_sha256": "d3ec852c09a153be0952d28981c995e9450e2a534919cece6001ac4e65bc52d8",
+    "string_to_sign": "CC-HMAC-SHA256-WEBHOOK-V1\n1789430400\n7c9e6679-7425-40de-944b-e07fc1f90ae7\nd3ec852c09a153be0952d28981c995e9450e2a534919cece6001ac4e65bc52d8",
+    "signature": "v1=d2d99893c7d92bdb272a9a6241d056fefc9a89d42f0dbac9d4d0441f39aae057",
+    "now": 1789430400,
+    "expect": "bad_headers",
+    "headers": {
+      "X-CC-Timestamp": [
+        ""
+      ]
+    }
+  },
+  {
+    "name": "delivery_id_129_chars",
+    "api_key": "test_api_key_123",
+    "timestamp": 1789430400,
+    "delivery_id": "7c9e6679-7425-40de-944b-e07fc1f90ae7",
+    "body": "{\"event\":\"invoice.paid\",\"uuid\":\"5b0c7a52-8a1e-4c0e-9d7b-2f3e4a5b6c7d\"}",
+    "body_sha256": "d3ec852c09a153be0952d28981c995e9450e2a534919cece6001ac4e65bc52d8",
+    "string_to_sign": "CC-HMAC-SHA256-WEBHOOK-V1\n1789430400\n7c9e6679-7425-40de-944b-e07fc1f90ae7\nd3ec852c09a153be0952d28981c995e9450e2a534919cece6001ac4e65bc52d8",
+    "signature": "v1=d2d99893c7d92bdb272a9a6241d056fefc9a89d42f0dbac9d4d0441f39aae057",
+    "now": 1789430400,
+    "expect": "bad_headers",
+    "headers": {
+      "X-Webhook-Delivery": [
+        "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_-0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_-a"
+      ]
+    }
+  },
+  {
+    "name": "delivery_id_with_dot",
+    "api_key": "test_api_key_123",
+    "timestamp": 1789430400,
+    "delivery_id": "7c9e6679-7425-40de-944b-e07fc1f90ae7",
+    "body": "{\"event\":\"invoice.paid\",\"uuid\":\"5b0c7a52-8a1e-4c0e-9d7b-2f3e4a5b6c7d\"}",
+    "body_sha256": "d3ec852c09a153be0952d28981c995e9450e2a534919cece6001ac4e65bc52d8",
+    "string_to_sign": "CC-HMAC-SHA256-WEBHOOK-V1\n1789430400\n7c9e6679-7425-40de-944b-e07fc1f90ae7\nd3ec852c09a153be0952d28981c995e9450e2a534919cece6001ac4e65bc52d8",
+    "signature": "v1=d2d99893c7d92bdb272a9a6241d056fefc9a89d42f0dbac9d4d0441f39aae057",
+    "now": 1789430400,
+    "expect": "bad_headers",
+    "headers": {
+      "X-Webhook-Delivery": [
+        "dlv.000001"
+      ]
+    }
+  },
+  {
+    "name": "delivery_id_empty",
+    "api_key": "test_api_key_123",
+    "timestamp": 1789430400,
+    "delivery_id": "7c9e6679-7425-40de-944b-e07fc1f90ae7",
+    "body": "{\"event\":\"invoice.paid\",\"uuid\":\"5b0c7a52-8a1e-4c0e-9d7b-2f3e4a5b6c7d\"}",
+    "body_sha256": "d3ec852c09a153be0952d28981c995e9450e2a534919cece6001ac4e65bc52d8",
+    "string_to_sign": "CC-HMAC-SHA256-WEBHOOK-V1\n1789430400\n7c9e6679-7425-40de-944b-e07fc1f90ae7\nd3ec852c09a153be0952d28981c995e9450e2a534919cece6001ac4e65bc52d8",
+    "signature": "v1=d2d99893c7d92bdb272a9a6241d056fefc9a89d42f0dbac9d4d0441f39aae057",
+    "now": 1789430400,
+    "expect": "bad_headers",
+    "headers": {
+      "X-Webhook-Delivery": [
+        ""
+      ]
+    }
+  },
+  {
+    "name": "signature_header_repeated",
+    "api_key": "test_api_key_123",
+    "timestamp": 1789430400,
+    "delivery_id": "7c9e6679-7425-40de-944b-e07fc1f90ae7",
+    "body": "{\"event\":\"invoice.paid\",\"uuid\":\"5b0c7a52-8a1e-4c0e-9d7b-2f3e4a5b6c7d\"}",
+    "body_sha256": "d3ec852c09a153be0952d28981c995e9450e2a534919cece6001ac4e65bc52d8",
+    "string_to_sign": "CC-HMAC-SHA256-WEBHOOK-V1\n1789430400\n7c9e6679-7425-40de-944b-e07fc1f90ae7\nd3ec852c09a153be0952d28981c995e9450e2a534919cece6001ac4e65bc52d8",
+    "signature": "v1=d2d99893c7d92bdb272a9a6241d056fefc9a89d42f0dbac9d4d0441f39aae057",
+    "now": 1789430400,
+    "expect": "bad_headers",
+    "headers": {
+      "X-CC-Signature": [
+        "v1=d2d99893c7d92bdb272a9a6241d056fefc9a89d42f0dbac9d4d0441f39aae057",
+        "v1=d2d99893c7d92bdb272a9a6241d056fefc9a89d42f0dbac9d4d0441f39aae057"
+      ]
+    }
+  },
+  {
+    "name": "timestamp_header_repeated",
+    "api_key": "test_api_key_123",
+    "timestamp": 1789430400,
+    "delivery_id": "7c9e6679-7425-40de-944b-e07fc1f90ae7",
+    "body": "{\"event\":\"invoice.paid\",\"uuid\":\"5b0c7a52-8a1e-4c0e-9d7b-2f3e4a5b6c7d\"}",
+    "body_sha256": "d3ec852c09a153be0952d28981c995e9450e2a534919cece6001ac4e65bc52d8",
+    "string_to_sign": "CC-HMAC-SHA256-WEBHOOK-V1\n1789430400\n7c9e6679-7425-40de-944b-e07fc1f90ae7\nd3ec852c09a153be0952d28981c995e9450e2a534919cece6001ac4e65bc52d8",
+    "signature": "v1=d2d99893c7d92bdb272a9a6241d056fefc9a89d42f0dbac9d4d0441f39aae057",
+    "now": 1789430400,
+    "expect": "bad_headers",
+    "headers": {
+      "X-CC-Timestamp": [
+        "1789430400",
+        "1789430400"
+      ]
+    }
+  },
+  {
+    "name": "delivery_id_header_repeated",
+    "api_key": "test_api_key_123",
+    "timestamp": 1789430400,
+    "delivery_id": "7c9e6679-7425-40de-944b-e07fc1f90ae7",
+    "body": "{\"event\":\"invoice.paid\",\"uuid\":\"5b0c7a52-8a1e-4c0e-9d7b-2f3e4a5b6c7d\"}",
+    "body_sha256": "d3ec852c09a153be0952d28981c995e9450e2a534919cece6001ac4e65bc52d8",
+    "string_to_sign": "CC-HMAC-SHA256-WEBHOOK-V1\n1789430400\n7c9e6679-7425-40de-944b-e07fc1f90ae7\nd3ec852c09a153be0952d28981c995e9450e2a534919cece6001ac4e65bc52d8",
+    "signature": "v1=d2d99893c7d92bdb272a9a6241d056fefc9a89d42f0dbac9d4d0441f39aae057",
+    "now": 1789430400,
+    "expect": "bad_headers",
+    "headers": {
+      "X-Webhook-Delivery": [
+        "7c9e6679-7425-40de-944b-e07fc1f90ae7",
+        "7c9e6679-7425-40de-944b-e07fc1f90ae7"
+      ]
+    }
+  },
+  {
+    "name": "signature_trailing_crlf",
+    "api_key": "test_api_key_123",
+    "timestamp": 1789430400,
+    "delivery_id": "7c9e6679-7425-40de-944b-e07fc1f90ae7",
+    "body": "{\"event\":\"invoice.paid\",\"uuid\":\"5b0c7a52-8a1e-4c0e-9d7b-2f3e4a5b6c7d\"}",
+    "body_sha256": "d3ec852c09a153be0952d28981c995e9450e2a534919cece6001ac4e65bc52d8",
+    "string_to_sign": "CC-HMAC-SHA256-WEBHOOK-V1\n1789430400\n7c9e6679-7425-40de-944b-e07fc1f90ae7\nd3ec852c09a153be0952d28981c995e9450e2a534919cece6001ac4e65bc52d8",
+    "signature": "v1=d2d99893c7d92bdb272a9a6241d056fefc9a89d42f0dbac9d4d0441f39aae057",
+    "now": 1789430400,
+    "expect": "bad_headers",
+    "headers": {
+      "X-CC-Signature": [
+        "v1=d2d99893c7d92bdb272a9a6241d056fefc9a89d42f0dbac9d4d0441f39aae057\r\n"
+      ]
+    }
+  },
+  {
+    "name": "timestamp_trailing_lf",
+    "api_key": "test_api_key_123",
+    "timestamp": 1789430400,
+    "delivery_id": "7c9e6679-7425-40de-944b-e07fc1f90ae7",
+    "body": "{\"event\":\"invoice.paid\",\"uuid\":\"5b0c7a52-8a1e-4c0e-9d7b-2f3e4a5b6c7d\"}",
+    "body_sha256": "d3ec852c09a153be0952d28981c995e9450e2a534919cece6001ac4e65bc52d8",
+    "string_to_sign": "CC-HMAC-SHA256-WEBHOOK-V1\n1789430400\n7c9e6679-7425-40de-944b-e07fc1f90ae7\nd3ec852c09a153be0952d28981c995e9450e2a534919cece6001ac4e65bc52d8",
+    "signature": "v1=d2d99893c7d92bdb272a9a6241d056fefc9a89d42f0dbac9d4d0441f39aae057",
+    "now": 1789430400,
+    "expect": "bad_headers",
+    "headers": {
+      "X-CC-Timestamp": [
+        "1789430400\n"
+      ]
+    }
+  },
+  {
+    "name": "delivery_id_inner_cr",
+    "api_key": "test_api_key_123",
+    "timestamp": 1789430400,
+    "delivery_id": "7c9e6679-7425-40de-944b-e07fc1f90ae7",
+    "body": "{\"event\":\"invoice.paid\",\"uuid\":\"5b0c7a52-8a1e-4c0e-9d7b-2f3e4a5b6c7d\"}",
+    "body_sha256": "d3ec852c09a153be0952d28981c995e9450e2a534919cece6001ac4e65bc52d8",
+    "string_to_sign": "CC-HMAC-SHA256-WEBHOOK-V1\n1789430400\n7c9e6679-7425-40de-944b-e07fc1f90ae7\nd3ec852c09a153be0952d28981c995e9450e2a534919cece6001ac4e65bc52d8",
+    "signature": "v1=d2d99893c7d92bdb272a9a6241d056fefc9a89d42f0dbac9d4d0441f39aae057",
+    "now": 1789430400,
+    "expect": "bad_headers",
+    "headers": {
+      "X-Webhook-Delivery": [
+        "dlv\r000001"
+      ]
+    }
+  }
+]

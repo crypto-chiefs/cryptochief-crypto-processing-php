@@ -3,21 +3,25 @@
 declare(strict_types=1);
 
 /**
- * Minimal webhook receiver using PHP's built-in dev server. Verifies the signature
- * against the raw body before parsing into a typed event.
+ * Minimal webhook receiver using PHP's built-in dev server. Verifies the HMAC v1 signature
+ * over the raw body before parsing into a typed event.
  *
  *   API_KEY=... php -S 127.0.0.1:8080 examples/webhook_server.php
  *
- * Pass the EXACT raw request body to the verifier (no re-encoding):
+ * The built-in server is for local trials; run a receiver behind PHP-FPM.
  *
- *   $raw = $request->getContent();                           // Laravel / Symfony
- *   $raw = (string) $request->getBody();                     // PSR-7
- *   $event = Webhook::parseEvent($apiKey, $raw, $request->getHeaderLine('Signature'));
+ * Pass the EXACT raw request body (no re-encoding) and the request headers:
+ *
+ *   // Laravel / Symfony
+ *   $event = Webhook::parseEvent($apiKey, $request->getContent(), $request->headers->all());
+ *   // PSR-7
+ *   $event = Webhook::parseEvent($apiKey, (string) $request->getBody(), $request->getHeaders());
  */
 
 require __DIR__ . '/../vendor/autoload.php';
 
-use CryptoChief\Processing\Exception\WebhookSignatureException;
+use CryptoChief\Processing\Exception\CryptoChiefException;
+use CryptoChief\Processing\Exception\WebhookVerificationException;
 use CryptoChief\Processing\Webhook;
 use CryptoChief\Processing\Webhook\PayInEvent;
 use CryptoChief\Processing\Webhook\PayoutEvent;
@@ -38,15 +42,23 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') !== 'POST') {
 }
 
 $raw = file_get_contents('php://input') ?: '';
-$signature = $_SERVER['HTTP_SIGNATURE'] ?? null;
+$headers = Webhook::headersFromGlobals();
 
 try {
-    $event = Webhook::parseEvent($apiKey, $raw, $signature);
-} catch (WebhookSignatureException) {
+    $event = Webhook::parseEvent($apiKey, $raw, $headers);
+} catch (WebhookVerificationException $e) {
+    // WebhookHeadersException, WebhookTimestampException or WebhookSignatureException.
     http_response_code(401);
-    echo 'invalid signature';
+    echo $e->getMessage();
+    return;
+} catch (CryptoChiefException $e) {
+    http_response_code(400);
+    echo $e->getMessage();
     return;
 }
+
+// Same on every attempt and resend of one delivery: the idempotency key for this request.
+$deliveryId = $headers['x-webhook-delivery'];
 
 if ($event instanceof PayoutEvent) {
     error_log(
@@ -86,7 +98,7 @@ if ($event instanceof PayoutEvent) {
     // $ledger->moveToAvailable($customerFor($event->walletAddress), $event->assetSymbol, $event->amountHuman);
     // $costs->record($event->taskId, $event->totalFeeUsd);  // sweeps are not free
 } else {
-    error_log('unknown event: ' . json_encode($event));
+    error_log("unknown event in delivery {$deliveryId}: " . json_encode($event));
 }
 
 http_response_code(200);

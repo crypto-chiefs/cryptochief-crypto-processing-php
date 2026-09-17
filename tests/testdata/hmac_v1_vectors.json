@@ -1,0 +1,1014 @@
+[
+  {
+    "name": "empty_body",
+    "api_key": "test_api_key_123",
+    "method": "POST",
+    "path": "/v1/credits/balance",
+    "query": "",
+    "merchant": "3f2a1b4c-5d6e-7f80-9a1b-2c3d4e5f6071",
+    "idempotency_key": "",
+    "timestamp": "1789430400",
+    "nonce": "0123456789abcdef0123456789abcdef",
+    "body": "",
+    "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "string_to_sign": "CC-HMAC-SHA256-REQ-V1\n1789430400\n0123456789abcdef0123456789abcdef\nPOST\n/v1/credits/balance\n\n3f2a1b4c-5d6e-7f80-9a1b-2c3d4e5f6071\n\ne3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "signature": "0a6214495239c990ff84bfe52e8a0ca514c8cedc22b081bd8e73321a5e8e1456",
+    "now": 1789430400,
+    "expect": "ok"
+  },
+  {
+    "name": "json_null_html_chars_non_ascii_u2028_numbers",
+    "api_key": "test_api_key_123",
+    "method": "POST",
+    "path": "/v1/payments/order/create",
+    "query": "",
+    "merchant": "3f2a1b4c-5d6e-7f80-9a1b-2c3d4e5f6071",
+    "idempotency_key": "",
+    "timestamp": "1789430400",
+    "nonce": "a1b2c3d4e5f60718293a4b5c6d7e8f90",
+    "body": "{\"order_id\":\"ord-1\",\"amount\":1.0,\"min_fee\":1e-7,\"memo\":null,\"url_callback\":\"https://shop.example/cb?a=1&b=2\",\"title\":\"<b>Заказ №1</b> 🚀\",\"note\":\"line\u2028break\"}",
+    "body_sha256": "06a540d20cc42adedd39b0cbbe361134dccdc59a1ab3cc4128d0847046845a75",
+    "string_to_sign": "CC-HMAC-SHA256-REQ-V1\n1789430400\na1b2c3d4e5f60718293a4b5c6d7e8f90\nPOST\n/v1/payments/order/create\n\n3f2a1b4c-5d6e-7f80-9a1b-2c3d4e5f6071\n\n06a540d20cc42adedd39b0cbbe361134dccdc59a1ab3cc4128d0847046845a75",
+    "signature": "793cd1bde8c03b35a1334336acf393e8caaa7a93a0b85e712c9868fc57024d6e",
+    "now": 1789430400,
+    "expect": "ok"
+  },
+  {
+    "name": "idempotency_key_payout_execute",
+    "api_key": "test_api_key_123",
+    "method": "POST",
+    "path": "/v1/payout/execute",
+    "query": "",
+    "merchant": "3f2a1b4c-5d6e-7f80-9a1b-2c3d4e5f6071",
+    "idempotency_key": "payout-2026-09-15-0001",
+    "timestamp": "1789430400",
+    "nonce": "fedcba9876543210fedcba9876543210",
+    "body": "{\"order_id\":\"po-1\",\"amount\":\"10.5\",\"network\":\"TRON_MAINNET\",\"coin\":\"USDT\",\"to_address\":\"TLa2f6VPqDgRE67v1736s7bJ8Ray5wYjU7\"}",
+    "body_sha256": "947afb456933a6db30cc6a385d46d9b78a002f1959bc13c023dc2296967cb08e",
+    "string_to_sign": "CC-HMAC-SHA256-REQ-V1\n1789430400\nfedcba9876543210fedcba9876543210\nPOST\n/v1/payout/execute\n\n3f2a1b4c-5d6e-7f80-9a1b-2c3d4e5f6071\npayout-2026-09-15-0001\n947afb456933a6db30cc6a385d46d9b78a002f1959bc13c023dc2296967cb08e",
+    "signature": "6c52543f6d69fe9653bc7028356a6ad8c40c5ccdda268a66d4411748355220a1",
+    "now": 1789430400,
+    "expect": "ok"
+  },
+  {
+    "name": "query",
+    "api_key": "test_api_key_123",
+    "method": "POST",
+    "path": "/v1/payments/history",
+    "query": "a=1&b=2",
+    "merchant": "3f2a1b4c-5d6e-7f80-9a1b-2c3d4e5f6071",
+    "idempotency_key": "",
+    "timestamp": "1789430400",
+    "nonce": "nonce_with-allowed_chars-0123456",
+    "body": "{}",
+    "body_sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+    "string_to_sign": "CC-HMAC-SHA256-REQ-V1\n1789430400\nnonce_with-allowed_chars-0123456\nPOST\n/v1/payments/history\na=1&b=2\n3f2a1b4c-5d6e-7f80-9a1b-2c3d4e5f6071\n\n44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+    "signature": "e4141f109aa2396d7a2989eeacc508b6a66f898f5da9878634fca5c4cfe4869e",
+    "now": 1789430400,
+    "expect": "ok"
+  },
+  {
+    "name": "wallets_info",
+    "api_key": "test_api_key_123",
+    "method": "POST",
+    "path": "/v1/wallets/info",
+    "query": "",
+    "merchant": "3f2a1b4c-5d6e-7f80-9a1b-2c3d4e5f6071",
+    "idempotency_key": "",
+    "timestamp": "1789430400",
+    "nonce": "00112233445566778899aabbccddeeff",
+    "body": "{\"address\":\"TLa2f6VPqDgRE67v1736s7bJ8Ray5wYjU7\"}",
+    "body_sha256": "a84370468ea09392f10851374546f8466476603cce6253795b8c8a1149ca1aec",
+    "string_to_sign": "CC-HMAC-SHA256-REQ-V1\n1789430400\n00112233445566778899aabbccddeeff\nPOST\n/v1/wallets/info\n\n3f2a1b4c-5d6e-7f80-9a1b-2c3d4e5f6071\n\na84370468ea09392f10851374546f8466476603cce6253795b8c8a1149ca1aec",
+    "signature": "f49f43924c6f6596671e559c8c97d55950da3f3b039adbf198a5efbd5ba64088",
+    "now": 1789430400,
+    "expect": "ok"
+  },
+  {
+    "name": "wallets_freeze_same_body_as_wallets_info",
+    "api_key": "test_api_key_123",
+    "method": "POST",
+    "path": "/v1/wallets/freeze",
+    "query": "",
+    "merchant": "3f2a1b4c-5d6e-7f80-9a1b-2c3d4e5f6071",
+    "idempotency_key": "",
+    "timestamp": "1789430400",
+    "nonce": "00112233445566778899aabbccddeeff",
+    "body": "{\"address\":\"TLa2f6VPqDgRE67v1736s7bJ8Ray5wYjU7\"}",
+    "body_sha256": "a84370468ea09392f10851374546f8466476603cce6253795b8c8a1149ca1aec",
+    "string_to_sign": "CC-HMAC-SHA256-REQ-V1\n1789430400\n00112233445566778899aabbccddeeff\nPOST\n/v1/wallets/freeze\n\n3f2a1b4c-5d6e-7f80-9a1b-2c3d4e5f6071\n\na84370468ea09392f10851374546f8466476603cce6253795b8c8a1149ca1aec",
+    "signature": "8289bd102af44a5ad4f9b5b86a90eb3f3d217c12df6a37364b82139200d0bc3c",
+    "now": 1789430400,
+    "expect": "ok"
+  },
+  {
+    "name": "body_whitespace_and_line_breaks",
+    "api_key": "test_api_key_123",
+    "method": "POST",
+    "path": "/v1/payments/history",
+    "query": "",
+    "merchant": "3f2a1b4c-5d6e-7f80-9a1b-2c3d4e5f6071",
+    "idempotency_key": "",
+    "timestamp": "1789430400",
+    "nonce": "9f8e7d6c5b4a39281706f5e4d3c2b1a0",
+    "body": "{\n  \"page\": 1,\r\n\t\"page_size\" : 20\n}\n",
+    "body_sha256": "3e787c7cfedf029af3261d519ef92e7fba57256603f9812ac5aa99a111cbe379",
+    "string_to_sign": "CC-HMAC-SHA256-REQ-V1\n1789430400\n9f8e7d6c5b4a39281706f5e4d3c2b1a0\nPOST\n/v1/payments/history\n\n3f2a1b4c-5d6e-7f80-9a1b-2c3d4e5f6071\n\n3e787c7cfedf029af3261d519ef92e7fba57256603f9812ac5aa99a111cbe379",
+    "signature": "a75a89503e13bbd3d8e882b5333cb3f7bf1f25be9402aac15223f0ae49ba83ef",
+    "now": 1789430400,
+    "expect": "ok"
+  },
+  {
+    "name": "get_query_empty_body",
+    "api_key": "mk_0f1e2d3c4b5a69788796a5b4c3d2e1f0",
+    "method": "GET",
+    "path": "/v1/payments/order/info",
+    "query": "uuid=5b0c7a52-8a1e-4c0e-9d7b-2f3e4a5b6c7d",
+    "merchant": "8c1d2e3f-4a5b-6c7d-8e9f-0a1b2c3d4e5f",
+    "idempotency_key": "",
+    "timestamp": "1789430400",
+    "nonce": "3c4d5e6f708192a3b4c5d6e7f8091a2b",
+    "body": "",
+    "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "string_to_sign": "CC-HMAC-SHA256-REQ-V1\n1789430400\n3c4d5e6f708192a3b4c5d6e7f8091a2b\nGET\n/v1/payments/order/info\nuuid=5b0c7a52-8a1e-4c0e-9d7b-2f3e4a5b6c7d\n8c1d2e3f-4a5b-6c7d-8e9f-0a1b2c3d4e5f\n\ne3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "signature": "b68671bf0442d1597dab03b53d18ea882d2b92606d4f3ad7c9d60f3831dbd318",
+    "now": 1789430400,
+    "expect": "ok"
+  },
+  {
+    "name": "path_percent_decoded",
+    "api_key": "test_api_key_123",
+    "method": "GET",
+    "path": "/v1/payments/order/info/заказ №1/ord/1",
+    "query": "",
+    "merchant": "3f2a1b4c-5d6e-7f80-9a1b-2c3d4e5f6071",
+    "idempotency_key": "",
+    "timestamp": "1789430400",
+    "nonce": "1a2b3c4d5e6f708192a3b4c5d6e7f809",
+    "body": "",
+    "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "string_to_sign": "CC-HMAC-SHA256-REQ-V1\n1789430400\n1a2b3c4d5e6f708192a3b4c5d6e7f809\nGET\n/v1/payments/order/info/заказ №1/ord/1\n\n3f2a1b4c-5d6e-7f80-9a1b-2c3d4e5f6071\n\ne3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "signature": "bf098fcfaf6f9c1314bc916ae5f1044127a78b88440d2ee52bebb340d1ee1d25",
+    "now": 1789430400,
+    "expect": "ok"
+  },
+  {
+    "name": "query_raw_percent_encoded",
+    "api_key": "test_api_key_123",
+    "method": "GET",
+    "path": "/v1/payments/history",
+    "query": "id=ord%2F1&name=%D0%B7%D0%B0%D0%BA%D0%B0%D0%B7%20%E2%84%961&note=a+b",
+    "merchant": "3f2a1b4c-5d6e-7f80-9a1b-2c3d4e5f6071",
+    "idempotency_key": "",
+    "timestamp": "1789430400",
+    "nonce": "2b3c4d5e6f708192a3b4c5d6e7f8091a",
+    "body": "",
+    "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "string_to_sign": "CC-HMAC-SHA256-REQ-V1\n1789430400\n2b3c4d5e6f708192a3b4c5d6e7f8091a\nGET\n/v1/payments/history\nid=ord%2F1&name=%D0%B7%D0%B0%D0%BA%D0%B0%D0%B7%20%E2%84%961&note=a+b\n3f2a1b4c-5d6e-7f80-9a1b-2c3d4e5f6071\n\ne3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "signature": "4e03cd46e3f8287b8f0ec9cb9cdad4bb1b72aea195c247b3b3e86c43844f2d08",
+    "now": 1789430400,
+    "expect": "ok"
+  },
+  {
+    "name": "method_mixed_case",
+    "api_key": "test_api_key_123",
+    "method": "PoSt",
+    "path": "/v1/credits/balance",
+    "query": "",
+    "merchant": "3f2a1b4c-5d6e-7f80-9a1b-2c3d4e5f6071",
+    "idempotency_key": "",
+    "timestamp": "1789430400",
+    "nonce": "4d5e6f708192a3b4c5d6e7f8091a2b3c",
+    "body": "",
+    "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "string_to_sign": "CC-HMAC-SHA256-REQ-V1\n1789430400\n4d5e6f708192a3b4c5d6e7f8091a2b3c\nPOST\n/v1/credits/balance\n\n3f2a1b4c-5d6e-7f80-9a1b-2c3d4e5f6071\n\ne3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "signature": "66e5a8fd8000629eeb74aed4cdf6bf8454c5c22c87ecb10781ff314156133182",
+    "now": 1789430400,
+    "expect": "ok"
+  },
+  {
+    "name": "method_lowercase",
+    "api_key": "test_api_key_123",
+    "method": "post",
+    "path": "/v1/credits/balance",
+    "query": "",
+    "merchant": "3f2a1b4c-5d6e-7f80-9a1b-2c3d4e5f6071",
+    "idempotency_key": "",
+    "timestamp": "1789430400",
+    "nonce": "5a6b7c8d9e0f1a2b3c4d5e6f70819200",
+    "body": "",
+    "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "string_to_sign": "CC-HMAC-SHA256-REQ-V1\n1789430400\n5a6b7c8d9e0f1a2b3c4d5e6f70819200\nPOST\n/v1/credits/balance\n\n3f2a1b4c-5d6e-7f80-9a1b-2c3d4e5f6071\n\ne3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "signature": "746ac13f2e112537fb65ad3796e57e4254751f9ff0a43fbf7ab12f0a118f578c",
+    "now": 1789430400,
+    "expect": "ok"
+  },
+  {
+    "name": "timestamp_leading_zero",
+    "api_key": "test_api_key_123",
+    "method": "POST",
+    "path": "/v1/wallets/info",
+    "query": "",
+    "merchant": "3f2a1b4c-5d6e-7f80-9a1b-2c3d4e5f6071",
+    "idempotency_key": "",
+    "timestamp": "1789430400",
+    "nonce": "6b7c8d9e0f1a2b3c4d5e6f7081920304",
+    "body": "{\"address\":\"TLa2f6VPqDgRE67v1736s7bJ8Ray5wYjU7\"}",
+    "body_sha256": "a84370468ea09392f10851374546f8466476603cce6253795b8c8a1149ca1aec",
+    "string_to_sign": "CC-HMAC-SHA256-REQ-V1\n1789430400\n6b7c8d9e0f1a2b3c4d5e6f7081920304\nPOST\n/v1/wallets/info\n\n3f2a1b4c-5d6e-7f80-9a1b-2c3d4e5f6071\n\na84370468ea09392f10851374546f8466476603cce6253795b8c8a1149ca1aec",
+    "signature": "8dcd7589d550f8da4c61786e19f502b7e8b3ad13123fe551019bbf78c982100b",
+    "now": 1789430400,
+    "expect": "bad_auth_headers",
+    "headers": {
+      "X-CC-Timestamp": [
+        "01789430400"
+      ]
+    }
+  },
+  {
+    "name": "nonce_16_chars",
+    "api_key": "test_api_key_123",
+    "method": "POST",
+    "path": "/v1/wallets/info",
+    "query": "",
+    "merchant": "3f2a1b4c-5d6e-7f80-9a1b-2c3d4e5f6071",
+    "idempotency_key": "",
+    "timestamp": "1789430400",
+    "nonce": "0123456789abcdef",
+    "body": "{\"address\":\"TLa2f6VPqDgRE67v1736s7bJ8Ray5wYjU7\"}",
+    "body_sha256": "a84370468ea09392f10851374546f8466476603cce6253795b8c8a1149ca1aec",
+    "string_to_sign": "CC-HMAC-SHA256-REQ-V1\n1789430400\n0123456789abcdef\nPOST\n/v1/wallets/info\n\n3f2a1b4c-5d6e-7f80-9a1b-2c3d4e5f6071\n\na84370468ea09392f10851374546f8466476603cce6253795b8c8a1149ca1aec",
+    "signature": "4f1bafba8d207ed5f46588c3ba3b75c4b6353dd2702116861814d50860f6adf6",
+    "now": 1789430400,
+    "expect": "ok"
+  },
+  {
+    "name": "nonce_64_chars",
+    "api_key": "test_api_key_123",
+    "method": "POST",
+    "path": "/v1/wallets/info",
+    "query": "",
+    "merchant": "3f2a1b4c-5d6e-7f80-9a1b-2c3d4e5f6071",
+    "idempotency_key": "",
+    "timestamp": "1789430400",
+    "nonce": "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef",
+    "body": "{\"address\":\"TLa2f6VPqDgRE67v1736s7bJ8Ray5wYjU7\"}",
+    "body_sha256": "a84370468ea09392f10851374546f8466476603cce6253795b8c8a1149ca1aec",
+    "string_to_sign": "CC-HMAC-SHA256-REQ-V1\n1789430400\n0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef\nPOST\n/v1/wallets/info\n\n3f2a1b4c-5d6e-7f80-9a1b-2c3d4e5f6071\n\na84370468ea09392f10851374546f8466476603cce6253795b8c8a1149ca1aec",
+    "signature": "a1158fc886a0e5ac35bb2d9c5671e3d3e13bf960824574d93cebc52229fd0f69",
+    "now": 1789430400,
+    "expect": "ok"
+  },
+  {
+    "name": "timestamp_window_edge_past",
+    "api_key": "test_api_key_123",
+    "method": "POST",
+    "path": "/v1/wallets/info",
+    "query": "",
+    "merchant": "3f2a1b4c-5d6e-7f80-9a1b-2c3d4e5f6071",
+    "idempotency_key": "",
+    "timestamp": "1789430400",
+    "nonce": "7c8d9e0f1a2b3c4d5e6f708192030405",
+    "body": "{\"address\":\"TLa2f6VPqDgRE67v1736s7bJ8Ray5wYjU7\"}",
+    "body_sha256": "a84370468ea09392f10851374546f8466476603cce6253795b8c8a1149ca1aec",
+    "string_to_sign": "CC-HMAC-SHA256-REQ-V1\n1789430400\n7c8d9e0f1a2b3c4d5e6f708192030405\nPOST\n/v1/wallets/info\n\n3f2a1b4c-5d6e-7f80-9a1b-2c3d4e5f6071\n\na84370468ea09392f10851374546f8466476603cce6253795b8c8a1149ca1aec",
+    "signature": "6bd437d6634f79403f700ad4cce5fbf779f72f61641376299d579fab531e9104",
+    "now": 1789430700,
+    "expect": "ok"
+  },
+  {
+    "name": "timestamp_window_edge_future",
+    "api_key": "test_api_key_123",
+    "method": "POST",
+    "path": "/v1/wallets/info",
+    "query": "",
+    "merchant": "3f2a1b4c-5d6e-7f80-9a1b-2c3d4e5f6071",
+    "idempotency_key": "",
+    "timestamp": "1789430400",
+    "nonce": "8d9e0f1a2b3c4d5e6f70819203040506",
+    "body": "{\"address\":\"TLa2f6VPqDgRE67v1736s7bJ8Ray5wYjU7\"}",
+    "body_sha256": "a84370468ea09392f10851374546f8466476603cce6253795b8c8a1149ca1aec",
+    "string_to_sign": "CC-HMAC-SHA256-REQ-V1\n1789430400\n8d9e0f1a2b3c4d5e6f70819203040506\nPOST\n/v1/wallets/info\n\n3f2a1b4c-5d6e-7f80-9a1b-2c3d4e5f6071\n\na84370468ea09392f10851374546f8466476603cce6253795b8c8a1149ca1aec",
+    "signature": "b7a56774ed16996919e9dff0f3d5b708d160560cce1fdb8a4eb2798dcde09956",
+    "now": 1789430100,
+    "expect": "ok"
+  },
+  {
+    "name": "header_ows_space_and_tab",
+    "api_key": "test_api_key_123",
+    "method": "POST",
+    "path": "/v1/wallets/info",
+    "query": "",
+    "merchant": "3f2a1b4c-5d6e-7f80-9a1b-2c3d4e5f6071",
+    "idempotency_key": "",
+    "timestamp": "1789430400",
+    "nonce": "0123456789abcdef0123456789abcdef",
+    "body": "{\"address\":\"TLa2f6VPqDgRE67v1736s7bJ8Ray5wYjU7\"}",
+    "body_sha256": "a84370468ea09392f10851374546f8466476603cce6253795b8c8a1149ca1aec",
+    "string_to_sign": "CC-HMAC-SHA256-REQ-V1\n1789430400\n0123456789abcdef0123456789abcdef\nPOST\n/v1/wallets/info\n\n3f2a1b4c-5d6e-7f80-9a1b-2c3d4e5f6071\n\na84370468ea09392f10851374546f8466476603cce6253795b8c8a1149ca1aec",
+    "signature": "ed01a0f1e39ce8e5f7240f9620b5f95ca93c24d2ce98052e0971c91630f9e4e1",
+    "now": 1789430400,
+    "expect": "ok",
+    "headers": {
+      "Merchant": [
+        " 3f2a1b4c-5d6e-7f80-9a1b-2c3d4e5f6071\t"
+      ],
+      "X-CC-Nonce": [
+        " \t0123456789abcdef0123456789abcdef \t"
+      ],
+      "X-CC-Signature": [
+        " v1=ed01a0f1e39ce8e5f7240f9620b5f95ca93c24d2ce98052e0971c91630f9e4e1 "
+      ],
+      "X-CC-Timestamp": [
+        "\t1789430400 "
+      ]
+    }
+  },
+  {
+    "name": "signature_hex_uppercase",
+    "api_key": "test_api_key_123",
+    "method": "POST",
+    "path": "/v1/wallets/info",
+    "query": "",
+    "merchant": "3f2a1b4c-5d6e-7f80-9a1b-2c3d4e5f6071",
+    "idempotency_key": "",
+    "timestamp": "1789430400",
+    "nonce": "0123456789abcdef0123456789abcdef",
+    "body": "{\"address\":\"TLa2f6VPqDgRE67v1736s7bJ8Ray5wYjU7\"}",
+    "body_sha256": "a84370468ea09392f10851374546f8466476603cce6253795b8c8a1149ca1aec",
+    "string_to_sign": "CC-HMAC-SHA256-REQ-V1\n1789430400\n0123456789abcdef0123456789abcdef\nPOST\n/v1/wallets/info\n\n3f2a1b4c-5d6e-7f80-9a1b-2c3d4e5f6071\n\na84370468ea09392f10851374546f8466476603cce6253795b8c8a1149ca1aec",
+    "signature": "ed01a0f1e39ce8e5f7240f9620b5f95ca93c24d2ce98052e0971c91630f9e4e1",
+    "now": 1789430400,
+    "expect": "ok",
+    "headers": {
+      "X-CC-Signature": [
+        "v1=ED01A0F1E39CE8E5F7240F9620B5F95CA93C24D2CE98052E0971C91630F9E4E1"
+      ]
+    }
+  },
+  {
+    "name": "content_type_with_charset",
+    "api_key": "test_api_key_123",
+    "method": "POST",
+    "path": "/v1/wallets/info",
+    "query": "",
+    "merchant": "3f2a1b4c-5d6e-7f80-9a1b-2c3d4e5f6071",
+    "idempotency_key": "",
+    "timestamp": "1789430400",
+    "nonce": "0123456789abcdef0123456789abcdef",
+    "body": "{\"address\":\"TLa2f6VPqDgRE67v1736s7bJ8Ray5wYjU7\"}",
+    "body_sha256": "a84370468ea09392f10851374546f8466476603cce6253795b8c8a1149ca1aec",
+    "string_to_sign": "CC-HMAC-SHA256-REQ-V1\n1789430400\n0123456789abcdef0123456789abcdef\nPOST\n/v1/wallets/info\n\n3f2a1b4c-5d6e-7f80-9a1b-2c3d4e5f6071\n\na84370468ea09392f10851374546f8466476603cce6253795b8c8a1149ca1aec",
+    "signature": "ed01a0f1e39ce8e5f7240f9620b5f95ca93c24d2ce98052e0971c91630f9e4e1",
+    "now": 1789430400,
+    "expect": "ok",
+    "headers": {
+      "Content-Type": [
+        "application/json; charset=utf-8"
+      ]
+    }
+  },
+  {
+    "name": "content_type_uppercase",
+    "api_key": "test_api_key_123",
+    "method": "POST",
+    "path": "/v1/wallets/info",
+    "query": "",
+    "merchant": "3f2a1b4c-5d6e-7f80-9a1b-2c3d4e5f6071",
+    "idempotency_key": "",
+    "timestamp": "1789430400",
+    "nonce": "0123456789abcdef0123456789abcdef",
+    "body": "{\"address\":\"TLa2f6VPqDgRE67v1736s7bJ8Ray5wYjU7\"}",
+    "body_sha256": "a84370468ea09392f10851374546f8466476603cce6253795b8c8a1149ca1aec",
+    "string_to_sign": "CC-HMAC-SHA256-REQ-V1\n1789430400\n0123456789abcdef0123456789abcdef\nPOST\n/v1/wallets/info\n\n3f2a1b4c-5d6e-7f80-9a1b-2c3d4e5f6071\n\na84370468ea09392f10851374546f8466476603cce6253795b8c8a1149ca1aec",
+    "signature": "ed01a0f1e39ce8e5f7240f9620b5f95ca93c24d2ce98052e0971c91630f9e4e1",
+    "now": 1789430400,
+    "expect": "ok",
+    "headers": {
+      "Content-Type": [
+        "APPLICATION/JSON"
+      ]
+    }
+  },
+  {
+    "name": "legacy_signature_header_ignored",
+    "api_key": "test_api_key_123",
+    "method": "POST",
+    "path": "/v1/wallets/info",
+    "query": "",
+    "merchant": "3f2a1b4c-5d6e-7f80-9a1b-2c3d4e5f6071",
+    "idempotency_key": "",
+    "timestamp": "1789430400",
+    "nonce": "0123456789abcdef0123456789abcdef",
+    "body": "{\"address\":\"TLa2f6VPqDgRE67v1736s7bJ8Ray5wYjU7\"}",
+    "body_sha256": "a84370468ea09392f10851374546f8466476603cce6253795b8c8a1149ca1aec",
+    "string_to_sign": "CC-HMAC-SHA256-REQ-V1\n1789430400\n0123456789abcdef0123456789abcdef\nPOST\n/v1/wallets/info\n\n3f2a1b4c-5d6e-7f80-9a1b-2c3d4e5f6071\n\na84370468ea09392f10851374546f8466476603cce6253795b8c8a1149ca1aec",
+    "signature": "ed01a0f1e39ce8e5f7240f9620b5f95ca93c24d2ce98052e0971c91630f9e4e1",
+    "now": 1789430400,
+    "expect": "ok",
+    "headers": {
+      "Signature": [
+        "d41d8cd98f00b204e9800998ecf8427e"
+      ]
+    }
+  },
+  {
+    "name": "missing_merchant",
+    "api_key": "test_api_key_123",
+    "method": "POST",
+    "path": "/v1/wallets/info",
+    "query": "",
+    "merchant": "3f2a1b4c-5d6e-7f80-9a1b-2c3d4e5f6071",
+    "idempotency_key": "",
+    "timestamp": "1789430400",
+    "nonce": "0123456789abcdef0123456789abcdef",
+    "body": "{\"address\":\"TLa2f6VPqDgRE67v1736s7bJ8Ray5wYjU7\"}",
+    "body_sha256": "a84370468ea09392f10851374546f8466476603cce6253795b8c8a1149ca1aec",
+    "string_to_sign": "CC-HMAC-SHA256-REQ-V1\n1789430400\n0123456789abcdef0123456789abcdef\nPOST\n/v1/wallets/info\n\n3f2a1b4c-5d6e-7f80-9a1b-2c3d4e5f6071\n\na84370468ea09392f10851374546f8466476603cce6253795b8c8a1149ca1aec",
+    "signature": "ed01a0f1e39ce8e5f7240f9620b5f95ca93c24d2ce98052e0971c91630f9e4e1",
+    "now": 1789430400,
+    "expect": "bad_auth_headers",
+    "headers": {
+      "Merchant": []
+    }
+  },
+  {
+    "name": "missing_timestamp",
+    "api_key": "test_api_key_123",
+    "method": "POST",
+    "path": "/v1/wallets/info",
+    "query": "",
+    "merchant": "3f2a1b4c-5d6e-7f80-9a1b-2c3d4e5f6071",
+    "idempotency_key": "",
+    "timestamp": "1789430400",
+    "nonce": "0123456789abcdef0123456789abcdef",
+    "body": "{\"address\":\"TLa2f6VPqDgRE67v1736s7bJ8Ray5wYjU7\"}",
+    "body_sha256": "a84370468ea09392f10851374546f8466476603cce6253795b8c8a1149ca1aec",
+    "string_to_sign": "CC-HMAC-SHA256-REQ-V1\n1789430400\n0123456789abcdef0123456789abcdef\nPOST\n/v1/wallets/info\n\n3f2a1b4c-5d6e-7f80-9a1b-2c3d4e5f6071\n\na84370468ea09392f10851374546f8466476603cce6253795b8c8a1149ca1aec",
+    "signature": "ed01a0f1e39ce8e5f7240f9620b5f95ca93c24d2ce98052e0971c91630f9e4e1",
+    "now": 1789430400,
+    "expect": "bad_auth_headers",
+    "headers": {
+      "X-CC-Timestamp": []
+    }
+  },
+  {
+    "name": "missing_nonce",
+    "api_key": "test_api_key_123",
+    "method": "POST",
+    "path": "/v1/wallets/info",
+    "query": "",
+    "merchant": "3f2a1b4c-5d6e-7f80-9a1b-2c3d4e5f6071",
+    "idempotency_key": "",
+    "timestamp": "1789430400",
+    "nonce": "0123456789abcdef0123456789abcdef",
+    "body": "{\"address\":\"TLa2f6VPqDgRE67v1736s7bJ8Ray5wYjU7\"}",
+    "body_sha256": "a84370468ea09392f10851374546f8466476603cce6253795b8c8a1149ca1aec",
+    "string_to_sign": "CC-HMAC-SHA256-REQ-V1\n1789430400\n0123456789abcdef0123456789abcdef\nPOST\n/v1/wallets/info\n\n3f2a1b4c-5d6e-7f80-9a1b-2c3d4e5f6071\n\na84370468ea09392f10851374546f8466476603cce6253795b8c8a1149ca1aec",
+    "signature": "ed01a0f1e39ce8e5f7240f9620b5f95ca93c24d2ce98052e0971c91630f9e4e1",
+    "now": 1789430400,
+    "expect": "bad_auth_headers",
+    "headers": {
+      "X-CC-Nonce": []
+    }
+  },
+  {
+    "name": "missing_signature",
+    "api_key": "test_api_key_123",
+    "method": "POST",
+    "path": "/v1/wallets/info",
+    "query": "",
+    "merchant": "3f2a1b4c-5d6e-7f80-9a1b-2c3d4e5f6071",
+    "idempotency_key": "",
+    "timestamp": "1789430400",
+    "nonce": "0123456789abcdef0123456789abcdef",
+    "body": "{\"address\":\"TLa2f6VPqDgRE67v1736s7bJ8Ray5wYjU7\"}",
+    "body_sha256": "a84370468ea09392f10851374546f8466476603cce6253795b8c8a1149ca1aec",
+    "string_to_sign": "CC-HMAC-SHA256-REQ-V1\n1789430400\n0123456789abcdef0123456789abcdef\nPOST\n/v1/wallets/info\n\n3f2a1b4c-5d6e-7f80-9a1b-2c3d4e5f6071\n\na84370468ea09392f10851374546f8466476603cce6253795b8c8a1149ca1aec",
+    "signature": "ed01a0f1e39ce8e5f7240f9620b5f95ca93c24d2ce98052e0971c91630f9e4e1",
+    "now": 1789430400,
+    "expect": "bad_auth_headers",
+    "headers": {
+      "X-CC-Signature": []
+    }
+  },
+  {
+    "name": "empty_merchant",
+    "api_key": "test_api_key_123",
+    "method": "POST",
+    "path": "/v1/wallets/info",
+    "query": "",
+    "merchant": "3f2a1b4c-5d6e-7f80-9a1b-2c3d4e5f6071",
+    "idempotency_key": "",
+    "timestamp": "1789430400",
+    "nonce": "0123456789abcdef0123456789abcdef",
+    "body": "{\"address\":\"TLa2f6VPqDgRE67v1736s7bJ8Ray5wYjU7\"}",
+    "body_sha256": "a84370468ea09392f10851374546f8466476603cce6253795b8c8a1149ca1aec",
+    "string_to_sign": "CC-HMAC-SHA256-REQ-V1\n1789430400\n0123456789abcdef0123456789abcdef\nPOST\n/v1/wallets/info\n\n3f2a1b4c-5d6e-7f80-9a1b-2c3d4e5f6071\n\na84370468ea09392f10851374546f8466476603cce6253795b8c8a1149ca1aec",
+    "signature": "ed01a0f1e39ce8e5f7240f9620b5f95ca93c24d2ce98052e0971c91630f9e4e1",
+    "now": 1789430400,
+    "expect": "bad_auth_headers",
+    "headers": {
+      "Merchant": [
+        ""
+      ]
+    }
+  },
+  {
+    "name": "duplicate_nonce_header",
+    "api_key": "test_api_key_123",
+    "method": "POST",
+    "path": "/v1/wallets/info",
+    "query": "",
+    "merchant": "3f2a1b4c-5d6e-7f80-9a1b-2c3d4e5f6071",
+    "idempotency_key": "",
+    "timestamp": "1789430400",
+    "nonce": "0123456789abcdef0123456789abcdef",
+    "body": "{\"address\":\"TLa2f6VPqDgRE67v1736s7bJ8Ray5wYjU7\"}",
+    "body_sha256": "a84370468ea09392f10851374546f8466476603cce6253795b8c8a1149ca1aec",
+    "string_to_sign": "CC-HMAC-SHA256-REQ-V1\n1789430400\n0123456789abcdef0123456789abcdef\nPOST\n/v1/wallets/info\n\n3f2a1b4c-5d6e-7f80-9a1b-2c3d4e5f6071\n\na84370468ea09392f10851374546f8466476603cce6253795b8c8a1149ca1aec",
+    "signature": "ed01a0f1e39ce8e5f7240f9620b5f95ca93c24d2ce98052e0971c91630f9e4e1",
+    "now": 1789430400,
+    "expect": "bad_auth_headers",
+    "headers": {
+      "X-CC-Nonce": [
+        "0123456789abcdef0123456789abcdef",
+        "0123456789abcdef0123456789abcdef"
+      ]
+    }
+  },
+  {
+    "name": "duplicate_idempotency_key_header",
+    "api_key": "test_api_key_123",
+    "method": "POST",
+    "path": "/v1/wallets/info",
+    "query": "",
+    "merchant": "3f2a1b4c-5d6e-7f80-9a1b-2c3d4e5f6071",
+    "idempotency_key": "",
+    "timestamp": "1789430400",
+    "nonce": "0123456789abcdef0123456789abcdef",
+    "body": "{\"address\":\"TLa2f6VPqDgRE67v1736s7bJ8Ray5wYjU7\"}",
+    "body_sha256": "a84370468ea09392f10851374546f8466476603cce6253795b8c8a1149ca1aec",
+    "string_to_sign": "CC-HMAC-SHA256-REQ-V1\n1789430400\n0123456789abcdef0123456789abcdef\nPOST\n/v1/wallets/info\n\n3f2a1b4c-5d6e-7f80-9a1b-2c3d4e5f6071\n\na84370468ea09392f10851374546f8466476603cce6253795b8c8a1149ca1aec",
+    "signature": "ed01a0f1e39ce8e5f7240f9620b5f95ca93c24d2ce98052e0971c91630f9e4e1",
+    "now": 1789430400,
+    "expect": "bad_auth_headers",
+    "headers": {
+      "Idempotency-Key": [
+        "a",
+        "b"
+      ]
+    }
+  },
+  {
+    "name": "duplicate_signature_header",
+    "api_key": "test_api_key_123",
+    "method": "POST",
+    "path": "/v1/wallets/info",
+    "query": "",
+    "merchant": "3f2a1b4c-5d6e-7f80-9a1b-2c3d4e5f6071",
+    "idempotency_key": "",
+    "timestamp": "1789430400",
+    "nonce": "0123456789abcdef0123456789abcdef",
+    "body": "{\"address\":\"TLa2f6VPqDgRE67v1736s7bJ8Ray5wYjU7\"}",
+    "body_sha256": "a84370468ea09392f10851374546f8466476603cce6253795b8c8a1149ca1aec",
+    "string_to_sign": "CC-HMAC-SHA256-REQ-V1\n1789430400\n0123456789abcdef0123456789abcdef\nPOST\n/v1/wallets/info\n\n3f2a1b4c-5d6e-7f80-9a1b-2c3d4e5f6071\n\na84370468ea09392f10851374546f8466476603cce6253795b8c8a1149ca1aec",
+    "signature": "ed01a0f1e39ce8e5f7240f9620b5f95ca93c24d2ce98052e0971c91630f9e4e1",
+    "now": 1789430400,
+    "expect": "bad_auth_headers",
+    "headers": {
+      "X-CC-Signature": [
+        "v1=ed01a0f1e39ce8e5f7240f9620b5f95ca93c24d2ce98052e0971c91630f9e4e1",
+        "v1=ed01a0f1e39ce8e5f7240f9620b5f95ca93c24d2ce98052e0971c91630f9e4e1"
+      ]
+    }
+  },
+  {
+    "name": "nonce_15_chars",
+    "api_key": "test_api_key_123",
+    "method": "POST",
+    "path": "/v1/wallets/info",
+    "query": "",
+    "merchant": "3f2a1b4c-5d6e-7f80-9a1b-2c3d4e5f6071",
+    "idempotency_key": "",
+    "timestamp": "1789430400",
+    "nonce": "0123456789abcdef0123456789abcdef",
+    "body": "{\"address\":\"TLa2f6VPqDgRE67v1736s7bJ8Ray5wYjU7\"}",
+    "body_sha256": "a84370468ea09392f10851374546f8466476603cce6253795b8c8a1149ca1aec",
+    "string_to_sign": "CC-HMAC-SHA256-REQ-V1\n1789430400\n0123456789abcdef0123456789abcdef\nPOST\n/v1/wallets/info\n\n3f2a1b4c-5d6e-7f80-9a1b-2c3d4e5f6071\n\na84370468ea09392f10851374546f8466476603cce6253795b8c8a1149ca1aec",
+    "signature": "ed01a0f1e39ce8e5f7240f9620b5f95ca93c24d2ce98052e0971c91630f9e4e1",
+    "now": 1789430400,
+    "expect": "bad_auth_headers",
+    "headers": {
+      "X-CC-Nonce": [
+        "0123456789abcde"
+      ]
+    }
+  },
+  {
+    "name": "nonce_65_chars",
+    "api_key": "test_api_key_123",
+    "method": "POST",
+    "path": "/v1/wallets/info",
+    "query": "",
+    "merchant": "3f2a1b4c-5d6e-7f80-9a1b-2c3d4e5f6071",
+    "idempotency_key": "",
+    "timestamp": "1789430400",
+    "nonce": "0123456789abcdef0123456789abcdef",
+    "body": "{\"address\":\"TLa2f6VPqDgRE67v1736s7bJ8Ray5wYjU7\"}",
+    "body_sha256": "a84370468ea09392f10851374546f8466476603cce6253795b8c8a1149ca1aec",
+    "string_to_sign": "CC-HMAC-SHA256-REQ-V1\n1789430400\n0123456789abcdef0123456789abcdef\nPOST\n/v1/wallets/info\n\n3f2a1b4c-5d6e-7f80-9a1b-2c3d4e5f6071\n\na84370468ea09392f10851374546f8466476603cce6253795b8c8a1149ca1aec",
+    "signature": "ed01a0f1e39ce8e5f7240f9620b5f95ca93c24d2ce98052e0971c91630f9e4e1",
+    "now": 1789430400,
+    "expect": "bad_auth_headers",
+    "headers": {
+      "X-CC-Nonce": [
+        "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+      ]
+    }
+  },
+  {
+    "name": "nonce_bad_char",
+    "api_key": "test_api_key_123",
+    "method": "POST",
+    "path": "/v1/wallets/info",
+    "query": "",
+    "merchant": "3f2a1b4c-5d6e-7f80-9a1b-2c3d4e5f6071",
+    "idempotency_key": "",
+    "timestamp": "1789430400",
+    "nonce": "0123456789abcdef0123456789abcdef",
+    "body": "{\"address\":\"TLa2f6VPqDgRE67v1736s7bJ8Ray5wYjU7\"}",
+    "body_sha256": "a84370468ea09392f10851374546f8466476603cce6253795b8c8a1149ca1aec",
+    "string_to_sign": "CC-HMAC-SHA256-REQ-V1\n1789430400\n0123456789abcdef0123456789abcdef\nPOST\n/v1/wallets/info\n\n3f2a1b4c-5d6e-7f80-9a1b-2c3d4e5f6071\n\na84370468ea09392f10851374546f8466476603cce6253795b8c8a1149ca1aec",
+    "signature": "ed01a0f1e39ce8e5f7240f9620b5f95ca93c24d2ce98052e0971c91630f9e4e1",
+    "now": 1789430400,
+    "expect": "bad_auth_headers",
+    "headers": {
+      "X-CC-Nonce": [
+        "0123456789abcdef."
+      ]
+    }
+  },
+  {
+    "name": "timestamp_not_decimal",
+    "api_key": "test_api_key_123",
+    "method": "POST",
+    "path": "/v1/wallets/info",
+    "query": "",
+    "merchant": "3f2a1b4c-5d6e-7f80-9a1b-2c3d4e5f6071",
+    "idempotency_key": "",
+    "timestamp": "1789430400",
+    "nonce": "0123456789abcdef0123456789abcdef",
+    "body": "{\"address\":\"TLa2f6VPqDgRE67v1736s7bJ8Ray5wYjU7\"}",
+    "body_sha256": "a84370468ea09392f10851374546f8466476603cce6253795b8c8a1149ca1aec",
+    "string_to_sign": "CC-HMAC-SHA256-REQ-V1\n1789430400\n0123456789abcdef0123456789abcdef\nPOST\n/v1/wallets/info\n\n3f2a1b4c-5d6e-7f80-9a1b-2c3d4e5f6071\n\na84370468ea09392f10851374546f8466476603cce6253795b8c8a1149ca1aec",
+    "signature": "ed01a0f1e39ce8e5f7240f9620b5f95ca93c24d2ce98052e0971c91630f9e4e1",
+    "now": 1789430400,
+    "expect": "bad_auth_headers",
+    "headers": {
+      "X-CC-Timestamp": [
+        "1789430400.5"
+      ]
+    }
+  },
+  {
+    "name": "timestamp_negative",
+    "api_key": "test_api_key_123",
+    "method": "POST",
+    "path": "/v1/wallets/info",
+    "query": "",
+    "merchant": "3f2a1b4c-5d6e-7f80-9a1b-2c3d4e5f6071",
+    "idempotency_key": "",
+    "timestamp": "1789430400",
+    "nonce": "0123456789abcdef0123456789abcdef",
+    "body": "{\"address\":\"TLa2f6VPqDgRE67v1736s7bJ8Ray5wYjU7\"}",
+    "body_sha256": "a84370468ea09392f10851374546f8466476603cce6253795b8c8a1149ca1aec",
+    "string_to_sign": "CC-HMAC-SHA256-REQ-V1\n1789430400\n0123456789abcdef0123456789abcdef\nPOST\n/v1/wallets/info\n\n3f2a1b4c-5d6e-7f80-9a1b-2c3d4e5f6071\n\na84370468ea09392f10851374546f8466476603cce6253795b8c8a1149ca1aec",
+    "signature": "ed01a0f1e39ce8e5f7240f9620b5f95ca93c24d2ce98052e0971c91630f9e4e1",
+    "now": 1789430400,
+    "expect": "bad_auth_headers",
+    "headers": {
+      "X-CC-Timestamp": [
+        "-1789430400"
+      ]
+    }
+  },
+  {
+    "name": "timestamp_19_digits",
+    "api_key": "test_api_key_123",
+    "method": "POST",
+    "path": "/v1/wallets/info",
+    "query": "",
+    "merchant": "3f2a1b4c-5d6e-7f80-9a1b-2c3d4e5f6071",
+    "idempotency_key": "",
+    "timestamp": "1789430400",
+    "nonce": "0123456789abcdef0123456789abcdef",
+    "body": "{\"address\":\"TLa2f6VPqDgRE67v1736s7bJ8Ray5wYjU7\"}",
+    "body_sha256": "a84370468ea09392f10851374546f8466476603cce6253795b8c8a1149ca1aec",
+    "string_to_sign": "CC-HMAC-SHA256-REQ-V1\n1789430400\n0123456789abcdef0123456789abcdef\nPOST\n/v1/wallets/info\n\n3f2a1b4c-5d6e-7f80-9a1b-2c3d4e5f6071\n\na84370468ea09392f10851374546f8466476603cce6253795b8c8a1149ca1aec",
+    "signature": "ed01a0f1e39ce8e5f7240f9620b5f95ca93c24d2ce98052e0971c91630f9e4e1",
+    "now": 1789430400,
+    "expect": "bad_auth_headers",
+    "headers": {
+      "X-CC-Timestamp": [
+        "1789430400000000000"
+      ]
+    }
+  },
+  {
+    "name": "header_value_nbsp",
+    "api_key": "test_api_key_123",
+    "method": "POST",
+    "path": "/v1/wallets/info",
+    "query": "",
+    "merchant": "3f2a1b4c-5d6e-7f80-9a1b-2c3d4e5f6071",
+    "idempotency_key": "",
+    "timestamp": "1789430400",
+    "nonce": "0123456789abcdef0123456789abcdef",
+    "body": "{\"address\":\"TLa2f6VPqDgRE67v1736s7bJ8Ray5wYjU7\"}",
+    "body_sha256": "a84370468ea09392f10851374546f8466476603cce6253795b8c8a1149ca1aec",
+    "string_to_sign": "CC-HMAC-SHA256-REQ-V1\n1789430400\n0123456789abcdef0123456789abcdef\nPOST\n/v1/wallets/info\n\n3f2a1b4c-5d6e-7f80-9a1b-2c3d4e5f6071\n\na84370468ea09392f10851374546f8466476603cce6253795b8c8a1149ca1aec",
+    "signature": "ed01a0f1e39ce8e5f7240f9620b5f95ca93c24d2ce98052e0971c91630f9e4e1",
+    "now": 1789430400,
+    "expect": "bad_auth_headers",
+    "headers": {
+      "X-CC-Nonce": [
+        " 0123456789abcdef0123456789abcdef "
+      ]
+    }
+  },
+  {
+    "name": "header_value_carriage_return",
+    "api_key": "test_api_key_123",
+    "method": "POST",
+    "path": "/v1/wallets/info",
+    "query": "",
+    "merchant": "3f2a1b4c-5d6e-7f80-9a1b-2c3d4e5f6071",
+    "idempotency_key": "",
+    "timestamp": "1789430400",
+    "nonce": "0123456789abcdef0123456789abcdef",
+    "body": "{\"address\":\"TLa2f6VPqDgRE67v1736s7bJ8Ray5wYjU7\"}",
+    "body_sha256": "a84370468ea09392f10851374546f8466476603cce6253795b8c8a1149ca1aec",
+    "string_to_sign": "CC-HMAC-SHA256-REQ-V1\n1789430400\n0123456789abcdef0123456789abcdef\nPOST\n/v1/wallets/info\n\n3f2a1b4c-5d6e-7f80-9a1b-2c3d4e5f6071\n\na84370468ea09392f10851374546f8466476603cce6253795b8c8a1149ca1aec",
+    "signature": "ed01a0f1e39ce8e5f7240f9620b5f95ca93c24d2ce98052e0971c91630f9e4e1",
+    "now": 1789430400,
+    "expect": "bad_auth_headers",
+    "headers": {
+      "Merchant": [
+        "3f2a1b4c-5d6e-7f80-9a1b-2c3d4e5f6071\r"
+      ]
+    }
+  },
+  {
+    "name": "signature_prefix_uppercase",
+    "api_key": "test_api_key_123",
+    "method": "POST",
+    "path": "/v1/wallets/info",
+    "query": "",
+    "merchant": "3f2a1b4c-5d6e-7f80-9a1b-2c3d4e5f6071",
+    "idempotency_key": "",
+    "timestamp": "1789430400",
+    "nonce": "0123456789abcdef0123456789abcdef",
+    "body": "{\"address\":\"TLa2f6VPqDgRE67v1736s7bJ8Ray5wYjU7\"}",
+    "body_sha256": "a84370468ea09392f10851374546f8466476603cce6253795b8c8a1149ca1aec",
+    "string_to_sign": "CC-HMAC-SHA256-REQ-V1\n1789430400\n0123456789abcdef0123456789abcdef\nPOST\n/v1/wallets/info\n\n3f2a1b4c-5d6e-7f80-9a1b-2c3d4e5f6071\n\na84370468ea09392f10851374546f8466476603cce6253795b8c8a1149ca1aec",
+    "signature": "ed01a0f1e39ce8e5f7240f9620b5f95ca93c24d2ce98052e0971c91630f9e4e1",
+    "now": 1789430400,
+    "expect": "bad_auth_headers",
+    "headers": {
+      "X-CC-Signature": [
+        "V1=ed01a0f1e39ce8e5f7240f9620b5f95ca93c24d2ce98052e0971c91630f9e4e1"
+      ]
+    }
+  },
+  {
+    "name": "signature_without_prefix",
+    "api_key": "test_api_key_123",
+    "method": "POST",
+    "path": "/v1/wallets/info",
+    "query": "",
+    "merchant": "3f2a1b4c-5d6e-7f80-9a1b-2c3d4e5f6071",
+    "idempotency_key": "",
+    "timestamp": "1789430400",
+    "nonce": "0123456789abcdef0123456789abcdef",
+    "body": "{\"address\":\"TLa2f6VPqDgRE67v1736s7bJ8Ray5wYjU7\"}",
+    "body_sha256": "a84370468ea09392f10851374546f8466476603cce6253795b8c8a1149ca1aec",
+    "string_to_sign": "CC-HMAC-SHA256-REQ-V1\n1789430400\n0123456789abcdef0123456789abcdef\nPOST\n/v1/wallets/info\n\n3f2a1b4c-5d6e-7f80-9a1b-2c3d4e5f6071\n\na84370468ea09392f10851374546f8466476603cce6253795b8c8a1149ca1aec",
+    "signature": "ed01a0f1e39ce8e5f7240f9620b5f95ca93c24d2ce98052e0971c91630f9e4e1",
+    "now": 1789430400,
+    "expect": "bad_auth_headers",
+    "headers": {
+      "X-CC-Signature": [
+        "ed01a0f1e39ce8e5f7240f9620b5f95ca93c24d2ce98052e0971c91630f9e4e1"
+      ]
+    }
+  },
+  {
+    "name": "signature_63_hex",
+    "api_key": "test_api_key_123",
+    "method": "POST",
+    "path": "/v1/wallets/info",
+    "query": "",
+    "merchant": "3f2a1b4c-5d6e-7f80-9a1b-2c3d4e5f6071",
+    "idempotency_key": "",
+    "timestamp": "1789430400",
+    "nonce": "0123456789abcdef0123456789abcdef",
+    "body": "{\"address\":\"TLa2f6VPqDgRE67v1736s7bJ8Ray5wYjU7\"}",
+    "body_sha256": "a84370468ea09392f10851374546f8466476603cce6253795b8c8a1149ca1aec",
+    "string_to_sign": "CC-HMAC-SHA256-REQ-V1\n1789430400\n0123456789abcdef0123456789abcdef\nPOST\n/v1/wallets/info\n\n3f2a1b4c-5d6e-7f80-9a1b-2c3d4e5f6071\n\na84370468ea09392f10851374546f8466476603cce6253795b8c8a1149ca1aec",
+    "signature": "ed01a0f1e39ce8e5f7240f9620b5f95ca93c24d2ce98052e0971c91630f9e4e1",
+    "now": 1789430400,
+    "expect": "bad_auth_headers",
+    "headers": {
+      "X-CC-Signature": [
+        "v1=ed01a0f1e39ce8e5f7240f9620b5f95ca93c24d2ce98052e0971c91630f9e4e"
+      ]
+    }
+  },
+  {
+    "name": "signature_not_hex",
+    "api_key": "test_api_key_123",
+    "method": "POST",
+    "path": "/v1/wallets/info",
+    "query": "",
+    "merchant": "3f2a1b4c-5d6e-7f80-9a1b-2c3d4e5f6071",
+    "idempotency_key": "",
+    "timestamp": "1789430400",
+    "nonce": "0123456789abcdef0123456789abcdef",
+    "body": "{\"address\":\"TLa2f6VPqDgRE67v1736s7bJ8Ray5wYjU7\"}",
+    "body_sha256": "a84370468ea09392f10851374546f8466476603cce6253795b8c8a1149ca1aec",
+    "string_to_sign": "CC-HMAC-SHA256-REQ-V1\n1789430400\n0123456789abcdef0123456789abcdef\nPOST\n/v1/wallets/info\n\n3f2a1b4c-5d6e-7f80-9a1b-2c3d4e5f6071\n\na84370468ea09392f10851374546f8466476603cce6253795b8c8a1149ca1aec",
+    "signature": "ed01a0f1e39ce8e5f7240f9620b5f95ca93c24d2ce98052e0971c91630f9e4e1",
+    "now": 1789430400,
+    "expect": "bad_auth_headers",
+    "headers": {
+      "X-CC-Signature": [
+        "v1=gggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggg"
+      ]
+    }
+  },
+  {
+    "name": "content_type_missing_with_body",
+    "api_key": "test_api_key_123",
+    "method": "POST",
+    "path": "/v1/wallets/info",
+    "query": "",
+    "merchant": "3f2a1b4c-5d6e-7f80-9a1b-2c3d4e5f6071",
+    "idempotency_key": "",
+    "timestamp": "1789430400",
+    "nonce": "0123456789abcdef0123456789abcdef",
+    "body": "{\"address\":\"TLa2f6VPqDgRE67v1736s7bJ8Ray5wYjU7\"}",
+    "body_sha256": "a84370468ea09392f10851374546f8466476603cce6253795b8c8a1149ca1aec",
+    "string_to_sign": "CC-HMAC-SHA256-REQ-V1\n1789430400\n0123456789abcdef0123456789abcdef\nPOST\n/v1/wallets/info\n\n3f2a1b4c-5d6e-7f80-9a1b-2c3d4e5f6071\n\na84370468ea09392f10851374546f8466476603cce6253795b8c8a1149ca1aec",
+    "signature": "ed01a0f1e39ce8e5f7240f9620b5f95ca93c24d2ce98052e0971c91630f9e4e1",
+    "now": 1789430400,
+    "expect": "bad_auth_headers",
+    "headers": {
+      "Content-Type": []
+    }
+  },
+  {
+    "name": "content_type_text_plain",
+    "api_key": "test_api_key_123",
+    "method": "POST",
+    "path": "/v1/wallets/info",
+    "query": "",
+    "merchant": "3f2a1b4c-5d6e-7f80-9a1b-2c3d4e5f6071",
+    "idempotency_key": "",
+    "timestamp": "1789430400",
+    "nonce": "0123456789abcdef0123456789abcdef",
+    "body": "{\"address\":\"TLa2f6VPqDgRE67v1736s7bJ8Ray5wYjU7\"}",
+    "body_sha256": "a84370468ea09392f10851374546f8466476603cce6253795b8c8a1149ca1aec",
+    "string_to_sign": "CC-HMAC-SHA256-REQ-V1\n1789430400\n0123456789abcdef0123456789abcdef\nPOST\n/v1/wallets/info\n\n3f2a1b4c-5d6e-7f80-9a1b-2c3d4e5f6071\n\na84370468ea09392f10851374546f8466476603cce6253795b8c8a1149ca1aec",
+    "signature": "ed01a0f1e39ce8e5f7240f9620b5f95ca93c24d2ce98052e0971c91630f9e4e1",
+    "now": 1789430400,
+    "expect": "bad_auth_headers",
+    "headers": {
+      "Content-Type": [
+        "text/plain"
+      ]
+    }
+  },
+  {
+    "name": "content_type_malformed",
+    "api_key": "test_api_key_123",
+    "method": "POST",
+    "path": "/v1/wallets/info",
+    "query": "",
+    "merchant": "3f2a1b4c-5d6e-7f80-9a1b-2c3d4e5f6071",
+    "idempotency_key": "",
+    "timestamp": "1789430400",
+    "nonce": "0123456789abcdef0123456789abcdef",
+    "body": "{\"address\":\"TLa2f6VPqDgRE67v1736s7bJ8Ray5wYjU7\"}",
+    "body_sha256": "a84370468ea09392f10851374546f8466476603cce6253795b8c8a1149ca1aec",
+    "string_to_sign": "CC-HMAC-SHA256-REQ-V1\n1789430400\n0123456789abcdef0123456789abcdef\nPOST\n/v1/wallets/info\n\n3f2a1b4c-5d6e-7f80-9a1b-2c3d4e5f6071\n\na84370468ea09392f10851374546f8466476603cce6253795b8c8a1149ca1aec",
+    "signature": "ed01a0f1e39ce8e5f7240f9620b5f95ca93c24d2ce98052e0971c91630f9e4e1",
+    "now": 1789430400,
+    "expect": "bad_auth_headers",
+    "headers": {
+      "Content-Type": [
+        "application/json; charset="
+      ]
+    }
+  },
+  {
+    "name": "timestamp_too_old",
+    "api_key": "test_api_key_123",
+    "method": "POST",
+    "path": "/v1/wallets/info",
+    "query": "",
+    "merchant": "3f2a1b4c-5d6e-7f80-9a1b-2c3d4e5f6071",
+    "idempotency_key": "",
+    "timestamp": "1789430400",
+    "nonce": "0123456789abcdef0123456789abcdef",
+    "body": "{\"address\":\"TLa2f6VPqDgRE67v1736s7bJ8Ray5wYjU7\"}",
+    "body_sha256": "a84370468ea09392f10851374546f8466476603cce6253795b8c8a1149ca1aec",
+    "string_to_sign": "CC-HMAC-SHA256-REQ-V1\n1789430400\n0123456789abcdef0123456789abcdef\nPOST\n/v1/wallets/info\n\n3f2a1b4c-5d6e-7f80-9a1b-2c3d4e5f6071\n\na84370468ea09392f10851374546f8466476603cce6253795b8c8a1149ca1aec",
+    "signature": "ed01a0f1e39ce8e5f7240f9620b5f95ca93c24d2ce98052e0971c91630f9e4e1",
+    "now": 1789430701,
+    "expect": "timestamp_out_of_range"
+  },
+  {
+    "name": "timestamp_too_new",
+    "api_key": "test_api_key_123",
+    "method": "POST",
+    "path": "/v1/wallets/info",
+    "query": "",
+    "merchant": "3f2a1b4c-5d6e-7f80-9a1b-2c3d4e5f6071",
+    "idempotency_key": "",
+    "timestamp": "1789430400",
+    "nonce": "0123456789abcdef0123456789abcdef",
+    "body": "{\"address\":\"TLa2f6VPqDgRE67v1736s7bJ8Ray5wYjU7\"}",
+    "body_sha256": "a84370468ea09392f10851374546f8466476603cce6253795b8c8a1149ca1aec",
+    "string_to_sign": "CC-HMAC-SHA256-REQ-V1\n1789430400\n0123456789abcdef0123456789abcdef\nPOST\n/v1/wallets/info\n\n3f2a1b4c-5d6e-7f80-9a1b-2c3d4e5f6071\n\na84370468ea09392f10851374546f8466476603cce6253795b8c8a1149ca1aec",
+    "signature": "ed01a0f1e39ce8e5f7240f9620b5f95ca93c24d2ce98052e0971c91630f9e4e1",
+    "now": 1789430099,
+    "expect": "timestamp_out_of_range"
+  },
+  {
+    "name": "signature_of_other_key",
+    "api_key": "test_api_key_123",
+    "method": "POST",
+    "path": "/v1/wallets/info",
+    "query": "",
+    "merchant": "3f2a1b4c-5d6e-7f80-9a1b-2c3d4e5f6071",
+    "idempotency_key": "",
+    "timestamp": "1789430400",
+    "nonce": "0123456789abcdef0123456789abcdef",
+    "body": "{\"address\":\"TLa2f6VPqDgRE67v1736s7bJ8Ray5wYjU7\"}",
+    "body_sha256": "a84370468ea09392f10851374546f8466476603cce6253795b8c8a1149ca1aec",
+    "string_to_sign": "CC-HMAC-SHA256-REQ-V1\n1789430400\n0123456789abcdef0123456789abcdef\nPOST\n/v1/wallets/info\n\n3f2a1b4c-5d6e-7f80-9a1b-2c3d4e5f6071\n\na84370468ea09392f10851374546f8466476603cce6253795b8c8a1149ca1aec",
+    "signature": "ed01a0f1e39ce8e5f7240f9620b5f95ca93c24d2ce98052e0971c91630f9e4e1",
+    "now": 1789430400,
+    "expect": "invalid_signature",
+    "headers": {
+      "X-CC-Signature": [
+        "v1=1b8f3038d9ad5679cde7a573f3c08db5020f3da5987c612ddcd65c9f65d1ecbb"
+      ]
+    }
+  },
+  {
+    "name": "signature_of_other_body",
+    "api_key": "test_api_key_123",
+    "method": "POST",
+    "path": "/v1/wallets/info",
+    "query": "",
+    "merchant": "3f2a1b4c-5d6e-7f80-9a1b-2c3d4e5f6071",
+    "idempotency_key": "",
+    "timestamp": "1789430400",
+    "nonce": "0123456789abcdef0123456789abcdef",
+    "body": "{\"address\":\"TLa2f6VPqDgRE67v1736s7bJ8Ray5wYjU7\"}",
+    "body_sha256": "a84370468ea09392f10851374546f8466476603cce6253795b8c8a1149ca1aec",
+    "string_to_sign": "CC-HMAC-SHA256-REQ-V1\n1789430400\n0123456789abcdef0123456789abcdef\nPOST\n/v1/wallets/info\n\n3f2a1b4c-5d6e-7f80-9a1b-2c3d4e5f6071\n\na84370468ea09392f10851374546f8466476603cce6253795b8c8a1149ca1aec",
+    "signature": "ed01a0f1e39ce8e5f7240f9620b5f95ca93c24d2ce98052e0971c91630f9e4e1",
+    "now": 1789430400,
+    "expect": "invalid_signature",
+    "headers": {
+      "X-CC-Signature": [
+        "v1=392f842e0f9fb00ec12e7e189f4ca3e2d72f4ad06619e60840bfae6a454166b5"
+      ]
+    }
+  },
+  {
+    "name": "signature_of_other_path",
+    "api_key": "test_api_key_123",
+    "method": "POST",
+    "path": "/v1/wallets/info",
+    "query": "",
+    "merchant": "3f2a1b4c-5d6e-7f80-9a1b-2c3d4e5f6071",
+    "idempotency_key": "",
+    "timestamp": "1789430400",
+    "nonce": "0123456789abcdef0123456789abcdef",
+    "body": "{\"address\":\"TLa2f6VPqDgRE67v1736s7bJ8Ray5wYjU7\"}",
+    "body_sha256": "a84370468ea09392f10851374546f8466476603cce6253795b8c8a1149ca1aec",
+    "string_to_sign": "CC-HMAC-SHA256-REQ-V1\n1789430400\n0123456789abcdef0123456789abcdef\nPOST\n/v1/wallets/info\n\n3f2a1b4c-5d6e-7f80-9a1b-2c3d4e5f6071\n\na84370468ea09392f10851374546f8466476603cce6253795b8c8a1149ca1aec",
+    "signature": "ed01a0f1e39ce8e5f7240f9620b5f95ca93c24d2ce98052e0971c91630f9e4e1",
+    "now": 1789430400,
+    "expect": "invalid_signature",
+    "headers": {
+      "X-CC-Signature": [
+        "v1=dc3a98ebf84da858a563649d005b0a7a71e0ebaa91ea9c357fc731a459b2e2d1"
+      ]
+    }
+  }
+]

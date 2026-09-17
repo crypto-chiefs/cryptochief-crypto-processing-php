@@ -50,4 +50,14 @@ enum ErrorCode: string
     case ResendTooSoon                    = 'RESEND_TOO_SOON';
     /** Static-deposit resend: no webhook was ever queued — the wallet had no callback_url. */
     case NoDeliveries                     = 'NO_DELIVERIES';
+    /** X-CC-* headers are missing, repeated or malformed (HTTP 400). */
+    case BadAuthHeaders                   = 'BAD_AUTH_HEADERS';
+    /** X-CC-Signature does not match (HTTP 401). */
+    case InvalidSignature                 = 'INVALID_SIGNATURE';
+    /** X-CC-Timestamp is more than 300 s from server time (HTTP 401); `ApiException::$serverTime` carries `server_time`. */
+    case SignatureTimestampOutOfRange     = 'SIGNATURE_TIMESTAMP_OUT_OF_RANGE';
+    /** X-CC-Nonce was already used (HTTP 401). */
+    case SignatureReplayed                = 'SIGNATURE_REPLAYED';
+    /** Request body exceeds the endpoint's size limit (HTTP 413). */
+    case PayloadTooLarge                  = 'PAYLOAD_TOO_LARGE';
 }

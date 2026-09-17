@@ -6,7 +6,8 @@ namespace CryptoChief\Processing\Tests;
 
 use CryptoChief\Processing\Client;
 use CryptoChief\Processing\Dto\CreditsTopupRequest;
-use CryptoChief\Processing\Sign;
+use CryptoChief\Processing\Tests\Support\JsonBody;
+use CryptoChief\Processing\Tests\Support\SignedRequest;
 use GuzzleHttp\Client as GuzzleClient;
 use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\HandlerStack;
@@ -62,10 +63,10 @@ final class CreditsServiceTest extends TestCase
         self::assertSame('M', $req->getHeaderLine('Merchant'));
         self::assertSame('application/json', $req->getHeaderLine('Content-Type'));
 
-        // The empty request canonicalizes to `{}` and is signed like every other call.
+        // The empty request is sent as `{}` and signed like every other call.
         $body = (string) $req->getBody();
         self::assertSame('{}', $body);
-        self::assertSame(Sign::sign($body, 'K'), $req->getHeaderLine('Signature'));
+        SignedRequest::assertSignedV1($req);
     }
 
     public function testBalancePrepaidPositive(): void
@@ -148,10 +149,10 @@ final class CreditsServiceTest extends TestCase
         self::assertSame('application/json', $req->getHeaderLine('Content-Type'));
 
         // Unset optional urls are dropped entirely - not sent as "" - so the signed
-        // canonical body contains only the required fields.
+        // body contains only the required fields.
         $body = (string) $req->getBody();
-        self::assertSame('{"amount":"250.00","currency":"USDT"}', $body);
-        self::assertSame(Sign::sign($body, 'K'), $req->getHeaderLine('Signature'));
+        JsonBody::assertSameValue('{"amount":"250.00","currency":"USDT"}', $body);
+        SignedRequest::assertSignedV1($req);
     }
 
     public function testTopupSendsRedirectUrlsAndMapsResponseWithoutOptionals(): void
@@ -198,12 +199,12 @@ final class CreditsServiceTest extends TestCase
         $req = $entry['request'];
 
         $body = (string) $req->getBody();
-        self::assertSame(
+        JsonBody::assertSameValue(
             '{"amount":"10.00","currency":"USDC",'
             . '"url_error":"https://example.com/fail",'
             . '"url_success":"https://example.com/ok"}',
             $body
         );
-        self::assertSame(Sign::sign($body, 'K'), $req->getHeaderLine('Signature'));
+        SignedRequest::assertSignedV1($req);
     }
 }

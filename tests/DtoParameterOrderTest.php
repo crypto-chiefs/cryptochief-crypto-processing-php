@@ -155,8 +155,8 @@ final class DtoParameterOrderTest extends TestCase
     }
 
     /**
-     * Wire decoding is by name, so the reorder must not move a single byte of the request
-     * or response mapping. Canonical JSON sorts its keys anyway, which is why moving a
+     * Wire encoding and decoding are by name, so the reorder changes no request or response
+     * value. A JSON object's member order carries no meaning, which is why moving a
      * parameter is safe at all.
      */
     public function testReorderDoesNotChangeWireDecoding(): void

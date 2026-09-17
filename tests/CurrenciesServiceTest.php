@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace CryptoChief\Processing\Tests;
 
 use CryptoChief\Processing\Client;
-use CryptoChief\Processing\Sign;
+use CryptoChief\Processing\Tests\Support\SignedRequest;
 use GuzzleHttp\Client as GuzzleClient;
 use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\HandlerStack;
@@ -68,10 +68,10 @@ final class CurrenciesServiceTest extends TestCase
         self::assertSame('M', $req->getHeaderLine('Merchant'));
         self::assertSame('application/json', $req->getHeaderLine('Content-Type'));
 
-        // Nothing to filter by, but the empty body is still canonicalized and signed.
+        // Nothing to filter by: the body is an empty object, signed like every other call.
         $body = (string) $req->getBody();
         self::assertSame('{}', $body);
-        self::assertSame(Sign::sign($body, 'K'), $req->getHeaderLine('Signature'));
+        SignedRequest::assertSignedV1($req);
 
         self::assertCount(3, $fiats);
         self::assertSame('JMD', $fiats[0]->code);
@@ -183,7 +183,7 @@ final class CurrenciesServiceTest extends TestCase
 
         $body = (string) $req->getBody();
         self::assertSame('{}', $body);
-        self::assertSame(Sign::sign($body, 'K'), $req->getHeaderLine('Signature'));
+        SignedRequest::assertSignedV1($req);
 
         // More than one exchange, keyed by name, each with its own list: a decoder that
         // flattens the map to a single list loses which venue can quote what, and

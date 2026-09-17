@@ -4,10 +4,13 @@ declare(strict_types=1);
 
 namespace CryptoChief\Processing\Exception;
 
-class WebhookSignatureException extends CryptoChiefException
+/**
+ * X-CC-Signature does not match the body, timestamp and delivery id.
+ */
+class WebhookSignatureException extends WebhookVerificationException
 {
-    public function __construct()
+    public function __construct(string $message = 'cryptochief: invalid webhook signature')
     {
-        parent::__construct('cryptochief: invalid webhook signature');
+        parent::__construct($message);
     }
 }

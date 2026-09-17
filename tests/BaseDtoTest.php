@@ -10,7 +10,7 @@ use CryptoChief\Processing\Dto\EstimatePayoutRequest;
 use CryptoChief\Processing\Dto\EstimatePayoutResponse;
 use CryptoChief\Processing\Dto\HistoryQuery;
 use CryptoChief\Processing\Dto\PayoutFeeInfo;
-use CryptoChief\Processing\Sign;
+use CryptoChief\Processing\Tests\Support\JsonBody;
 use PHPUnit\Framework\TestCase;
 
 final class BaseDtoTest extends TestCase
@@ -92,7 +92,7 @@ final class BaseDtoTest extends TestCase
         self::assertSame(['page' => 2, 'page_size' => 50, 'status' => 'paid'], $q->toWire());
     }
 
-    public function testDtoCanonicalizes(): void
+    public function testDtoWireJson(): void
     {
         $req = new EstimatePayoutRequest(
             network: 'ETH_SEPOLIA',
@@ -101,11 +101,10 @@ final class BaseDtoTest extends TestCase
             toAddress: '0xAbC',
             fromAddresses: ['0x111', '0x222'],
         );
-        // Should produce the same canonical JSON as the bare array vector in SignTest.
-        self::assertSame(
+        JsonBody::assertSameValue(
             '{"amount":"0.0001","coin":"ETH","from_addresses":["0x111","0x222"],'
             . '"network":"ETH_SEPOLIA","to_address":"0xAbC"}',
-            Sign::canonicalJson($req)
+            json_encode($req->toWire(), JSON_THROW_ON_ERROR),
         );
     }
 }

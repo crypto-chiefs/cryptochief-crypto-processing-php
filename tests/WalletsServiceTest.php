@@ -10,7 +10,8 @@ use CryptoChief\Processing\Dto\GenerateWalletRequest;
 use CryptoChief\Processing\Dto\HistoryMeta;
 use CryptoChief\Processing\Dto\PayIn;
 use CryptoChief\Processing\Dto\WalletPayInHistoryQuery;
-use CryptoChief\Processing\Sign;
+use CryptoChief\Processing\Tests\Support\JsonBody;
+use CryptoChief\Processing\Tests\Support\SignedRequest;
 use GuzzleHttp\Client as GuzzleClient;
 use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\HandlerStack;
@@ -98,11 +99,8 @@ final class WalletsServiceTest extends TestCase
 
         // The label is a plain top-level field and rides on masters too, not just statics.
         $body = (string) $req->getBody();
-        self::assertSame(
-            '{"chain_family":"EVM","label":"hot wallet EU","wallet_type":"master"}',
-            $body
-        );
-        self::assertSame(Sign::sign($body, 'K'), $req->getHeaderLine('Signature'));
+        JsonBody::assertSameValue('{"chain_family":"EVM","label":"hot wallet EU","wallet_type":"master"}', $body);
+        SignedRequest::assertSignedV1($req);
     }
 
     public function testGenerateOmitsAnUnsetLabel(): void
@@ -120,6 +118,7 @@ final class WalletsServiceTest extends TestCase
         self::assertArrayNotHasKey('label', $body);
         self::assertArrayNotHasKey('master_wallet_address', $body);
         self::assertArrayNotHasKey('callback_url', $body);
+        ksort($body);
         self::assertSame(['chain_family' => 'EVM', 'wallet_type' => 'transit'], $body);
     }
 
@@ -137,8 +136,8 @@ final class WalletsServiceTest extends TestCase
 
         // A misspelt master field would silently rebind nothing, so pin the exact bytes.
         $body = (string) $req->getBody();
-        self::assertSame('{"address":"0xstatic","master_wallet_address":"0xnewmaster"}', $body);
-        self::assertSame(Sign::sign($body, 'K'), $req->getHeaderLine('Signature'));
+        JsonBody::assertSameValue('{"address":"0xstatic","master_wallet_address":"0xnewmaster"}', $body);
+        SignedRequest::assertSignedV1($req);
 
         // The response is the wallet as it stands afterwards.
         self::assertSame('0xnewmaster', $wallet->masterWalletAddress);
@@ -160,11 +159,8 @@ final class WalletsServiceTest extends TestCase
         self::assertSame('/v1/wallets/callback-url', $req->getUri()->getPath());
 
         $body = (string) $req->getBody();
-        self::assertSame(
-            '{"address":"0xstatic","callback_url":"https://example.com/hook"}',
-            $body
-        );
-        self::assertSame(Sign::sign($body, 'K'), $req->getHeaderLine('Signature'));
+        JsonBody::assertSameValue('{"address":"0xstatic","callback_url":"https://example.com/hook"}', $body);
+        SignedRequest::assertSignedV1($req);
 
         self::assertSame('https://example.com/hook', $wallet->callbackUrl);
     }
@@ -179,9 +175,9 @@ final class WalletsServiceTest extends TestCase
         // "" is the value that clears the webhook. Dropping the field the way an unset
         // optional is dropped would leave the old URL in place - the opposite request.
         $body = (string) $this->sentRequest($captured)->getBody();
-        self::assertSame('{"address":"0xstatic","callback_url":""}', $body);
+        JsonBody::assertSameValue('{"address":"0xstatic","callback_url":""}', $body);
         self::assertArrayHasKey('callback_url', $this->sentBody($captured));
-        self::assertSame(Sign::sign($body, 'K'), $this->sentRequest($captured)->getHeaderLine('Signature'));
+        SignedRequest::assertSignedV1($this->sentRequest($captured));
 
         self::assertNull($wallet->callbackUrl);
     }
@@ -195,7 +191,7 @@ final class WalletsServiceTest extends TestCase
 
         $req = $this->sentRequest($captured);
         self::assertSame('/v1/wallets/callback-url', $req->getUri()->getPath());
-        self::assertSame('{"address":"0xstatic","callback_url":""}', (string) $req->getBody());
+        JsonBody::assertSameValue('{"address":"0xstatic","callback_url":""}', (string) $req->getBody());
     }
 
     public function testSetLabelSendsTheName(): void
@@ -214,9 +210,9 @@ final class WalletsServiceTest extends TestCase
 
         // Exactly two fields: an extra one here would be a field the platform ignores.
         $body = (string) $req->getBody();
-        self::assertSame('{"address":"0xstatic","label":"customer 4242"}', $body);
+        JsonBody::assertSameValue('{"address":"0xstatic","label":"customer 4242"}', $body);
         self::assertSame(['address', 'label'], array_keys($this->sentBody($captured)));
-        self::assertSame(Sign::sign($body, 'K'), $req->getHeaderLine('Signature'));
+        SignedRequest::assertSignedV1($req);
 
         self::assertSame('customer 4242', $wallet->label);
     }
@@ -231,9 +227,9 @@ final class WalletsServiceTest extends TestCase
         // "" is the value that clears the name. Dropping the field the way an unset
         // optional is dropped would leave the old name in place - the opposite request.
         $body = (string) $this->sentRequest($captured)->getBody();
-        self::assertSame('{"address":"0xstatic","label":""}', $body);
+        JsonBody::assertSameValue('{"address":"0xstatic","label":""}', $body);
         self::assertArrayHasKey('label', $this->sentBody($captured));
-        self::assertSame(Sign::sign($body, 'K'), $this->sentRequest($captured)->getHeaderLine('Signature'));
+        SignedRequest::assertSignedV1($this->sentRequest($captured));
 
         // And a cleared name reads back as null, never as the empty string that cleared it.
         self::assertNull($wallet->label);
@@ -248,7 +244,7 @@ final class WalletsServiceTest extends TestCase
 
         $req = $this->sentRequest($captured);
         self::assertSame('/v1/wallets/label', $req->getUri()->getPath());
-        self::assertSame('{"address":"0xstatic","label":""}', (string) $req->getBody());
+        JsonBody::assertSameValue('{"address":"0xstatic","label":""}', (string) $req->getBody());
     }
 
     public function testSetLabelIsNotStaticOnly(): void
@@ -268,7 +264,7 @@ final class WalletsServiceTest extends TestCase
 
         $wallet = $client->wallets()->setLabel('0xmaster', 'treasury EU');
 
-        self::assertSame(
+        JsonBody::assertSameValue(
             '{"address":"0xmaster","label":"treasury EU"}',
             (string) $this->sentRequest($captured)->getBody()
         );
@@ -370,7 +366,7 @@ final class WalletsServiceTest extends TestCase
 
         $body = (string) $req->getBody();
         self::assertSame('{"address":"TQrY8bYc2yQ8sM8nJ1sZ9c2Zx7L2wq7pQb"}', $body);
-        self::assertSame(Sign::sign($body, 'K'), $req->getHeaderLine('Signature'));
+        SignedRequest::assertSignedV1($req);
 
         self::assertNotNull($out->items);
         self::assertCount(2, $out->items);
@@ -402,19 +398,19 @@ final class WalletsServiceTest extends TestCase
             pageSize: 50,
         ));
 
-        // Keys are canonicalized (sorted) before signing; unset filters stay off the wire.
+        // Unset filters stay off the wire.
         $body = (string) $this->sentRequest($captured)->getBody();
-        self::assertSame(
+        JsonBody::assertSameValue(
             '{"address":"0xAbC","date_from":"2026-01-01T00:00:00+00:00",'
             . '"date_to":"2026-02-01T00:00:00+00:00","page":2,"page_size":50}',
             $body
         );
-        self::assertSame(Sign::sign($body, 'K'), $this->sentRequest($captured)->getHeaderLine('Signature'));
+        SignedRequest::assertSignedV1($this->sentRequest($captured));
 
         $captured = [];
         $client = $this->client(['items' => [], 'meta' => ['page' => 1, 'page_size' => 20, 'total' => 0]], $captured);
         $client->wallets()->payInHistory('0xAbC', new WalletPayInHistoryQuery(pageSize: 100));
-        self::assertSame('{"address":"0xAbC","page_size":100}', (string) $this->sentRequest($captured)->getBody());
+        JsonBody::assertSameValue('{"address":"0xAbC","page_size":100}', (string) $this->sentRequest($captured)->getBody());
     }
 
     public function testPayInHistoryOfAnAddressYouDoNotOwnIsAnEmptyPage(): void
