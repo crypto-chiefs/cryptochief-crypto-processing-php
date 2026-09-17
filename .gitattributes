@@ -1,0 +1,4 @@
+# Check out text files with LF everywhere, Windows included: the signature
+# test vectors are pinned by sha256, and a CRLF checkout changes their bytes.
+* text=auto eol=lf
+*.bat text eol=crlf
