@@ -13,7 +13,8 @@ verify webhooks.
 
 - 25 chains across EVM, TRON, Solana, TON, XRP, and the BTC family
 - Single + batch payouts, auto-convert swaps, two-phase sign / execute, static deposits,
-  pay-ins, sweeps, withdrawals, fiat ↔ crypto conversion
+  pay-ins, sweeps, withdrawals, TRON energy rental, native-coin purchases, fiat ↔ crypto
+  conversion
 - Chain and asset catalogues, fiat and quotable-ticker lists, per-wallet pay-in history,
   per-wallet auto-sweep policy
 - High-level helpers: ERC-20 / TRC-20 transfers, ABI-encoded EVM calls, Solana Anchor
@@ -522,8 +523,9 @@ directly comparable. `getMessage()` keeps the sentence, `$raw` the untouched bod
 `$serverTime` the `server_time` of `SIGNATURE_TIMESTAMP_OUT_OF_RANGE`.
 
 Only 5xx and network failures retry; 4xx is the caller's fault and surfaces immediately.
-The exception is one resend after `SIGNATURE_TIMESTAMP_OUT_OF_RANGE` (see
-[Request signing](#request-signing)).
+The exceptions: one resend after `SIGNATURE_TIMESTAMP_OUT_OF_RANGE` (see
+[Request signing](#request-signing)), and a 5xx whose body is an order (`id` + `status`) —
+a settled business outcome the energy/native services recover, so retrying it is pointless.
 
 ## Credits balance & top-up
 
@@ -556,6 +558,127 @@ $invoice = $client->credits()->topup(new CreditsTopupRequest(
 
 echo "Pay at: {$invoice->paymentLink}\n";           // status starts as "pending"
 ```
+
+## Network fee estimates
+
+`transactions()->estimate()` prices the network fee of a transaction WITHOUT signing or
+broadcasting it. `estimatedFee` is the fee in the native coin; `required` is the total
+native balance the sender must hold (fee + value for a `native` transfer, fee only for a
+`token` one — the token amount comes off the token balance). Contract calls cannot be
+estimated (400 `CONTRACT_ESTIMATE_UNSUPPORTED`).
+
+```php
+use CryptoChief\Processing\Amount;
+use CryptoChief\Processing\Chain;
+use CryptoChief\Processing\Dto\EstimateTransactionRequest;
+
+$fee = $client->transactions()->estimate(new EstimateTransactionRequest(
+    network:     Chain::TronMainnet->value,
+    fromAddress: 'TYourWallet...',
+    toAddress:   'TRecipient...',
+    value:       Amount::humanToBase('100', 6),  // 100 TRX in sun
+));
+
+echo "fee {$fee->estimatedFee} TRX, sender needs {$fee->required} TRX\n";
+```
+
+TRON estimates additionally carry a fee breakdown (every other family leaves these
+`null` — the keys are absent from the JSON):
+
+- `feeExpected` — what the transfer will probably cost given the energy the sender
+  currently holds (staked / delegated / rented). NOT a guarantee: the pool can expire
+  or be spent by another transfer before the broadcast, so fund `estimatedFee`, not
+  this.
+- `feeLimit` — the on-chain fee cap written into the transaction.
+- `energy` — energy units the transaction needs.
+- `energyFee`, `bandwidthFee`, `activationFee` — the gross burn with an empty pool; the
+  three sum to `estimatedFee`. `activationFee` is set only for a native transfer to an
+  address the chain has not seen yet.
+
+## TRON energy rental
+
+Renting the energy a TRON transfer needs is cheaper than burning TRX for it. Orders are
+charged to the same credits balance as the rest of the API. `quote()` and `order()` are
+free of charge; `rent()` is the paid call.
+
+```php
+use CryptoChief\Processing\Dto\EnergyQuoteRequest;
+use CryptoChief\Processing\Dto\EnergyRentRequest;
+
+// 1. Price it - free of charge. receiveAddress is the SENDER of the transfer:
+//    the address the energy is delegated to.
+$quote = $client->energy()->quote(new EnergyQuoteRequest(
+    receiveAddress: 'TYourSenderWallet...',
+));
+echo "{$quote->priceTrx} TRX (~\${$quote->priceUsd}), saves {$quote->savingTrx} TRX vs burning\n";
+
+// 2. Rent, synchronously: by the time rent() answers, the energy is delegated or the
+//    reason it could not be is known. The Idempotency-Key is REQUIRED - it is what
+//    makes a retry safe.
+$order = $client->energy()->rent(new EnergyRentRequest(
+    quoteRef: $quote->ref,          // buy at the held price; or pass receiveAddress/energy directly
+), 'energy-' . bin2hex(random_bytes(6)));
+
+// 3. Branch on the outcome - the answer is always an order:
+if ($order->needsAttention) {
+    // 409 unresolved: the supplier never answered, the energy MAY be delegated.
+    // Do NOT retry - follow it with $client->energy()->order($order->idempotencyKey).
+} elseif ($order->status === 'refused') {
+    // 502 - or 402 when $order->errorCode is INSUFFICIENT_CREDITS (top the credits up).
+    // Nothing was charged: $order->credits and $order->priceUsd are null, $order->error
+    // says why. Retrying with a NEW idempotency key is safe.
+} else {
+    // delivered: $order->deliveredEnergy units are delegated for $order->durationSec.
+}
+```
+
+Errors with no order to report (409 `QUOTE_EXPIRED`, 409 `NOT_WORTH_RENTING`, ...)
+arrive as a regular `ApiException`.
+
+## Native-coin purchases
+
+The platform sells the native coin (TRX, ETH, BNB, SOL, TON, ...) out of its own
+liquidity, to any address you name — the platform pays for the transfer, and its fee is
+already in the price. The price covers the coins at the current market rate plus the
+platform's transfer fee: `totalUsd` is the full price and `credits` the exact amount
+charged to the same credits balance as the rest of the API. `quote()` and `order()`
+are free of charge; `buy()` is the paid call.
+
+```php
+use CryptoChief\Processing\Dto\NativeQuoteRequest;
+use CryptoChief\Processing\Dto\NativeBuyRequest;
+
+// 1. Price it - free of charge. The quote holds the price for ~90 seconds and is
+//    single-use.
+$quote = $client->native()->quote(new NativeQuoteRequest(
+    network:        'TRON_MAINNET',             // platform network id, not the "TRX" ticker
+    receiveAddress: 'TAnyAddress...',           // any address; the platform pays for the transfer
+    amount:         '25.5',                     // human units
+));
+echo "{$quote->amount} TRX for \${$quote->totalUsd} ({$quote->credits} credits)\n";
+
+// 2. Buy, synchronously: by the time buy() answers, the coins are sent or the reason
+//    they could not be is known. The Idempotency-Key is REQUIRED - it is what makes a
+//    retry safe.
+$order = $client->native()->buy(new NativeBuyRequest(
+    quoteRef: $quote->ref,          // buy at the held price; or pass network/receiveAddress/amount directly
+), 'native-' . bin2hex(random_bytes(6)));
+
+// 3. Branch on the outcome - the answer is always an order:
+if ($order->needsAttention) {
+    // 409 unresolved: the transfer's outcome never arrived, the coins MAY be sent.
+    // Do NOT retry - follow it with $client->native()->order($order->idempotencyKey).
+} elseif ($order->status === 'refused') {
+    // 502 - or 402 when $order->errorCode is INSUFFICIENT_CREDITS (top the credits up).
+    // Nothing was charged: $order->credits and $order->totalUsd are null, $order->error
+    // says why. Retrying with the same key returns this same order; a NEW key re-attempts.
+} else {
+    // delivered: $order->txHash is the transfer.
+}
+```
+
+Errors with no order to report (409 `QUOTE_EXPIRED` / `QUOTE_ALREADY_USED` — quote
+again, ...) arrive as a regular `ApiException`.
 
 ## Amount precision
 

@@ -13,11 +13,16 @@ use CryptoChief\Processing\Dto\ContractCall;
 use CryptoChief\Processing\Dto\ConvertRequest;
 use CryptoChief\Processing\Dto\CreatePayInRequest;
 use CryptoChief\Processing\Dto\CreditsTopupRequest;
+use CryptoChief\Processing\Dto\EnergyQuoteRequest;
+use CryptoChief\Processing\Dto\EnergyRentRequest;
 use CryptoChief\Processing\Dto\EstimatePayoutRequest;
+use CryptoChief\Processing\Dto\EstimateTransactionRequest;
 use CryptoChief\Processing\Dto\ExecutePayoutRequest;
 use CryptoChief\Processing\Dto\ExecuteTransactionRequest;
 use CryptoChief\Processing\Dto\GenerateWalletRequest;
 use CryptoChief\Processing\Dto\HistoryQuery;
+use CryptoChief\Processing\Dto\NativeBuyRequest;
+use CryptoChief\Processing\Dto\NativeQuoteRequest;
 use CryptoChief\Processing\Dto\SelectAssetRequest;
 use CryptoChief\Processing\Dto\SignTransactionRequest;
 use CryptoChief\Processing\Dto\StaticDepositHistoryQuery;
@@ -171,6 +176,13 @@ final class RequestBodyTest extends TestCase
             '/v1/transaction/signature',
             '{"calls":[{"data":"x","to":"P"}],"from_address":"0x1111111111111111111111111111111111111111","network":"ETH","type":"contract"}',
         ];
+        yield 'transactions.estimate nulls' => [
+            static fn (Client $c) => $c->transactions()->estimate(new EstimateTransactionRequest(
+                network: 'ETH', fromAddress: self::EVM_A,
+            )),
+            '/v1/transaction/estimate',
+            '{"from_address":"0x1111111111111111111111111111111111111111","network":"ETH","type":"native"}',
+        ];
         yield 'transactions.execute null hex' => [
             static fn (Client $c) => $c->transactions()->execute(new ExecuteTransactionRequest(uuid: 'u', signedTxHex: null)),
             '/v1/transaction/execute',
@@ -205,6 +217,46 @@ final class RequestBodyTest extends TestCase
             static fn (Client $c) => $c->credits()->topup(new CreditsTopupRequest('50', 'USDT', null, null)),
             '/v1/credits/topup',
             '{"amount":"50","currency":"USDT"}',
+        ];
+        yield 'energy.quote nulls' => [
+            static fn (Client $c) => $c->energy()->quote(new EnergyQuoteRequest('TSenderAddress0000000000000000000001', null, null)),
+            '/v1/energy/quote',
+            '{"receive_address":"TSenderAddress0000000000000000000001"}',
+        ];
+        yield 'energy.rent nulls' => [
+            static fn (Client $c) => $c->energy()->rent(new EnergyRentRequest(null, null, null, null), 'k-1'),
+            '/v1/energy/rent',
+            '{}',
+        ];
+        yield 'energy.rent quoteRef only' => [
+            static fn (Client $c) => $c->energy()->rent(new EnergyRentRequest(quoteRef: 'q_9f2e1c7a'), 'k-1'),
+            '/v1/energy/rent',
+            '{"quote_ref":"q_9f2e1c7a"}',
+        ];
+        yield 'energy.order' => [
+            static fn (Client $c) => $c->energy()->order('k-1'),
+            '/v1/energy/order',
+            '{"key":"k-1"}',
+        ];
+        yield 'native.quote' => [
+            static fn (Client $c) => $c->native()->quote(new NativeQuoteRequest('TRON_MAINNET', 'TReceiverAddress000000000000000000001', '25.5')),
+            '/v1/native/quote',
+            '{"network":"TRON_MAINNET","receive_address":"TReceiverAddress000000000000000000001","amount":"25.5"}',
+        ];
+        yield 'native.buy nulls' => [
+            static fn (Client $c) => $c->native()->buy(new NativeBuyRequest(null, null, null, null), 'k-1'),
+            '/v1/native/buy',
+            '{}',
+        ];
+        yield 'native.buy quoteRef only' => [
+            static fn (Client $c) => $c->native()->buy(new NativeBuyRequest(quoteRef: 'nq_9f2e1c7a'), 'k-1'),
+            '/v1/native/buy',
+            '{"quote_ref":"nq_9f2e1c7a"}',
+        ];
+        yield 'native.order' => [
+            static fn (Client $c) => $c->native()->order('k-1'),
+            '/v1/native/order',
+            '{"key":"k-1"}',
         ];
         yield 'request null member' => [
             static fn (Client $c) => $c->request('/v1/raw', ['coin' => 'ETH', 'memo' => null]),

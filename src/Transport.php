@@ -19,8 +19,9 @@ use Psr\Http\Message\ResponseInterface;
  *
  * The body is encoded to JSON once and signed with HMAC v1 (`X-CC-Timestamp`, `X-CC-Nonce`,
  * `X-CC-Signature`) over the bytes sent. The headers are computed on every attempt. 5xx
- * responses and network errors retry with exponential backoff + full jitter; 4xx is never
- * retried. `SIGNATURE_TIMESTAMP_OUT_OF_RANGE` with
+ * responses and network errors retry with exponential backoff + full jitter - except a 5xx
+ * whose body is an order (`id` + `status`), a settled business outcome that retries cannot
+ * change; 4xx is never retried. `SIGNATURE_TIMESTAMP_OUT_OF_RANGE` with
  * `server_time` sets the clock offset once and resends the request immediately, outside the
  * retry budget.
  */
@@ -225,7 +226,7 @@ final class Transport
                 $repeatNow = true;
                 continue;
             }
-            if ($status >= 500) {
+            if ($status >= 500 && !self::isOrderBody($text)) {
                 $lastErr = $apiErr;
                 continue;
             }
@@ -301,6 +302,10 @@ final class Transport
      * `error` is missing or `SERVICE_ERROR`, in which case it is `msg` — falling back to
      * `error` and then to `HTTP_<status>`. The message prefers `msg`, falling back to `error`.
      *
+     * A top-level `error_code` (an order body thrown as an error - the order carries the
+     * machine code next to a sanitised `error` sentence) wins over both shapes: it is the
+     * field downstream integrations branch on.
+     *
      * `error` is an object (`{"data":null,"error":{"status","name","message","details"}}`):
      * the code is `error.details.code`, falling back to `error.name` and then to `HTTP_<status>`; the message is
      * `error.message`.
@@ -322,12 +327,14 @@ final class Transport
         }
 
         $serverTime = self::unixSeconds($env['server_time'] ?? null);
+        $errorCode = self::nonEmptyString($env['error_code'] ?? null);
 
         if (isset($env['error']) && is_array($env['error'])) {
             $details = isset($env['error']['details']) && is_array($env['error']['details'])
                 ? $env['error']['details']
                 : [];
-            $code = self::nonEmptyString($details['code'] ?? null)
+            $code = $errorCode
+                ?? self::nonEmptyString($details['code'] ?? null)
                 ?? self::nonEmptyString($env['error']['name'] ?? null)
                 ?? ('HTTP_' . $status);
             $message = self::nonEmptyString($env['error']['message'] ?? null);
@@ -339,7 +346,8 @@ final class Transport
         $msg = self::nonEmptyString($env['msg'] ?? null);
         $err = self::nonEmptyString($env['error'] ?? null);
 
-        $code = $err !== null && $err !== ErrorCode::ServiceError->value ? $err : $msg;
+        $code = $errorCode;
+        $code ??= $err !== null && $err !== ErrorCode::ServiceError->value ? $err : $msg;
         $code ??= $err ?? ('HTTP_' . $status);
 
         $message = $msg ?? $err;
@@ -350,6 +358,26 @@ final class Transport
     private static function nonEmptyString(mixed $value): ?string
     {
         return is_string($value) && $value !== '' ? $value : null;
+    }
+
+    /**
+     * Whether a non-2xx body is an order (`id` + `status`) rather than an error
+     * envelope. A 5xx order is a settled business outcome the service layer recovers
+     * (see EnergyService / NativeService), not a transient failure - retrying it would
+     * just burn the retry budget before the order can be read.
+     */
+    private static function isOrderBody(string $body): bool
+    {
+        if ($body === '') {
+            return false;
+        }
+        try {
+            $decoded = json_decode($body, true, 512, JSON_THROW_ON_ERROR);
+        } catch (\JsonException) {
+            return false;
+        }
+
+        return is_array($decoded) && isset($decoded['id'], $decoded['status']);
     }
 
     /** Positive integer or decimal-digit string, otherwise null. */

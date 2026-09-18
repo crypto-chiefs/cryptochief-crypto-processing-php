@@ -15,6 +15,8 @@ use CryptoChief\Processing\ErrorCode;
  *   - {"ok":false,"error":"<CODE>","msg":"<sentence>"}
  *   - {"ok":false,"error":"SERVICE_ERROR","msg":"<CODE>"}
  *   - {"data":null,"error":{"status":...,"name":...,"message":"<sentence>","details":{"code":"<CODE>"}}}
+ *   - an order body: {"id":...,"status":...,"error_code":"<CODE>","error":"<sentence>"} -
+ *     `error_code` wins over the other shapes wherever it appears.
  *
  * All resolve to `<CODE>`, so every `ErrorCode` case is directly comparable. Without
  * `details.code` the code is `error.name`; a body without a code gives `HTTP_<status>`:

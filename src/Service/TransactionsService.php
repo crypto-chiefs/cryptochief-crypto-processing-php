@@ -9,6 +9,8 @@ use CryptoChief\Processing\Contract\EvmAbi;
 use CryptoChief\Processing\Dto\AnchorCallRequest;
 use CryptoChief\Processing\Dto\ContractCall;
 use CryptoChief\Processing\Dto\Erc20TransferRequest;
+use CryptoChief\Processing\Dto\EstimateTransactionRequest;
+use CryptoChief\Processing\Dto\EstimateTransactionResponse;
 use CryptoChief\Processing\Dto\EvmCallRequest;
 use CryptoChief\Processing\Dto\ExecuteTransactionRequest;
 use CryptoChief\Processing\Dto\HistoryQuery;
@@ -36,6 +38,16 @@ use CryptoChief\Processing\Ton\Messages;
  */
 final class TransactionsService extends BaseService
 {
+    /**
+     * Estimate the network fee for a transaction WITHOUT signing or broadcasting. `type`
+     * is `native` or `token`; contract calls cannot be estimated (the API answers 400
+     * `CONTRACT_ESTIMATE_UNSUPPORTED`, surfaced as a regular ApiException).
+     */
+    public function estimate(EstimateTransactionRequest $req): EstimateTransactionResponse
+    {
+        return self::fromWire(EstimateTransactionResponse::class, $this->post('/v1/transaction/estimate', $req));
+    }
+
     /**
      * Build and sign a transaction WITHOUT broadcasting. The signature has a per-family
      * TTL (EVM 10m, UTXO 15m, TRON 45s, Solana 60s, XRP 90s, TON 300s); call execute()

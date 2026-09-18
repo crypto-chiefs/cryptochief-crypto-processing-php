@@ -557,6 +557,57 @@ final class TransportTest extends TestCase
         self::assertTrue($resp['ok']);
     }
 
+    /**
+     * A 5xx whose body is an order (id + status) is a settled business outcome, not a
+     * transient failure - the service layer recovers the order from the exception's raw
+     * body, so the transport must NOT burn the retry budget on it first.
+     */
+    public function testDoesNotRetry5xxWithAnOrderBody(): void
+    {
+        /** @var array<int, array{request: RequestInterface}> $captured */
+        $captured = [];
+        $mock = new MockHandler([
+            new Response(502, [], '{"id":90211,"idempotency_key":"k-1","status":"refused","settled":true,'
+                . '"needs_attention":false,"error_code":"SUPPLIER_REFUSED","error":"no supplier could fill this order"}'),
+        ]);
+        $stack = HandlerStack::create($mock);
+        $stack->push(Middleware::history($captured));
+        $http = new GuzzleClient(['handler' => $stack]);
+
+        $client = new Client(
+            merchantId: 'M',
+            apiKey: 'K',
+            retries: 3,
+            retryBaseMs: 1.0,
+            retryMaxMs: 1.0,
+            httpClient: $http,
+        );
+
+        try {
+            $client->request('/v1/energy/rent', ['receive_address' => 'T...'], 'k-1');
+            self::fail('expected ApiException');
+        } catch (ApiException $e) {
+            self::assertSame(502, $e->httpStatus);
+            // The code comes from the order's error_code, not from the sentence.
+            self::assertSame('SUPPLIER_REFUSED', $e->errorCode);
+            self::assertStringContainsString('"status":"refused"', (string) $e->raw);
+        }
+
+        // Thrown on the first answer: a MockHandler retry would have run out of queue.
+        self::assertCount(1, $captured);
+    }
+
+    public function testErrorCodeFieldWinsOverTheErrorSentence(): void
+    {
+        $body = '{"id":90213,"status":"refused","error_code":"INSUFFICIENT_CREDITS",'
+            . '"error":"your credit balance did not cover this order; nothing was bought and nothing was charged"}';
+        $err = Transport::parseApiError(402, $body);
+
+        self::assertSame('INSUFFICIENT_CREDITS', $err->errorCode);
+        self::assertStringContainsString('credit balance', (string) $err->getMessage());
+        self::assertSame($body, $err->raw);
+    }
+
     public function testDoesNotRetryOn4xx(): void
     {
         $mock = new MockHandler([

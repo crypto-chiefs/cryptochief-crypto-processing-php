@@ -9,6 +9,8 @@ use CryptoChief\Processing\Exception\RsaKeyNotConfiguredException;
 use CryptoChief\Processing\Service\BlockchainService;
 use CryptoChief\Processing\Service\CreditsService;
 use CryptoChief\Processing\Service\CurrenciesService;
+use CryptoChief\Processing\Service\EnergyService;
+use CryptoChief\Processing\Service\NativeService;
 use CryptoChief\Processing\Service\PayInsService;
 use CryptoChief\Processing\Service\PayoutsService;
 use CryptoChief\Processing\Service\StaticDepositsService;
@@ -39,7 +41,7 @@ use Psr\Http\Client\ClientInterface as PsrHttpClient;
  */
 final class Client
 {
-    public const VERSION = '0.10.1';
+    public const VERSION = '0.11.0';
 
     public const DEFAULT_BASE_URL = 'https://api-processing.crypto-chief.com';
 
@@ -67,6 +69,8 @@ final class Client
     private readonly BlockchainService $blockchain;
     private readonly CurrenciesService $currencies;
     private readonly CreditsService $credits;
+    private readonly EnergyService $energy;
+    private readonly NativeService $native;
     private readonly WebhooksService $webhooks;
 
     public function __construct(
@@ -122,6 +126,8 @@ final class Client
         $this->blockchain     = new BlockchainService($this);
         $this->currencies     = new CurrenciesService($this);
         $this->credits        = new CreditsService($this);
+        $this->energy         = new EnergyService($this);
+        $this->native         = new NativeService($this);
         $this->webhooks       = new WebhooksService($this);
     }
 
@@ -135,6 +141,8 @@ final class Client
     public function blockchain(): BlockchainService         { return $this->blockchain; }
     public function currencies(): CurrenciesService         { return $this->currencies; }
     public function credits(): CreditsService               { return $this->credits; }
+    public function energy(): EnergyService                 { return $this->energy; }
+    public function native(): NativeService                 { return $this->native; }
     public function webhooks(): WebhooksService             { return $this->webhooks; }
 
     /**
