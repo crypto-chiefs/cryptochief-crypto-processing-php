@@ -36,6 +36,6 @@ final class SignedRequest
             body: (string) $request->getBody(),
         );
 
-        Assert::assertSame('v1=' . $expected, $request->getHeaderLine(Sign::HEADER_SIGNATURE));
+        Assert::assertSame($expected, $request->getHeaderLine(Sign::HEADER_SIGNATURE));
     }
 }

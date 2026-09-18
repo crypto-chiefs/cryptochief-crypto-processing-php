@@ -197,7 +197,7 @@ final class TransportTest extends TestCase
             idempotencyKey: '',
             body: (string) $captured[0]['request']->getBody(),
         );
-        self::assertNotSame('v1=' . $signedWithoutKey, $captured[0]['request']->getHeaderLine('X-CC-Signature'));
+        self::assertNotSame($signedWithoutKey, $captured[0]['request']->getHeaderLine('X-CC-Signature'));
     }
 
     public function testIdempotencyKeyThatCannotBeSentAsIsThrowsBeforeSending(): void
@@ -911,6 +911,6 @@ final class TransportTest extends TestCase
             body: (string) $req->getBody(),
         );
 
-        self::assertSame('v1=' . $expected, $req->getHeaderLine('X-CC-Signature'));
+        self::assertSame($expected, $req->getHeaderLine('X-CC-Signature'));
     }
 }

@@ -742,7 +742,7 @@ use CryptoChief\Processing\Sign;
 
 $timestamp = (string) time();
 $nonce     = Sign::hmacV1Nonce();
-$signature = 'v1=' . Sign::hmacV1Sign(
+$signature = Sign::hmacV1Sign(
     apiKey:         $apiKey,
     timestamp:      $timestamp,
     nonce:          $nonce,

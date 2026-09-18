@@ -83,11 +83,12 @@ final class Sign
     }
 
     /**
-     * Request signature, without the `v1=` prefix:
+     * Request X-CC-Signature header value, `v1=` followed by lowercase hex:
      *
-     *   hex(hmac_sha256(key = api_key, message = hmacV1StringToSign(...)))
+     *   "v1=" . hex(hmac_sha256(key = api_key, message = hmacV1StringToSign(...)))
      *
-     * Throws CryptoChiefException on a blank `$apiKey` and on the arguments
+     * The returned value is set on the `X-CC-Signature` header as it is, exactly like
+     * webhookV1Sign(). Throws CryptoChiefException on a blank `$apiKey` and on the arguments
      * hmacV1StringToSign() rejects.
      */
     public static function hmacV1Sign(
@@ -105,16 +106,17 @@ final class Sign
             throw new CryptoChiefException('cryptochief: api_key is required to sign a request');
         }
 
-        return hash_hmac('sha256', self::hmacV1StringToSign(
-            $timestamp,
-            $nonce,
-            $method,
-            $path,
-            $query,
-            $merchant,
-            $idempotencyKey,
-            $body,
-        ), $apiKey);
+        return self::HMAC_V1_PREFIX
+            . hash_hmac('sha256', self::hmacV1StringToSign(
+                $timestamp,
+                $nonce,
+                $method,
+                $path,
+                $query,
+                $merchant,
+                $idempotencyKey,
+                $body,
+            ), $apiKey);
     }
 
     /** Lowercase hex SHA-256 of the body bytes. */

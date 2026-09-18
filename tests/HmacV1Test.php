@@ -85,7 +85,7 @@ final class HmacV1Test extends TestCase
             body: $v['body'],
         ));
 
-        self::assertSame($v['signature'], Sign::hmacV1Sign(
+        self::assertSame(Sign::HMAC_V1_PREFIX . $v['signature'], Sign::hmacV1Sign(
             apiKey: $v['api_key'],
             timestamp: $v['timestamp'],
             nonce: $v['nonce'],
@@ -126,6 +126,43 @@ final class HmacV1Test extends TestCase
         }
 
         self::assertSame(GatewayHmacV1::OK, self::check($clean, (int) $v['timestamp'])->outcome, $v['name']);
+    }
+
+    /**
+     * Roundtrip: the value hmacV1Sign() returns is the X-CC-Signature header value — it is
+     * set as it is and verifies.
+     */
+    public function testSignVerifyRoundTrip(): void
+    {
+        $record = Vectors::request()[0];
+        $signature = Sign::hmacV1Sign(
+            apiKey: (string) $record['api_key'],
+            timestamp: (string) $record['timestamp'],
+            nonce: (string) $record['nonce'],
+            method: (string) $record['method'],
+            path: (string) $record['path'],
+            query: (string) $record['query'],
+            merchant: (string) $record['merchant'],
+            idempotencyKey: (string) $record['idempotency_key'],
+            body: (string) $record['body'],
+        );
+
+        $result = GatewayHmacV1::check(
+            apiKey: (string) $record['api_key'],
+            method: (string) $record['method'],
+            path: (string) $record['path'],
+            query: (string) $record['query'],
+            headers: [
+                'merchant' => [(string) $record['merchant']],
+                'x-cc-timestamp' => [(string) $record['timestamp']],
+                'x-cc-nonce' => [(string) $record['nonce']],
+                'x-cc-signature' => [$signature],
+            ],
+            body: (string) $record['body'],
+            now: (int) $record['timestamp'],
+        );
+
+        self::assertSame(GatewayHmacV1::OK, $result->outcome);
     }
 
     public function testStringToSignLayout(): void

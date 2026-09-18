@@ -182,7 +182,7 @@ final class HttpSignatureTest extends TestCase
             'Merchant' => self::MERCHANT,
             Sign::HEADER_TIMESTAMP => $timestamp,
             Sign::HEADER_NONCE => $nonce,
-            Sign::HEADER_SIGNATURE => 'v1=' . Sign::hmacV1Sign(
+            Sign::HEADER_SIGNATURE => Sign::hmacV1Sign(
                 self::API_KEY,
                 $timestamp,
                 $nonce,

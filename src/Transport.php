@@ -262,7 +262,7 @@ final class Transport
 
         $timestamp = (string) (time() + $this->clockOffset);
         $nonce = Sign::hmacV1Nonce();
-        $hmac = Sign::hmacV1Sign(
+        $signature = Sign::hmacV1Sign(
             $this->apiKey,
             $timestamp,
             $nonce,
@@ -277,7 +277,7 @@ final class Transport
         return $request
             ->withHeader(Sign::HEADER_TIMESTAMP, $timestamp)
             ->withHeader(Sign::HEADER_NONCE, $nonce)
-            ->withHeader(Sign::HEADER_SIGNATURE, Sign::HMAC_V1_PREFIX . $hmac);
+            ->withHeader(Sign::HEADER_SIGNATURE, $signature);
     }
 
     private function sendRequest(Psr7Request $request): ResponseInterface

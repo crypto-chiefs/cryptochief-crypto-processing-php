@@ -41,7 +41,7 @@ use Psr\Http\Client\ClientInterface as PsrHttpClient;
  */
 final class Client
 {
-    public const VERSION = '0.11.0';
+    public const VERSION = '0.12.0';
 
     public const DEFAULT_BASE_URL = 'https://api-processing.crypto-chief.com';
 
