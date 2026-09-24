@@ -32,6 +32,21 @@ enum ErrorCode: string
     case AlreadyExecuted                  = 'ALREADY_EXECUTED';
     case PreflightFailed                  = 'PREFLIGHT_FAILED';
     case BroadcastFailed                  = 'BROADCAST_FAILED';
+    /**
+     * EVM execute: a lower nonce of the address is held by another signature that was not
+     * executed. Nothing was sent; the transaction's `errorReason` names that signature when
+     * it is known. Execute it first, then retry the same uuid.
+     */
+    case NonceGap                         = 'NONCE_GAP';
+    /** EVM execute: the chain already used this transaction's nonce. Nothing was sent by this call. */
+    case NonceAlreadyUsed                 = 'NONCE_ALREADY_USED';
+    /**
+     * EVM sign: an earlier signature from the same address has an execute whose outcome is
+     * not known yet. The code may carry that signature's uuid
+     * (`PREVIOUS_EXECUTE_UNRESOLVED: uuid=<uuid>`); compare with `str_starts_with`.
+     * Retry execute of that uuid instead of signing again.
+     */
+    case PreviousExecuteUnresolved        = 'PREVIOUS_EXECUTE_UNRESOLVED';
     case SignedTxMismatch                 = 'SIGNED_TX_MISMATCH';
     case ContractRequiredForToken         = 'CONTRACT_REQUIRED_FOR_TOKEN';
     case TransferFieldsNotAllowedForContract = 'TRANSFER_FIELDS_NOT_ALLOWED_FOR_CONTRACT';

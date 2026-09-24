@@ -827,7 +827,7 @@ final class ConfirmationsTest extends TestCase
                 'needRefuel', 'refuelAmount', 'estimatedFee', 'estimatedFeeFiat',
             ],
             PayoutInfo::class => ['error', 'serviceOperations', 'confirmations', 'requiredConfirmations'],
-            TransactionInfo::class => ['error', 'confirmations', 'requiredConfirmations'],
+            TransactionInfo::class => ['error', 'confirmations', 'requiredConfirmations', 'errorReason'],
             PayoutEvent::class => ['errorReason', 'confirmations', 'requiredConfirmations'],
             TransactionEvent::class => ['errorReason', 'confirmations', 'requiredConfirmations'],
             Sweep::class => ['updatedAt', 'requiredConfirmations'],

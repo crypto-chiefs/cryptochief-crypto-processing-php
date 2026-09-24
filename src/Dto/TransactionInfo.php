@@ -25,6 +25,7 @@ final class TransactionInfo extends BaseDto
         public readonly ?string $actualFeeFiat = null,
         public readonly ?string $createdAt = null,
         public readonly ?string $updatedAt = null,
+        /** Not sent by the API; read `$errorReason`. */
         public readonly ?string $error = null,
         /**
          * Confirmations of the transaction. Always sent. `0` until it is in a block, then
@@ -36,10 +37,17 @@ final class TransactionInfo extends BaseDto
          * `confirmed` once `confirmations` reaches it.
          */
         public readonly ?int $requiredConfirmations = null,
+        /**
+         * Why the transaction is `failed`, `expired` or `cancelled` (`SUPERSEDED_BY:<uuid>`),
+         * or why a `signed` one could not be executed yet
+         * (`NONCE_GAP: missing_nonce=<n> blocking_uuid=<uuid>`,
+         * `NONCE_ALREADY_USED: chain_nonce=<n>`).
+         */
+        public readonly ?string $errorReason = null,
     ) {}
 
     public function isTerminal(): bool
     {
-        return in_array($this->status, ['confirmed', 'failed', 'expired'], true);
+        return in_array($this->status, ['confirmed', 'failed', 'expired', 'cancelled'], true);
     }
 }

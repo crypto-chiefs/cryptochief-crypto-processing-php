@@ -6,6 +6,10 @@ namespace CryptoChief\Processing\Dto;
 
 final class SignTransactionResponse extends BaseDto
 {
+    /**
+     * @param string[] $supersededUuids EVM: the earlier unexecuted signatures from the same
+     *        address that this one replaced; they turn `cancelled`. Empty when there were none.
+     */
     public function __construct(
         public readonly string $uuid = '',
         public readonly string $status = '',
@@ -14,5 +18,6 @@ final class SignTransactionResponse extends BaseDto
         public readonly ?string $expiresAt = null,
         public readonly ?string $chainFamily = null,
         public readonly ?string $network = null,
+        public readonly array $supersededUuids = [],
     ) {}
 }

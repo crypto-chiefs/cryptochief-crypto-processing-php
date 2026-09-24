@@ -7,7 +7,7 @@ namespace CryptoChief\Processing\Webhook;
 use CryptoChief\Processing\Dto\BaseDto;
 
 /**
- * Transaction webhook. Fires only on terminal status (confirmed / failed / expired).
+ * Transaction webhook. Fires only on terminal status (confirmed / failed / expired / cancelled).
  */
 final class TransactionEvent extends BaseDto
 {
