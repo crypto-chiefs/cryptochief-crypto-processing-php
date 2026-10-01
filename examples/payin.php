@@ -42,6 +42,10 @@ $invoice = $client->payIns()->create(new CreatePayInRequest(
     assets: new AssetsPolicy(
         allow: [new Asset(coin: 'USDT')], // any USDT network
     ),
+    // accuracyPaymentPercent: -1,   // paid-amount tolerance 0..15 (default 5); -1 accepts ANY amount
+    // isPaymentMultiple: true,      // several transactions may pay one invoice - watch the
+    //                               // invoice.wrong_amount_waiting / invoice.late_payment webhooks
+    //                               // (they carry received/remaining amounts and payments[])
 ));
 
 printf("Invoice uuid:   %s\n", $invoice->uuid);

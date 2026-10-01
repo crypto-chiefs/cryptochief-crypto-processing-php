@@ -142,6 +142,14 @@ final class RequestBodyTest extends TestCase
             '/v1/payments/order/create',
             '{"asset":{"network":"ANY"},"assets":{"allow":[{"network":"ETH"}]},"mode":"crypto","order_id":"o-1","user_id":"u-1"}',
         ];
+        yield 'payIns.create multiple payments wildcard accuracy' => [
+            static fn (Client $c) => $c->payIns()->create(new CreatePayInRequest(
+                orderId: 'o-1', userId: 'u-1', mode: 'crypto',
+                accuracyPaymentPercent: -1, isPaymentMultiple: true,
+            )),
+            '/v1/payments/order/create',
+            '{"accuracy_payment_percent":-1,"is_payment_multiple":true,"mode":"crypto","order_id":"o-1","user_id":"u-1"}',
+        ];
         yield 'payIns.selectAsset null master' => [
             static fn (Client $c) => $c->payIns()->selectAsset(new SelectAssetRequest('u', 'USDT', 'TRX', null)),
             '/v1/payments/asset/select',

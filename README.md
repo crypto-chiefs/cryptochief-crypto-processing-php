@@ -139,6 +139,15 @@ echo "Payment link: {$invoice->paymentLink}\n";
 The customer opens `paymentLink` and picks a coin. Once they do, the invoice transitions
 out of `waiting_asset_select` and exposes `toAddress` + `paymentCoin` + `paymentNetwork`.
 
+Two optional knobs on `CreatePayInRequest`: `accuracyPaymentPercent` is the paid-amount
+tolerance in percent, 0..15 (platform default 5) — pass `-1` to accept ANY received
+amount, the final status (`paid` / `paid_less` / `paid_over`) following the direction of
+the difference. `isPaymentMultiple: true` lets several transactions pay one invoice: an
+underpayment parks the order in `wrong_amount_waiting` (the remainder is accepted until
+one hour past `expired_at`), and the webhook stream gains `invoice.wrong_amount_waiting`
+(on every incoming transaction) and `invoice.late_payment`, both carrying
+`receivedAmountCrypto`, `remainingAmountCrypto` and the per-transaction `payments[]`.
+
 ### CRYPTO invoice (exact 0.01 ETH on Sepolia)
 
 ```php

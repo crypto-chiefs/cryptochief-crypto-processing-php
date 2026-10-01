@@ -12,6 +12,7 @@ use CryptoChief\Processing\Dto\PayIn;
 use CryptoChief\Processing\Dto\WalletPayInHistoryQuery;
 use CryptoChief\Processing\Tests\Support\JsonBody;
 use CryptoChief\Processing\Tests\Support\SignedRequest;
+use CryptoChief\Processing\Webhook\PayInPayment;
 use GuzzleHttp\Client as GuzzleClient;
 use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\HandlerStack;
@@ -345,6 +346,25 @@ final class WalletsServiceTest extends TestCase
                     'payment_coin' => 'USDT',
                     'payment_network' => 'TRON_MAINNET',
                     'to_address' => 'TQrY8bYc2yQ8sM8nJ1sZ9c2Zx7L2wq7pQb',
+                    'is_payment_multiple' => true,
+                    'received_amount_crypto' => '10.5',
+                    'remaining_amount_crypto' => '0',
+                    'payments' => [
+                        [
+                            'txid' => 'tx-1',
+                            'amount_crypto' => '6.5',
+                            'confirmations' => 19,
+                            'status' => 'confirmed',
+                            'seen_at' => '2026-09-30T10:00:00Z',
+                        ],
+                        [
+                            'txid' => 'tx-2',
+                            'amount_crypto' => '4.0',
+                            'confirmations' => 19,
+                            'status' => 'confirmed',
+                            'seen_at' => '2026-09-30T10:07:00Z',
+                        ],
+                    ],
                 ],
                 [
                     'uuid' => '1b2c3d4e-5f67-89ab-cdef-0123456789ab',
@@ -375,10 +395,28 @@ final class WalletsServiceTest extends TestCase
         self::assertSame('paid', $out->items[0]->status);
         self::assertSame('10.5', $out->items[0]->amountCrypto);
         self::assertSame('TRON_MAINNET', $out->items[0]->paymentNetwork);
+        // Multiple-payment order: the REST shape carries the same fields the webhook does.
+        self::assertTrue($out->items[0]->isPaymentMultiple);
+        self::assertSame('10.5', $out->items[0]->receivedAmountCrypto);
+        self::assertSame('0', $out->items[0]->remainingAmountCrypto);
+        self::assertIsArray($out->items[0]->payments);
+        self::assertCount(2, $out->items[0]->payments);
+        self::assertInstanceOf(PayInPayment::class, $out->items[0]->payments[0]);
+        self::assertSame('tx-1', $out->items[0]->payments[0]->txid);
+        self::assertSame('6.5', $out->items[0]->payments[0]->amountCrypto);
+        self::assertSame(19, $out->items[0]->payments[0]->confirmations);
+        self::assertSame('confirmed', $out->items[0]->payments[0]->status);
+        self::assertSame('2026-09-30T10:00:00Z', $out->items[0]->payments[0]->seenAt);
+        self::assertSame('tx-2', $out->items[0]->payments[1]->txid);
         // One deposit address can serve several orders over its lifetime - that is the
         // reason this endpoint exists.
         self::assertSame($out->items[0]->toAddress, $out->items[1]->toAddress);
         self::assertTrue($out->items[1]->isTerminal());
+        // Without the flag none of the multiple-payment fields is present.
+        self::assertNull($out->items[1]->isPaymentMultiple);
+        self::assertNull($out->items[1]->receivedAmountCrypto);
+        self::assertNull($out->items[1]->remainingAmountCrypto);
+        self::assertNull($out->items[1]->payments);
 
         self::assertInstanceOf(HistoryMeta::class, $out->meta);
         self::assertSame(1, $out->meta->page);

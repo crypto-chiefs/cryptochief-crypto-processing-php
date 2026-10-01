@@ -13,6 +13,7 @@ use CryptoChief\Processing\Sign;
 use CryptoChief\Processing\Tests\Support\Vectors;
 use CryptoChief\Processing\Webhook;
 use CryptoChief\Processing\Webhook\PayInEvent;
+use CryptoChief\Processing\Webhook\PayInPayment;
 use CryptoChief\Processing\Webhook\PayoutEvent;
 use CryptoChief\Processing\Webhook\SweepEvent;
 use CryptoChief\Processing\Webhook\TransactionEvent;
@@ -461,6 +462,84 @@ final class WebhookTest extends TestCase
             return;
         }
         self::fail('no vector payin_invoice_paid_with_nulls');
+    }
+
+    public function testParsePayInEventWrongAmountWaiting(): void
+    {
+        $event = self::parse([
+            'event' => 'invoice.wrong_amount_waiting',
+            'uuid' => 'inv-1',
+            'status' => 'wrong_amount_waiting',
+            'amount_crypto' => '25.000000',
+            'is_payment_multiple' => true,
+            'received_amount_crypto' => '10.000000',
+            'remaining_amount_crypto' => '15.000000',
+            'payments' => [
+                [
+                    'txid' => 'tx-a',
+                    'amount_crypto' => '6.000000',
+                    'confirmations' => 5,
+                    'status' => 'confirming',
+                    'seen_at' => '2026-09-30T10:00:00Z',
+                ],
+                [
+                    'txid' => 'tx-b',
+                    'amount_crypto' => '4.000000',
+                    'confirmations' => 20,
+                    'status' => 'confirmed',
+                    'seen_at' => '2026-09-30T09:55:00Z',
+                ],
+            ],
+        ]);
+        self::assertInstanceOf(PayInEvent::class, $event);
+        self::assertSame('invoice.wrong_amount_waiting', $event->event);
+        self::assertSame('wrong_amount_waiting', $event->status);
+        self::assertTrue($event->isPaymentMultiple);
+        self::assertSame('10.000000', $event->receivedAmountCrypto);
+        self::assertSame('15.000000', $event->remainingAmountCrypto);
+        self::assertIsArray($event->payments);
+        self::assertCount(2, $event->payments);
+        self::assertInstanceOf(PayInPayment::class, $event->payments[0]);
+        self::assertSame('tx-a', $event->payments[0]->txid);
+        self::assertSame('6.000000', $event->payments[0]->amountCrypto);
+        self::assertSame(5, $event->payments[0]->confirmations);
+        self::assertSame('confirming', $event->payments[0]->status);
+        self::assertSame('2026-09-30T10:00:00Z', $event->payments[0]->seenAt);
+        self::assertSame('tx-b', $event->payments[1]->txid);
+    }
+
+    public function testParsePayInEventLatePayment(): void
+    {
+        $event = self::parse([
+            'event' => 'invoice.late_payment',
+            'uuid' => 'inv-2',
+            'status' => 'paid',
+            'txid' => 'tx-late',
+            'is_payment_multiple' => true,
+            'received_amount_crypto' => '30.000000',
+            'remaining_amount_crypto' => '0.000000',
+            'payments' => [],
+        ]);
+        self::assertInstanceOf(PayInEvent::class, $event);
+        self::assertSame('invoice.late_payment', $event->event);
+        self::assertSame('tx-late', $event->txid);
+        self::assertSame([], $event->payments);
+    }
+
+    public function testParsePayInEventWithoutMultiplePaymentFields(): void
+    {
+        // A payload from an order without the flag (or a platform build that predates
+        // it): none of the multiple-payment keys is present, and it must still parse.
+        $event = self::parse([
+            'event' => 'invoice.paid',
+            'uuid' => 'inv-3',
+            'status' => 'paid',
+        ]);
+        self::assertInstanceOf(PayInEvent::class, $event);
+        self::assertNull($event->isPaymentMultiple);
+        self::assertNull($event->receivedAmountCrypto);
+        self::assertNull($event->remainingAmountCrypto);
+        self::assertNull($event->payments);
     }
 
     public function testUnknownEventReturnsRawArray(): void

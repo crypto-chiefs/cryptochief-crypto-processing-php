@@ -4,10 +4,13 @@ declare(strict_types=1);
 
 namespace CryptoChief\Processing\Dto;
 
+use CryptoChief\Processing\Webhook\PayInPayment;
+
 final class PayIn extends BaseDto
 {
     /**
      * @param CoinOption[]|null $coins
+     * @param PayInPayment[]|null $payments
      */
     public function __construct(
         public readonly string $uuid = '',
@@ -32,6 +35,13 @@ final class PayIn extends BaseDto
         public readonly ?string $expiredAt = null,
         public readonly ?string $createdAt = null,
         public readonly ?string $updatedAt = null,
+        /** Whether the order accepts several payments. Present only when it does. */
+        public readonly ?bool $isPaymentMultiple = null,
+        /** Sum of the payments received so far, in crypto, as a decimal string. */
+        public readonly ?string $receivedAmountCrypto = null,
+        /** Amount still missing to cover the order, in crypto, as a decimal string. */
+        public readonly ?string $remainingAmountCrypto = null,
+        public readonly ?array $payments = null,
     ) {}
 
     public function isTerminal(): bool
