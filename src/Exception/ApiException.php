@@ -39,6 +39,8 @@ use CryptoChief\Processing\ErrorCode;
  */
 class ApiException extends CryptoChiefException
 {
+    private const RETRYABLE_STATUSES = [502, 503, 504];
+
     public readonly string $errorCode;
     public readonly int $httpStatus;
     public readonly ?string $raw;
@@ -71,11 +73,13 @@ class ApiException extends CryptoChiefException
     }
 
     /**
-     * Only 5xx responses and transport `NETWORK_ERROR` failures are retryable; 4xx is
-     * never retried.
+     * True for HTTP 502, 503, 504 and a network error of this client (no response, or its body
+     * could not be read). False for every other status, 500 included, also when its body
+     * carries the code `NETWORK_ERROR`.
      */
     public function isRetryable(): bool
     {
-        return $this->httpStatus >= 500 || $this->errorCode === ErrorCode::NetworkError->value;
+        return in_array($this->httpStatus, self::RETRYABLE_STATUSES, true)
+            || ($this->errorCode === ErrorCode::NetworkError->value && $this->raw === null);
     }
 }

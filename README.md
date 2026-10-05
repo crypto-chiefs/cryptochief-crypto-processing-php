@@ -531,10 +531,12 @@ relayed from an upstream service marks `error` as `SERVICE_ERROR` and puts the c
 directly comparable. `getMessage()` keeps the sentence, `$raw` the untouched body and
 `$serverTime` the `server_time` of `SIGNATURE_TIMESTAMP_OUT_OF_RANGE`.
 
-Only 5xx and network failures retry; 4xx is the caller's fault and surfaces immediately.
-The exceptions: one resend after `SIGNATURE_TIMESTAMP_OUT_OF_RANGE` (see
-[Request signing](#request-signing)), and a 5xx whose body is an order (`id` + `status`) —
-a settled business outcome the energy/native services recover, so retrying it is pointless.
+The client retries HTTP 502, 503, 504 and network errors (no response, or a body that could
+not be read), up to `retries` times with exponential backoff and full jitter. Every other
+status, 500 and 4xx included, surfaces immediately. `$e->isRetryable()` follows the same
+rule. Two exceptions: one resend after `SIGNATURE_TIMESTAMP_OUT_OF_RANGE` (see
+[Request signing](#request-signing)), and no retry for a response whose body is an order
+(`id` + `status`) — a settled business outcome the energy/native services recover.
 
 ## Credits balance & top-up
 
@@ -711,7 +713,7 @@ $client = new Client(
     apiKey:        'K',
     baseUrl:       Client::DEFAULT_BASE_URL,    // override for staging
     userAgent:     'my-app/1.0',
-    retries:       3,
+    retries:       3,                           // 502, 503, 504 and network errors
     timeoutSec:    60.0,
     retryBaseMs:   200.0,
     retryMaxMs:    5000.0,

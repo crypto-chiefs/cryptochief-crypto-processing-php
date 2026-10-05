@@ -41,7 +41,7 @@ use Psr\Http\Client\ClientInterface as PsrHttpClient;
  */
 final class Client
 {
-    public const VERSION = '0.13.0';
+    public const VERSION = '0.15.0';
 
     public const DEFAULT_BASE_URL = 'https://api-processing.crypto-chief.com';
 
@@ -148,9 +148,10 @@ final class Client
     /**
      * Low-level signed request against an API path (e.g. `/v1/payout/estimate`).
      *
-     * Encodes the body to JSON, signs the bytes sent, retries transient failures, returns
-     * the decoded JSON. Object members whose value is `null` are not sent; `null` sends an
-     * empty body. Reach for it directly only to hit an endpoint the SDK doesn't model.
+     * Encodes the body to JSON, signs the bytes sent, retries HTTP 502, 503, 504 and network
+     * errors, returns the decoded JSON. Object members whose value is `null` are not sent;
+     * `null` sends an empty body. Reach for it directly only to hit an endpoint the SDK
+     * doesn't model.
      *
      * `$path` starts with `/` and carries the route without the base URL; a query goes on
      * it as `?a=1&b=2` and is signed as written, while the path itself is signed

@@ -8,10 +8,10 @@ use CryptoChief\Processing\Exception\ApiException;
 use CryptoChief\Processing\Exception\PollTimeoutException;
 
 /**
- * Synchronous polling helper used by the `waitFor` methods on each service. Transient
- * (retryable) fetch errors are tolerated and retried on the next tick; other errors
- * propagate immediately. On timeout a `PollTimeoutException` carrying the last
- * observed state is raised.
+ * Synchronous polling helper used by the `waitFor` methods on each service. Fetch errors
+ * for which `ApiException::isRetryable()` is true (HTTP 502, 503, 504 and network errors)
+ * are tolerated and retried on the next tick; other errors propagate immediately. On
+ * timeout a `PollTimeoutException` carrying the last observed state is raised.
  */
 final class Poll
 {

@@ -9,17 +9,23 @@ use CryptoChief\Processing\Dto\HistoryQuery;
 use CryptoChief\Processing\ErrorCode;
 use CryptoChief\Processing\Exception\ApiException;
 use CryptoChief\Processing\Exception\CryptoChiefException;
+use CryptoChief\Processing\Poll;
 use CryptoChief\Processing\Sign;
 use CryptoChief\Processing\Tests\Support\JsonBody;
 use CryptoChief\Processing\Tests\Support\SignedRequest;
 use CryptoChief\Processing\Transport;
 use GuzzleHttp\Client as GuzzleClient;
+use GuzzleHttp\Exception\ConnectException;
 use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Middleware;
+use GuzzleHttp\Psr7\FnStream;
+use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Response;
+use GuzzleHttp\Psr7\Utils;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\RequestInterface;
+use Psr\Http\Message\StreamInterface;
 
 final class TransportTest extends TestCase
 {
@@ -415,7 +421,7 @@ final class TransportTest extends TestCase
         self::assertCount(2, $captured);
     }
 
-    public function testClockCorrectionAfter5xxAddsOneAttempt(): void
+    public function testClockCorrectionAfterA503AddsOneAttempt(): void
     {
         $outOfRange = json_encode([
             'ok' => false,
@@ -534,35 +540,236 @@ final class TransportTest extends TestCase
         self::assertCount(1, $captured);
     }
 
-    public function testRetriesOn5xx(): void
+    public function testDoesNotRetry500(): void
     {
-        $mock = new MockHandler([
-            new Response(503, [], '{"error":"SERVICE_ERROR","msg":"BUSY"}'),
+        /** @var array<int, array{request: RequestInterface}> $captured */
+        $captured = [];
+        $client = self::client([
+            new Response(500, [], '{"ok":false,"error":"INTERNAL_ERROR","msg":"internal error"}'),
             new Response(200, [], '{"ok":true}'),
-        ]);
-        $stack = HandlerStack::create($mock);
-        $http = new GuzzleClient(['handler' => $stack]);
+        ], $captured, retries: 3);
 
-        $client = new Client(
-            merchantId: 'M',
-            apiKey: 'K',
-            retries: 1,
-            retryBaseMs: 1.0,
-            retryMaxMs: 1.0,
-            httpClient: $http,
+        try {
+            $client->request('/v1/payout/estimate', ['x' => 1]);
+            self::fail('expected ApiException');
+        } catch (ApiException $e) {
+            self::assertSame(500, $e->httpStatus);
+            self::assertSame('INTERNAL_ERROR', $e->errorCode);
+            self::assertFalse($e->isRetryable());
+        }
+        self::assertCount(1, $captured);
+    }
+
+    public function testDoesNotRetryStatusesOtherThan502503504(): void
+    {
+        foreach ([500, 501, 505, 520, 599, 429, 400, 404, 409] as $status) {
+            foreach (['{"ok":false,"error":"SERVICE_ERROR","msg":"BUSY"}', '', '<html>error</html>'] as $body) {
+                /** @var array<int, array{request: RequestInterface}> $captured */
+                $captured = [];
+                $client = self::client([
+                    new Response($status, [], $body),
+                    new Response(200, [], '{"ok":true}'),
+                ], $captured, retries: 3);
+
+                try {
+                    $client->request('/v1/payout/estimate', ['x' => 1]);
+                    self::fail('expected ApiException for ' . $status);
+                } catch (ApiException $e) {
+                    self::assertSame($status, $e->httpStatus);
+                    self::assertFalse($e->isRetryable(), (string) $status);
+                }
+                self::assertCount(1, $captured, $status . ' ' . $body);
+            }
+        }
+    }
+
+    public function testRetries502503504UntilTheBudgetRunsOut(): void
+    {
+        foreach ([502, 503, 504] as $status) {
+            /** @var array<int, array{request: RequestInterface}> $captured */
+            $captured = [];
+            $client = self::client([
+                new Response($status, [], '<html>gateway error</html>'),
+                new Response($status, [], '<html>gateway error</html>'),
+                new Response($status, [], '<html>gateway error</html>'),
+                new Response($status, [], '<html>gateway error</html>'),
+                new Response(200, [], '{"ok":true}'),
+            ], $captured, retries: 3);
+
+            try {
+                $client->request('/v1/payout/estimate', ['x' => 1]);
+                self::fail('expected ApiException for ' . $status);
+            } catch (ApiException $e) {
+                self::assertSame($status, $e->httpStatus);
+                self::assertSame('HTTP_' . $status, $e->errorCode);
+                self::assertTrue($e->isRetryable());
+            }
+            // retries + 1 attempts; the queued 200 is never reached.
+            self::assertCount(4, $captured, (string) $status);
+        }
+    }
+
+    public function testRetries502503504AndSucceeds(): void
+    {
+        foreach ([502, 503, 504] as $status) {
+            /** @var array<int, array{request: RequestInterface}> $captured */
+            $captured = [];
+            $client = self::client([
+                new Response($status, [], '{"error":"SERVICE_ERROR","msg":"BUSY"}'),
+                new Response($status, [], '{"error":"SERVICE_ERROR","msg":"BUSY"}'),
+                new Response(200, [], '{"ok":true}'),
+            ], $captured, retries: 3);
+
+            self::assertSame(['ok' => true], $client->request('/v1/payout/estimate', ['x' => 1]));
+            self::assertCount(3, $captured, (string) $status);
+        }
+    }
+
+    public function testRetriesNetworkErrors(): void
+    {
+        /** @var array<int, array{request: RequestInterface}> $captured */
+        $captured = [];
+        $client = self::client([
+            self::connectError(),
+            new Response(200, [], '{"ok":true}'),
+        ], $captured, retries: 3);
+
+        self::assertSame(['ok' => true], $client->request('/v1/payout/estimate', ['x' => 1]));
+        self::assertCount(2, $captured);
+
+        /** @var array<int, array{request: RequestInterface}> $captured */
+        $captured = [];
+        $client = self::client([
+            self::connectError(),
+            self::connectError(),
+            self::connectError(),
+            self::connectError(),
+            new Response(200, [], '{"ok":true}'),
+        ], $captured, retries: 3);
+
+        try {
+            $client->request('/v1/payout/estimate', ['x' => 1]);
+            self::fail('expected ApiException');
+        } catch (ApiException $e) {
+            self::assertSame(ErrorCode::NetworkError->value, $e->errorCode);
+            self::assertSame(0, $e->httpStatus);
+            self::assertTrue($e->isRetryable());
+        }
+        self::assertCount(4, $captured);
+    }
+
+    public function testRetriesWhenTheResponseBodyCannotBeRead(): void
+    {
+        /** @var array<int, array{request: RequestInterface}> $captured */
+        $captured = [];
+        $client = self::client([
+            new Response(200, [], self::unreadableBody()),
+            new Response(200, [], '{"ok":true}'),
+        ], $captured, retries: 3);
+
+        self::assertSame(['ok' => true], $client->request('/v1/payout/estimate', ['x' => 1]));
+        self::assertCount(2, $captured);
+
+        /** @var array<int, array{request: RequestInterface}> $captured */
+        $captured = [];
+        $client = self::client([
+            new Response(200, [], self::unreadableBody()),
+            new Response(200, [], self::unreadableBody()),
+        ], $captured, retries: 1);
+
+        try {
+            $client->request('/v1/payout/estimate', ['x' => 1]);
+            self::fail('expected ApiException');
+        } catch (ApiException $e) {
+            self::assertSame(ErrorCode::NetworkError->value, $e->errorCode);
+            self::assertTrue($e->isRetryable());
+            self::assertStringContainsString('connection reset while reading the body', $e->getMessage());
+        }
+        self::assertCount(2, $captured);
+    }
+
+    /** isRetryable() is true exactly for the answers the transport retries. */
+    public function testIsRetryableMatchesTheTransport(): void
+    {
+        foreach ([400, 404, 409, 429, 500, 501, 502, 503, 504, 505, 520] as $status) {
+            /** @var array<int, array{request: RequestInterface}> $captured */
+            $captured = [];
+            $client = self::client([
+                new Response($status, [], '{"ok":false,"error":"SERVICE_ERROR","msg":"BUSY"}'),
+                new Response($status, [], '{"ok":false,"error":"SERVICE_ERROR","msg":"BUSY"}'),
+            ], $captured, retries: 1);
+
+            try {
+                $client->request('/v1/payout/estimate', ['x' => 1]);
+                self::fail('expected ApiException for ' . $status);
+            } catch (ApiException $e) {
+                $retried = count($captured) === 2;
+                self::assertSame(in_array($status, [502, 503, 504], true), $retried, (string) $status);
+                self::assertSame($retried, $e->isRetryable(), (string) $status);
+            }
+        }
+
+        self::assertTrue((new ApiException(ErrorCode::NetworkError))->isRetryable());
+        self::assertTrue((new ApiException(ErrorCode::NetworkError, 200, 'reset'))->isRetryable());
+        self::assertFalse((new ApiException('INTERNAL_ERROR', 500))->isRetryable());
+        self::assertFalse(Transport::parseApiError(500, '')->isRetryable());
+        self::assertTrue(Transport::parseApiError(503, '')->isRetryable());
+
+        // A 500 whose body names NETWORK_ERROR (a white-label install whose own call failed)
+        // is still a 500.
+        foreach ([
+            '{"ok":false,"error":"SERVICE_ERROR","msg":"NETWORK_ERROR"}',
+            '{"data":null,"error":{"status":500,"name":"ApplicationError","message":"provider error: NETWORK_ERROR","details":{"code":"NETWORK_ERROR"}}}',
+        ] as $body) {
+            $e = Transport::parseApiError(500, $body);
+            self::assertSame(ErrorCode::NetworkError->value, $e->errorCode);
+            self::assertFalse($e->isRetryable(), $body);
+        }
+    }
+
+    /** Polling waits through a 503 and stops at a 500, the same rule as the transport. */
+    public function testPollStopsAt500AndWaitsThrough503(): void
+    {
+        $answers = [Transport::parseApiError(503, ''), 'done'];
+        $got = Poll::waitForTerminal(
+            static function () use (&$answers) {
+                $next = array_shift($answers);
+                if ($next instanceof ApiException) {
+                    throw $next;
+                }
+
+                return $next;
+            },
+            static fn ($v): bool => $v === 'done',
+            0.001,
+            5.0,
         );
+        self::assertSame('done', $got);
 
-        $resp = $client->request('/v1/payout/estimate', ['x' => 1]);
-        self::assertIsArray($resp);
-        self::assertTrue($resp['ok']);
+        $calls = 0;
+        try {
+            Poll::waitForTerminal(
+                static function () use (&$calls) {
+                    $calls++;
+                    throw Transport::parseApiError(500, '{"ok":false,"error":"SERVICE_ERROR","msg":"NETWORK_ERROR"}');
+                },
+                static fn ($v): bool => true,
+                0.001,
+                5.0,
+            );
+            self::fail('expected ApiException');
+        } catch (ApiException $e) {
+            self::assertSame(500, $e->httpStatus);
+            self::assertSame(1, $calls);
+        }
     }
 
     /**
-     * A 5xx whose body is an order (id + status) is a settled business outcome, not a
-     * transient failure - the service layer recovers the order from the exception's raw
-     * body, so the transport must NOT burn the retry budget on it first.
+     * A response whose body is an order (id + status) is a settled business outcome - the
+     * service layer recovers the order from the exception's raw body, so the transport must
+     * NOT burn the retry budget on it first.
      */
-    public function testDoesNotRetry5xxWithAnOrderBody(): void
+    public function testDoesNotRetryAnOrderBody(): void
     {
         /** @var array<int, array{request: RequestInterface}> $captured */
         $captured = [];
@@ -844,8 +1051,26 @@ final class TransportTest extends TestCase
         self::assertSame('HTTP_400', Transport::parseApiError(400, '{"ok":false}')->errorCode);
     }
 
+    private static function connectError(): ConnectException
+    {
+        return new ConnectException(
+            'cURL error 7: Failed to connect: Connection refused',
+            new Request('POST', Client::DEFAULT_BASE_URL . '/v1/payout/estimate'),
+        );
+    }
+
+    /** A body stream that fails when read, as a connection dropped mid-body does. */
+    private static function unreadableBody(): StreamInterface
+    {
+        return FnStream::decorate(Utils::streamFor(''), [
+            '__toString' => static function (): string {
+                throw new \RuntimeException('connection reset while reading the body');
+            },
+        ]);
+    }
+
     /**
-     * @param Response[] $responses
+     * @param array<Response|\Throwable> $responses
      * @param array<int, array{request: RequestInterface}> $captured
      */
     private static function client(

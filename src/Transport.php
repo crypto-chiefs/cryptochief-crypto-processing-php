@@ -18,16 +18,19 @@ use Psr\Http\Message\ResponseInterface;
  * Signed transport.
  *
  * The body is encoded to JSON once and signed with HMAC v1 (`X-CC-Timestamp`, `X-CC-Nonce`,
- * `X-CC-Signature`) over the bytes sent. The headers are computed on every attempt. 5xx
- * responses and network errors retry with exponential backoff + full jitter - except a 5xx
- * whose body is an order (`id` + `status`), a settled business outcome that retries cannot
- * change; 4xx is never retried. `SIGNATURE_TIMESTAMP_OUT_OF_RANGE` with
- * `server_time` sets the clock offset once and resends the request immediately, outside the
- * retry budget.
+ * `X-CC-Signature`) over the bytes sent. The headers are computed on every attempt. HTTP
+ * 502, 503, 504 and network errors (no response, or a body that could not be read) retry
+ * with exponential backoff + full jitter - except a response whose body is an order (`id` +
+ * `status`), a settled business outcome. Every other status, 500 included, is not retried.
+ * `SIGNATURE_TIMESTAMP_OUT_OF_RANGE` with `server_time` sets the clock offset once and
+ * resends the request immediately, outside the retry budget.
  */
 final class Transport
 {
     private const MAX_RAW_IN_ERROR = 512;
+
+    /** HTTP statuses retried within the retry budget. */
+    private const RETRYABLE_STATUSES = [502, 503, 504];
 
     /**
      * An `Idempotency-Key` that can be sent as it is: printable ASCII with no space or tab
@@ -193,7 +196,12 @@ final class Transport
             }
 
             $status = $response->getStatusCode();
-            $text = (string) $response->getBody();
+            try {
+                $text = (string) $response->getBody();
+            } catch (\Throwable $err) {
+                $lastErr = new ApiException(ErrorCode::NetworkError, $status, $err->getMessage());
+                continue;
+            }
 
             if ($status >= 200 && $status < 300) {
                 if ($text === '') {
@@ -226,7 +234,7 @@ final class Transport
                 $repeatNow = true;
                 continue;
             }
-            if ($status >= 500 && !self::isOrderBody($text)) {
+            if (in_array($status, self::RETRYABLE_STATUSES, true) && !self::isOrderBody($text)) {
                 $lastErr = $apiErr;
                 continue;
             }
@@ -362,9 +370,8 @@ final class Transport
 
     /**
      * Whether a non-2xx body is an order (`id` + `status`) rather than an error
-     * envelope. A 5xx order is a settled business outcome the service layer recovers
-     * (see EnergyService / NativeService), not a transient failure - retrying it would
-     * just burn the retry budget before the order can be read.
+     * envelope. An order is a settled business outcome the service layer recovers
+     * (see EnergyService / NativeService); it is not retried.
      */
     private static function isOrderBody(string $body): bool
     {
