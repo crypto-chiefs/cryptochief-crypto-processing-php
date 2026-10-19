@@ -23,6 +23,18 @@ enum ErrorCode: string
     case ServiceError                     = 'SERVICE_ERROR';
     case Unauthorized                     = 'UNAUTHORIZED';
     case UrlCallbackRequired              = 'URL_CALLBACK_REQUIRED';
+    /**
+     * `url_callback` of a PayIn, payout, batch payout item or signed transaction: the host
+     * is a non-public IP address, a single-label or local name, or resolves to a non-public
+     * address (HTTP 400).
+     */
+    case UrlCallbackHostNotAllowed        = 'url_callback_HOST_NOT_ALLOWED';
+    /** `url_callback`: the scheme is not https or http (HTTP 400). */
+    case UrlCallbackSchemeInvalid         = 'url_callback_SCHEME_INVALID';
+    /** `url_callback`: not an absolute URL (HTTP 400). */
+    case UrlCallbackInvalid               = 'url_callback_INVALID';
+    /** Static wallet `callback_url` (generate, set callback URL) breaks the same rule; the reason is in the message (HTTP 400). */
+    case CallbackUrlInvalid               = 'CALLBACK_URL_INVALID';
     case LabelTooLong                     = 'LABEL_TOO_LONG';
     case BatchEmpty                       = 'BATCH_EMPTY';
     case BatchTooLarge                    = 'BATCH_TOO_LARGE';
@@ -53,6 +65,17 @@ enum ErrorCode: string
     case CallsRequired                    = 'CALLS_REQUIRED';
     case CallsNotAllowedForTransfer       = 'CALLS_NOT_ALLOWED_FOR_TRANSFER';
     case ContractCallsUnsupportedOnNetwork = 'CONTRACT_CALLS_UNSUPPORTED_ON_NETWORK';
+    /**
+     * Transaction estimate or sign of a token transfer: `from_address` holds less of the
+     * token than `value` (HTTP 400). Execute reports it as
+     * `PREFLIGHT_FAILED: insufficient_balance`.
+     */
+    case InsufficientBalance              = 'INSUFFICIENT_BALANCE';
+    /**
+     * EVM sign: the transaction reverted in simulation (HTTP 400). The contract's reason may
+     * follow (`SIMULATION_REVERTED: <reason>`); compare with `str_starts_with`.
+     */
+    case SimulationReverted               = 'SIMULATION_REVERTED';
     case NetworkError                     = 'NETWORK_ERROR';
 
     /** The object does not exist OR is not this project's — deliberately indistinguishable. */
