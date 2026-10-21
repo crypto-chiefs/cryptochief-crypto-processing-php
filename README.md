@@ -27,7 +27,7 @@ verify webhooks.
 ## Installation
 
 ```bash
-composer require crypto-chiefs/cryptochief-crypto-processing-php
+composer require crypto-chiefs/cryptochief-crypto-processing-php:^0.16.0
 ```
 
 Requires PHP 8.1+ with the `bcmath`, `mbstring`, `openssl`, and `json` extensions.
@@ -96,6 +96,11 @@ foreach ($result->items ?? [] as $row) {
 
 Funds lock sequentially inside a batch — an intra-batch double-spend cannot occur, even
 when the total exceeds your balance partway through. Max 50 items per call.
+
+Batch estimate and execute items expose `httpStatus` from `http_status`: the HTTP status
+the item would receive as a single request. It is `null` when the field is absent,
+including on successful items. `$row->isRetryable()` is true only for `httpStatus === 502`.
+Re-send those items; for execute, keep the same `orderId`.
 
 ## Accept payments (pay-ins / invoices)
 

@@ -12,5 +12,14 @@ final class BatchItemResult extends BaseDto
         public readonly ?string $status = null,
         public readonly ?string $uuid = null,
         public readonly ?string $error = null,
+        public readonly ?int $httpStatus = null,
     ) {}
+
+    /**
+     * True only for HTTP 502. Retry batch execute items with the same order_id.
+     */
+    public function isRetryable(): bool
+    {
+        return $this->httpStatus === 502;
+    }
 }
