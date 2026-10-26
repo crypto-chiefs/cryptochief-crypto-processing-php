@@ -27,7 +27,7 @@ verify webhooks.
 ## Installation
 
 ```bash
-composer require crypto-chiefs/cryptochief-crypto-processing-php:^0.16.0
+composer require crypto-chiefs/cryptochief-crypto-processing-php:^0.16.1
 ```
 
 Requires PHP 8.1+ with the `bcmath`, `mbstring`, `openssl`, and `json` extensions.
