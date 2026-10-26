@@ -254,7 +254,7 @@ $client->transactions()->signAnchorCall(new AnchorCallRequest(
         Borsh::string('hello'),
     ],
     accounts: [
-        new SolanaAccount(pubkey: $from, isSigner: true, isWritable: true),
+        new SolanaAccount(address: $from, isSigner: true, isWritable: true),
     ],
 ));
 ```

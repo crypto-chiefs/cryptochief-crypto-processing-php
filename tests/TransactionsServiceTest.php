@@ -6,6 +6,8 @@ namespace CryptoChief\Processing\Tests;
 
 use CryptoChief\Processing\Client;
 use CryptoChief\Processing\Dto\EstimateTransactionRequest;
+use CryptoChief\Processing\Dto\SolanaAccount;
+use CryptoChief\Processing\Dto\SolanaCallRequest;
 use CryptoChief\Processing\Exception\ApiException;
 use GuzzleHttp\Client as GuzzleClient;
 use GuzzleHttp\Handler\MockHandler;
@@ -230,5 +232,36 @@ final class TransactionsServiceTest extends TestCase
             self::assertSame(400, $e->httpStatus);
             self::assertStringContainsString('CONTRACT_ESTIMATE_UNSUPPORTED', $e->getMessage());
         }
+    }
+
+    public function testSolanaAccountsAreSentAsAddress(): void
+    {
+        $captured = [];
+        $client = $this->client([new Response(200, [], '{"uuid":"u","status":"signed"}')], $captured);
+
+        $client->transactions()->signSolanaCall(new SolanaCallRequest(
+            network: 'SOLANA_DEVNET',
+            fromAddress: 'From',
+            program: 'Prog',
+            instructionData: "\x01\x02",
+            accounts: [
+                new SolanaAccount(address: 'A', isSigner: true, isWritable: true),
+                new SolanaAccount(pubkey: 'P'),
+                new SolanaAccount('S', true, false),
+            ],
+        ));
+
+        self::assertSame([[
+            'to' => 'Prog',
+            'data' => 'AQI=',
+            'accounts' => [
+                ['address' => 'A', 'is_signer' => true, 'is_writable' => true],
+                ['address' => 'P', 'is_signer' => false, 'is_writable' => false],
+                ['address' => 'S', 'is_signer' => true, 'is_writable' => false],
+            ],
+        ]], $this->sentBody($captured)['calls']);
+
+        $this->expectException(\InvalidArgumentException::class);
+        new SolanaAccount(isSigner: true);
     }
 }

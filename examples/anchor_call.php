@@ -34,8 +34,8 @@ $signed = $client->transactions()->signAnchorCall(new AnchorCallRequest(
         Borsh::string('hello from cryptochief-php'),
     ],
     accounts: [
-        new SolanaAccount(pubkey: $from,    isSigner: true,  isWritable: true),
-        new SolanaAccount(pubkey: $program, isSigner: false, isWritable: false),
+        new SolanaAccount(address: $from,   isSigner: true,  isWritable: true),
+        new SolanaAccount(address: $program, isSigner: false, isWritable: false),
     ],
 ));
 printf("Signed Anchor call %s\n", $signed->uuid);
